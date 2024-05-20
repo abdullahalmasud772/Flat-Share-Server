@@ -2,6 +2,7 @@ import cors from "cors";
 import express, { Application, NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
 import router from "./app/routes";
+import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 //import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 //import routes from "./app/routes";
 //import cron from "node-cron";
@@ -10,7 +11,12 @@ import router from "./app/routes";
 
 const app: Application = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "http://localhost:3001"],
+    credentials: true,
+  })
+);
 //app.use(cookieParser());
 
 //parser
@@ -35,7 +41,7 @@ app.get("/", async (req: Request, res: Response) => {
 // });
 
 //global error handler
-//app.use(globalErrorHandler);
+app.use(globalErrorHandler);
 
 //handle not found
 app.use((req: Request, res: Response, next: NextFunction) => {

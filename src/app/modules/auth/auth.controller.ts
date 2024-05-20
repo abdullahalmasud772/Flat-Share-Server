@@ -10,7 +10,13 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
   sendResponse<ILoginUserResponse>(res, {
     statusCode: 200,
     success: true,
-    message: 'User logged in successfully !',
-    data: result
+    message: "User logged in successfully !",
+    data: {
+      accessToken: result.accessToken,
+    },
   });
 });
+
+export const AuthControllers = {
+  loginUser,
+};
