@@ -53,10 +53,11 @@ model Flat {
   utilitiesDescription String
   location             String
   description          String
-  Amenities            String
+  amenities            String
   rent                 Int
-  availability         Boolean   @default(true)
   advanceAmount        Int
+  availability         Boolean   @default(true)
+  flatPhoto            String?
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
   user                 User      @relation(fields: [userId], references: [id])

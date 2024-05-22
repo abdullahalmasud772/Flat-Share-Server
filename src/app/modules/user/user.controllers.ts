@@ -11,7 +11,15 @@ const createUser = catchAsync(
       statusCode: httpStatus.OK,
       success: true,
       message: "User created successfully!",
-      data: result,
+      data: {
+        name: result.userProfile.name,
+        username: result.newUser.username,
+        email: result.newUser.email,
+        bio: result.userProfile.bio,
+        profession: result.userProfile.profession,
+        address: result.userProfile.address,
+        profilePhoto: result.userProfile.profilePhoto
+      },
     });
   }
 );
