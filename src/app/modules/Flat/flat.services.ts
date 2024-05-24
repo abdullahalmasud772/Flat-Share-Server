@@ -5,10 +5,26 @@ import { flatSearchableFields } from "./flat.constant";
 import { IUploadFile } from "../../../interfaces/file";
 import { FileUploadHelper } from "../../../helpers/fileUploadHelper";
 
+interface FlatCreateInput {
+  userId: string | null;
+  flatName: string | null;
+  squareFeet: number | null;
+  totalBedrooms: number | null;
+  totalRooms: number | null;
+  utilitiesDescription: string | null;
+  location: String | null;
+  description: String | null;
+  amenities: String | null;
+  rent: number | null;
+  advanceAmount: number | null;
+  availability: Boolean;
+  flatPhoto: string | null;
+}
+
 const createFlatIntoDB = async (req: Request) => {
   const user = req.user;
   const file = req.file as IUploadFile;
-  
+
   if (user?.role === "SELLER") {
     if (file) {
       const uploadedProfileImage = await FileUploadHelper.uploadToCloudinary(
@@ -18,9 +34,10 @@ const createFlatIntoDB = async (req: Request) => {
     }
 
     const result = await prisma.$transaction(async (transactionClient) => {
-      const createFlat = await transactionClient.flat.create({
+      const createFlat: FlatCreateInput = await transactionClient.flat.create({
         data: {
           userId: user?.userId,
+          flatName: req.body.flatName,
           squareFeet: req.body.squareFeet,
           totalBedrooms: req.body.totalBedrooms,
           totalRooms: req.body.totalRooms,

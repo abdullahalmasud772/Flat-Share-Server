@@ -46,6 +46,7 @@ model UserProfile {
 
 model Flat {
   id                   String    @id @default(uuid())
+  flatName             String
   userId               String
   squareFeet           Int
   totalBedrooms        Int
