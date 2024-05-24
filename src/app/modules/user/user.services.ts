@@ -1,7 +1,7 @@
 import { Request } from "express";
 import prisma from "../../../shared/prisma";
 import { hashedPassword } from "../../../helpers/hashPasswordHelper";
-import { UserRole } from "@prisma/client";
+import { UserRole, UserStatus } from "@prisma/client";
 import { IUploadFile } from "../../../interfaces/file";
 import { FileUploadHelper } from "../../../helpers/fileUploadHelper";
 
@@ -38,6 +38,45 @@ const createUserIntoDB = async (req: Request) => {
   return result;
 };
 
+const getMyProfileIntoDB = async (authUser: any) => {
+  const userData = await prisma.user.findUnique({
+    where: {
+      id: authUser.userId,
+      status: UserStatus.ACTIVE,
+    },
+    select: {
+      id: true,
+      email: true,
+      role: true,
+      username: true,
+      status: true,
+    },
+  });
+
+  let profileData;
+  if (userData?.role === UserRole.ADMIN) {
+    profileData = await prisma.userProfile.findUnique({
+      where: {
+        userId: userData?.id,
+      },
+    });
+  } else if (userData?.role === UserRole.BUYER) {
+    profileData = await prisma.userProfile.findUnique({
+      where: {
+        userId: userData.id,
+      },
+    });
+  } else if (userData?.role === UserRole.SELLER) {
+    profileData = await prisma.userProfile.findUnique({
+      where: {
+        userId: userData.id,
+      },
+    });
+  }
+  return { ...profileData, ...userData };
+};
+
 export const userServices = {
   createUserIntoDB,
+  getMyProfileIntoDB,
 };
