@@ -30,12 +30,13 @@ const createUserIntoDB = async (req: Request) => {
         name: req.body.user.name,
         profession: req.body.user.profession,
         address: req.body.user.address,
+        profilePhoto: req.body.user.profilePhoto,
       },
     });
     return { newUser, userProfile };
-  });
+  }); 
 
-  return result;
+  return result; 
 };
 
 const getMyProfileIntoDB = async (authUser: any) => {
