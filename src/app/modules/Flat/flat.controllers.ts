@@ -6,6 +6,7 @@ import httpStatus from "http-status";
 import sendResponse from "../../../shared/sendResponse";
 
 const createFlat = catchAsync(async (req: Request, res: Response) => {
+  console.log(typeof(req.body));
   const result = await FlatServices.createFlatIntoDB(req);
   sendUniqueResponse(res, {
     success: true,
