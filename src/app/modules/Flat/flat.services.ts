@@ -34,10 +34,10 @@ const createFlatIntoDB = async (req: Request) => {
     }
 
     const result = await prisma.$transaction(async (transactionClient) => {
-      const createFlat = await transactionClient.flat.create({
+      const createFlat: FlatCreateInput = await transactionClient.flat.create({
         data: {
           userId: user?.userId,
-          flatName:req.body.flatName,
+          flatName: req.body.flatName,
           squareFeet: req.body.squareFeet,
           totalBedrooms: req.body.totalBedrooms,
           totalRooms: req.body.totalRooms,
@@ -50,6 +50,7 @@ const createFlatIntoDB = async (req: Request) => {
           flatPhoto: req.body.flatPhoto,
         },
       });
+      console.log(createFlat);
       return createFlat;
     });
     return result;

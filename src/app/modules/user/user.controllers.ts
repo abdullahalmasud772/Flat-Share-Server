@@ -12,13 +12,14 @@ const createUser = catchAsync(
       success: true,
       message: "User created successfully!",
       data: {
+        id: result.newUser.id,
         name: result.userProfile.name,
         username: result.newUser.username,
         email: result.newUser.email,
         bio: result.userProfile.bio,
         profession: result.userProfile.profession,
         address: result.userProfile.address,
-        profilePhoto: result.userProfile.profilePhoto
+        profilePhoto: result.userProfile.profilePhoto,
       },
     });
   }

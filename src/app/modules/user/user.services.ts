@@ -7,6 +7,7 @@ import { FileUploadHelper } from "../../../helpers/fileUploadHelper";
 
 const createUserIntoDB = async (req: Request) => {
   const file = req.file as IUploadFile;
+  console.log(req.body);
   if (file) {
     const uploadedProfileImage = await FileUploadHelper.uploadToCloudinary(
       file
@@ -21,7 +22,7 @@ const createUserIntoDB = async (req: Request) => {
         username: req.body.username,
         email: req.body.email,
         password: hashPassword,
-        role: UserRole.ADMIN,
+        role: req.body.role,
       },
     });
     const userProfile = await transactionClient.userProfile.create({
@@ -34,9 +35,9 @@ const createUserIntoDB = async (req: Request) => {
       },
     });
     return { newUser, userProfile };
-  }); 
+  });
 
-  return result; 
+  return result;
 };
 
 const getMyProfileIntoDB = async (authUser: any) => {
