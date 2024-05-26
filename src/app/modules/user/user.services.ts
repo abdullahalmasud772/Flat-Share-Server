@@ -4,17 +4,22 @@ import { hashedPassword } from "../../../helpers/hashPasswordHelper";
 import { UserRole, UserStatus } from "@prisma/client";
 import { IUploadFile } from "../../../interfaces/file";
 import { FileUploadHelper } from "../../../helpers/fileUploadHelper";
+import ApiError from "../../../errors/ApiError";
+import httpStatus from "http-status";
 
 const createUserIntoDB = async (req: Request) => {
   const file = req.file as IUploadFile;
-  console.log(req.body);
+  const user = req?.user;
+
   if (file) {
     const uploadedProfileImage = await FileUploadHelper.uploadToCloudinary(
       file
     );
     req.body.user.profilePhoto = uploadedProfileImage?.secure_url;
   }
-
+  if (req.body.role === "ADMIN" && !(user?.role === "ADMIN")) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized!");
+  }
   const hashPassword = await hashedPassword(req.body.password);
   const result = await prisma.$transaction(async (transactionClient) => {
     const newUser = await transactionClient.user.create({
@@ -25,6 +30,7 @@ const createUserIntoDB = async (req: Request) => {
         role: req.body.role,
       },
     });
+
     const userProfile = await transactionClient.userProfile.create({
       data: {
         userId: newUser.id,
@@ -36,7 +42,6 @@ const createUserIntoDB = async (req: Request) => {
     });
     return { newUser, userProfile };
   });
-
   return result;
 };
 
