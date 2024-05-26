@@ -4,9 +4,11 @@ import { FlatServices } from "./flat.services";
 import sendUniqueResponse from "../../../shared/sendUniqeResponse";
 import httpStatus from "http-status";
 import sendResponse from "../../../shared/sendResponse";
+import pick from "../../../shared/pick";
+import { flatFilterableFields, flatSearchableFields } from "./flat.constant";
 
 const createFlat = catchAsync(async (req: Request, res: Response) => {
-  console.log(typeof(req.body));
+  console.log(typeof req.body);
   const result = await FlatServices.createFlatIntoDB(req);
   sendUniqueResponse(res, {
     success: true,
@@ -17,7 +19,9 @@ const createFlat = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllFlats = catchAsync(async (req: Request, res: Response) => {
-  const result = await FlatServices.getAllFlatsIntoDB(req);
+  const filters = pick(req.query, flatFilterableFields);
+  const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
+  const result = await FlatServices.getAllFlatsIntoDB(filters, options);
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,

@@ -1,12 +1,15 @@
-export const flatSearchableFields = [
+export const flatFilterableFields: string[] = [
+  "searchTerm",
+  "flatName",
+  "squareFeet",
+  "totalBedrooms",
+  "totalRooms",
+  "location",
+  "rent",
+];
+
+export const flatSearchableFields:string[] = [
   "utilitiesDescription",
   "location",
   "description",
-];
-
-export const adminFilterableFields = [
-  "name",
-  "email",
-  "searchTerm",
-  "contactNumber",
 ];

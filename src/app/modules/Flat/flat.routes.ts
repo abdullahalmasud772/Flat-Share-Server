@@ -16,7 +16,7 @@ router.post(
   }
 );
 
-router.get("/flats", auth(), FlatController.getAllFlats);
+router.get("/", FlatController.getAllFlats);
 
 router.put("/flats/:flatId", auth(), FlatController.updateFlat);
 
