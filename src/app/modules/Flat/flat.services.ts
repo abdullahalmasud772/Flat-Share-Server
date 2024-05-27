@@ -65,6 +65,7 @@ const createFlatIntoDB = async (req: Request) => {
 
 const getAllFlatsIntoDB = async (  filters: IFlatFilterRequest,
   options: IPaginationOptions):Promise<IGenericResponse<Flat[]>> => {
+    console.log(filters);
     const { limit, page, skip } = paginationHelper.calculatePagination(options);
     const { searchTerm, ...filterData } = filters;
     const andConditions = [];

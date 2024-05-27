@@ -64,6 +64,11 @@
             "date": 1716721955032,
             "name": "D:\\Programing\\FullStack\\Assignments\\assignment-09\\assignment-09-server\\logs\\winston\\successes\\phu-2024-26-05-17-success.log",
             "hash": "b46c3ee31e98497d8d8db964036926cbd4eb26dd70a34eba9fe387123a0e970b"
+        },
+        {
+            "date": 1716791270360,
+            "name": "D:\\Programing\\FullStack\\Assignments\\assignment-09\\assignment-09-server\\logs\\winston\\successes\\phu-2024-27-05-12-success.log",
+            "hash": "a7fb84144ffe53818bbe9e4fa36e5b9c98ce70b2be2b46c2cf1cd08b0d681dbf"
         }
     ],
     "hashType": "sha256"
