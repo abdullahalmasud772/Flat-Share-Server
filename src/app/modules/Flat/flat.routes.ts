@@ -18,6 +18,8 @@ router.post(
 
 router.get("/", FlatController.getAllFlats);
 
+router.get("/:id", FlatController.getSingleFlat);
+
 router.put("/flats/:flatId", auth(), FlatController.updateFlat);
 
 export const FlatRoutes = router;

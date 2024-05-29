@@ -63,12 +63,14 @@ const createFlatIntoDB = async (req: Request) => {
   }
 };
 
-const getAllFlatsIntoDB = async (  filters: IFlatFilterRequest,
-  options: IPaginationOptions):Promise<IGenericResponse<Flat[]>> => {
-    console.log(filters);
-    const { limit, page, skip } = paginationHelper.calculatePagination(options);
-    const { searchTerm, ...filterData } = filters;
-    const andConditions = [];
+const getAllFlatsIntoDB = async (
+  filters: IFlatFilterRequest,
+  options: IPaginationOptions
+): Promise<IGenericResponse<Flat[]>> => {
+  console.log(filters);
+  const { limit, page, skip } = paginationHelper.calculatePagination(options);
+  const { searchTerm, ...filterData } = filters;
+  const andConditions = [];
 
   // const params = req.query as any;
   // const andCondition: Prisma.FlatWhereInput[] = [];
@@ -88,7 +90,7 @@ const getAllFlatsIntoDB = async (  filters: IFlatFilterRequest,
 
   if (Object.keys(filterData).length > 0) {
     andConditions.push({
-      AND: Object.keys(filterData).map(key => {
+      AND: Object.keys(filterData).map((key) => {
         return {
           [key]: {
             equals: (filterData as any)[key],
@@ -102,7 +104,7 @@ const getAllFlatsIntoDB = async (  filters: IFlatFilterRequest,
   // });
 
   const whereConditions: Prisma.FlatWhereInput =
-  andConditions.length > 0 ? { AND: andConditions } : {};
+    andConditions.length > 0 ? { AND: andConditions } : {};
 
   const result = await prisma.flat.findMany({
     where: whereConditions,
@@ -112,7 +114,7 @@ const getAllFlatsIntoDB = async (  filters: IFlatFilterRequest,
       options.sortBy && options.sortOrder
         ? { [options.sortBy]: options.sortOrder }
         : {
-            createdAt: 'desc',
+            createdAt: "desc",
           },
   });
   const total = await prisma.flat.count({
@@ -131,6 +133,15 @@ const getAllFlatsIntoDB = async (  filters: IFlatFilterRequest,
     },
     data: result,
   };
+};
+
+const getSingleFlatIntoDB = async (id: string): Promise<Flat | null> => {
+  const result = await prisma.flat.findUniqueOrThrow({
+    where: {
+      id,
+    },
+  });
+  return result;
 };
 
 const updateFlatIntoDB = async (
@@ -156,5 +167,6 @@ const updateFlatIntoDB = async (
 export const FlatServices = {
   createFlatIntoDB,
   getAllFlatsIntoDB,
+  getSingleFlatIntoDB,
   updateFlatIntoDB,
 };
