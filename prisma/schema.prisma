@@ -20,6 +20,7 @@ model User {
   password    String
   role        UserRole
   status      UserStatus   @default(ACTIVE)
+  isDeleted   Boolean      @default(false)
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   booking     Booking[]
@@ -37,6 +38,7 @@ model UserProfile {
   profession   String
   address      String
   profilePhoto String?
+  isDeleted    Boolean  @default(false)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   user         User     @relation(fields: [userId], references: [id])
@@ -59,6 +61,7 @@ model Flat {
   advanceAmount        Int
   availability         Boolean   @default(true)
   flatPhoto            String?
+  isDeleted            Boolean   @default(false)
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
   user                 User      @relation(fields: [userId], references: [id])
@@ -68,14 +71,16 @@ model Flat {
 }
 
 model Booking {
-  id        String        @id @default(uuid())
-  flatId    String
-  userId    String
-  status    BookingStatus @default(PENDING)
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-  user      User          @relation(fields: [userId], references: [id])
-  flat      Flat          @relation(fields: [flatId], references: [id])
+  id          String        @id @default(uuid())
+  flatId      String
+  userId      String
+  flatOwnerId String        @default("")
+  status      BookingStatus @default(PENDING)
+  isDeleted   Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  user        User          @relation(fields: [userId], references: [id])
+  flat        Flat          @relation(fields: [flatId], references: [id])
 
   @@map("bookings")
 }
