@@ -45,6 +45,23 @@ const createUserIntoDB = async (req: Request) => {
   return result;
 };
 
+const getSellerIntoDB = async () => {
+  const result = await prisma.user.findMany({
+    where: {
+      role: "SELLER",
+    },
+  });
+  return result;
+};
+const getBuyerIntoDB = async () => {
+  const result = await prisma.user.findMany({
+    where: {
+      role: "BUYER",
+    },
+  });
+  return result;
+};
+
 const getMyProfileIntoDB = async (authUser: any) => {
   const userData = await prisma.user.findUnique({
     where: {
@@ -85,5 +102,7 @@ const getMyProfileIntoDB = async (authUser: any) => {
 
 export const userServices = {
   createUserIntoDB,
+  getSellerIntoDB,
+  getBuyerIntoDB,
   getMyProfileIntoDB,
 };

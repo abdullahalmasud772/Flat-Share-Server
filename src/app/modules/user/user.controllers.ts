@@ -25,6 +25,26 @@ const createUser = catchAsync(
   }
 );
 
+const getSeller = catchAsync(async (req: Request, res: Response) => {
+  const result = await userServices.getSellerIntoDB();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Get all seller successfullay!",
+    data: result,
+  });
+});
+
+const getBuyer = catchAsync(async (req: Request, res: Response) => {
+  const result = await userServices.getBuyerIntoDB();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Get all buyer successfullay!",
+    data: result,
+  });
+});
+
 const getMyProfile = catchAsync(async (req: Request, res: Response) => {
   const user = req.user;
   const result = await userServices.getMyProfileIntoDB(user);
@@ -32,12 +52,14 @@ const getMyProfile = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Profile data fetched!",
+    message: "Get my profile successfully!",
     data: result,
   });
 });
 
 export const UserControllers = {
   createUser,
+  getSeller,
+  getBuyer,
   getMyProfile,
 };

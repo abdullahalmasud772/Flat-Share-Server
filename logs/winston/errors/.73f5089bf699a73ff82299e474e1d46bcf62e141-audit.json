@@ -204,6 +204,11 @@
             "date": 1717175583567,
             "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-31-05-23-error.log",
             "hash": "1c848608a1aea0ffe83935fac53cc20d2f237356a2b987461615af9dec41f60c"
+        },
+        {
+            "date": 1717179693394,
+            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-01-06-00-error.log",
+            "hash": "a85bb119c3494c33537be9ac987e9d645a7a8a02938ace259c5535ac5619259f"
         }
     ],
     "hashType": "sha256"

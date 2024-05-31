@@ -16,6 +16,17 @@ router.post(
 );
 
 router.get(
+  "/seller",
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  UserControllers.getSeller
+);
+router.get(
+  "/buyer",
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  UserControllers.getBuyer
+);
+
+router.get(
   "/me",
   auth(
     ENUM_USER_ROLE.ADMIN,
