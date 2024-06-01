@@ -1,7 +1,7 @@
 import { Request } from "express";
 import prisma from "../../../shared/prisma";
 import { hashedPassword } from "../../../helpers/hashPasswordHelper";
-import { UserRole, UserStatus } from "@prisma/client";
+import { User, UserRole, UserStatus } from "@prisma/client";
 import { IUploadFile } from "../../../interfaces/file";
 import { FileUploadHelper } from "../../../helpers/fileUploadHelper";
 import ApiError from "../../../errors/ApiError";
@@ -50,6 +50,33 @@ const getSellerIntoDB = async () => {
     where: {
       role: "SELLER",
     },
+    include: {
+      userProfile: true,
+    },
+  });
+  return result;
+};
+
+const getSingleSellerIntoDB = async (id: string): Promise<User | null> => {
+  ///
+  const result = await prisma.user.findUniqueOrThrow({
+    where: {
+      id,
+    },
+    include: {
+      userProfile: true,
+    },
+  });
+  return result;
+};
+const getSingleBuyerIntoDB = async (id: string): Promise<User | null> => {
+  const result = await prisma.user.findUniqueOrThrow({
+    where: {
+      id,
+    },
+    include: {
+      userProfile: true,
+    },
   });
   return result;
 };
@@ -57,6 +84,9 @@ const getBuyerIntoDB = async () => {
   const result = await prisma.user.findMany({
     where: {
       role: "BUYER",
+    },
+    include: {
+      userProfile: true,
     },
   });
   return result;
@@ -103,6 +133,8 @@ const getMyProfileIntoDB = async (authUser: any) => {
 export const userServices = {
   createUserIntoDB,
   getSellerIntoDB,
+  getSingleSellerIntoDB,
   getBuyerIntoDB,
+  getSingleBuyerIntoDB,
   getMyProfileIntoDB,
 };

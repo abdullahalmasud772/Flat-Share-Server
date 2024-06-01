@@ -35,6 +35,27 @@ const getSeller = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getSingleSeller = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await userServices.getSingleSellerIntoDB(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Get single seller successfullay!",
+    data: result,
+  });
+});
+const getSingleBuyer = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await userServices.getSingleBuyerIntoDB(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Get single buyer successfullay!",
+    data: result,
+  });
+});
+
 const getBuyer = catchAsync(async (req: Request, res: Response) => {
   const result = await userServices.getBuyerIntoDB();
   sendResponse(res, {
@@ -60,6 +81,8 @@ const getMyProfile = catchAsync(async (req: Request, res: Response) => {
 export const UserControllers = {
   createUser,
   getSeller,
+  getSingleSeller,
   getBuyer,
+  getSingleBuyer,
   getMyProfile,
 };

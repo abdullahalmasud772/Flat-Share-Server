@@ -20,6 +20,19 @@ router.get(
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
   UserControllers.getSeller
 );
+
+router.get(
+  "/seller/:id",
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  UserControllers.getSingleSeller
+);
+
+router.get(
+  "/buyer/:id",
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  UserControllers.getSingleBuyer
+);
+
 router.get(
   "/buyer",
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
