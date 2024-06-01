@@ -6,6 +6,12 @@ import { IUploadFile } from "../../../interfaces/file";
 import { FileUploadHelper } from "../../../helpers/fileUploadHelper";
 import ApiError from "../../../errors/ApiError";
 import httpStatus from "http-status";
+import { ENUM_USER_ROLE } from "../../../enums/user";
+
+export type IAdminUpdate = {
+  role: ENUM_USER_ROLE;
+  status: UserStatus;
+};
 
 const createUserIntoDB = async (req: Request) => {
   const file = req.file as IUploadFile;
@@ -58,7 +64,6 @@ const getSellerIntoDB = async () => {
 };
 
 const getSingleSellerIntoDB = async (id: string): Promise<User | null> => {
-  ///
   const result = await prisma.user.findUniqueOrThrow({
     where: {
       id,
@@ -69,6 +74,24 @@ const getSingleSellerIntoDB = async (id: string): Promise<User | null> => {
   });
   return result;
 };
+
+const updateSingleSellerIntoDB = async () => {
+  ///
+};
+const updateSingleBuyerIntoDB = async (
+  id: string,
+  payload: Partial<IAdminUpdate>
+): Promise<User | null> => {
+  console.log(payload);
+  const result = await prisma.user.update({
+    where: {
+      id,
+    },
+    data: payload,
+  });
+  return result;
+};
+
 const getSingleBuyerIntoDB = async (id: string): Promise<User | null> => {
   const result = await prisma.user.findUniqueOrThrow({
     where: {
@@ -80,6 +103,7 @@ const getSingleBuyerIntoDB = async (id: string): Promise<User | null> => {
   });
   return result;
 };
+
 const getBuyerIntoDB = async () => {
   const result = await prisma.user.findMany({
     where: {
@@ -134,7 +158,9 @@ export const userServices = {
   createUserIntoDB,
   getSellerIntoDB,
   getSingleSellerIntoDB,
+  updateSingleSellerIntoDB,
   getBuyerIntoDB,
   getSingleBuyerIntoDB,
+  updateSingleBuyerIntoDB,
   getMyProfileIntoDB,
 };

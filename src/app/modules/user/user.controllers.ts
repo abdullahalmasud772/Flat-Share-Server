@@ -45,6 +45,18 @@ const getSingleSeller = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+const updateSingleSeller = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await userServices.getSingleSellerIntoDB(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Get single seller successfullay!",
+    data: result,
+  });
+});
+
 const getSingleBuyer = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await userServices.getSingleBuyerIntoDB(id);
@@ -66,6 +78,17 @@ const getBuyer = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateSingleBuyer = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await userServices.updateSingleBuyerIntoDB(id, req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Update single buyer successfullay!",
+    data: result,
+  });
+});
+
 const getMyProfile = catchAsync(async (req: Request, res: Response) => {
   const user = req.user;
   const result = await userServices.getMyProfileIntoDB(user);
@@ -82,7 +105,9 @@ export const UserControllers = {
   createUser,
   getSeller,
   getSingleSeller,
+  updateSingleSeller,
   getBuyer,
   getSingleBuyer,
+  updateSingleBuyer,
   getMyProfile,
 };
