@@ -73,10 +73,6 @@ const getAllFlatsIntoDB = async (
   const { searchTerm, ...filterData } = filters;
   const andConditions = [];
 
-  // const params = req.query as any;
-  // const andCondition: Prisma.FlatWhereInput[] = [];
-  // const whereConditions: Prisma.FlatWhereInput = { AND: andCondition };
-
   //// search Term
   if (searchTerm) {
     andConditions.push({
@@ -100,9 +96,6 @@ const getAllFlatsIntoDB = async (
       }),
     });
   }
-  // andConditions.push({
-  //   isDeleted: false,
-  // });
 
   const whereConditions: Prisma.FlatWhereInput =
     andConditions.length > 0 ? { AND: andConditions } : {};
