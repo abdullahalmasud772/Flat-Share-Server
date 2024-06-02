@@ -8,6 +8,7 @@ import { IFlatFilterRequest } from "./flat.interface";
 import { IPaginationOptions } from "../../../interfaces/pagination";
 import { IGenericResponse } from "../../../interfaces/common";
 import { paginationHelper } from "../../../helpers/paginationHelper";
+import { JwtPayload } from "jsonwebtoken";
 
 interface FlatCreateInput {
   flatName: string | null;
@@ -116,6 +117,9 @@ const getAllFlatsIntoDB = async (
         : {
             createdAt: "desc",
           },
+    include: {
+      user: true,
+    },
   });
   const total = await prisma.flat.count({
     where: whereConditions,
@@ -133,6 +137,16 @@ const getAllFlatsIntoDB = async (
     },
     data: result,
   };
+};
+
+const getSellerFlatsIntoDB = async (user: JwtPayload | null) => {
+  console.log(user);
+  const result = await prisma.flat.findMany({
+    where: {
+      userId: user?.userId,
+    },
+  });
+  return result;
 };
 
 const getSingleFlatIntoDB = async (id: string): Promise<Flat | null> => {
@@ -167,6 +181,7 @@ const updateFlatIntoDB = async (
 export const FlatServices = {
   createFlatIntoDB,
   getAllFlatsIntoDB,
+  getSellerFlatsIntoDB,
   getSingleFlatIntoDB,
   updateFlatIntoDB,
 };

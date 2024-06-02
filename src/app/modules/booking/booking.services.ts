@@ -69,6 +69,9 @@ const getBookingIntoDB = async (req: Request) => {
         where: {
           userId: userId,
         },
+        include: {
+          flat: true,
+        },
       });
       return result;
     }

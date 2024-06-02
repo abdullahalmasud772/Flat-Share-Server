@@ -49,6 +49,7 @@ const getSingleSeller = catchAsync(async (req: Request, res: Response) => {
 const updateSingleSeller = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await userServices.getSingleSellerIntoDB(id);
+  console.log(result);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

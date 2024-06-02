@@ -3,6 +3,7 @@ import { FlatController } from "./flat.controllers";
 import auth from "../../middlewares/auth";
 import { FileUploadHelper } from "../../../helpers/fileUploadHelper";
 import { UserRole } from "@prisma/client";
+import { ENUM_USER_ROLE } from "../../../enums/user";
 
 const router = express.Router();
 
@@ -17,6 +18,12 @@ router.post(
 );
 
 router.get("/", FlatController.getAllFlats);
+
+router.get(
+  "/seller",
+  auth(ENUM_USER_ROLE.SELLER),
+  FlatController.getSellerFlats
+);
 
 router.get("/:id", FlatController.getSingleFlat);
 
