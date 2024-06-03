@@ -51,8 +51,6 @@ router.patch(
   UserControllers.updateSingleBuyer
 );
 
-
-
 router.get(
   "/me",
   auth(
@@ -62,6 +60,34 @@ router.get(
     ENUM_USER_ROLE.SUPER_ADMIN
   ),
   UserControllers.getMyProfile
+);
+
+//// get my profileData
+router.get(
+  "/me/:id",
+  auth(
+    ENUM_USER_ROLE.ADMIN,
+    ENUM_USER_ROLE.BUYER,
+    ENUM_USER_ROLE.SELLER,
+    ENUM_USER_ROLE.SUPER_ADMIN
+  ),
+  UserControllers.getMyUserProfileData
+);
+
+//// update my profile
+router.patch(
+  "/update-my-profile",
+  auth(
+    ENUM_USER_ROLE.SUPER_ADMIN,
+    ENUM_USER_ROLE.ADMIN,
+    ENUM_USER_ROLE.BUYER,
+    ENUM_USER_ROLE.SELLER
+  ),
+  FileUploadHelper.upload.single("file"),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body.data);
+    return UserControllers.updateMyProfile(req, res, next);
+  }
 );
 
 export const UserRoutes = router;

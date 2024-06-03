@@ -31,17 +31,18 @@ model User {
 }
 
 model UserProfile {
-  id           String   @id @default(uuid())
-  userId       String   @unique
-  name         String
-  bio          String?
-  profession   String
-  address      String
-  profilePhoto String?
-  isDeleted    Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  user         User     @relation(fields: [userId], references: [id])
+  id            String   @id @default(uuid())
+  userId        String   @unique
+  name          String
+  bio           String?
+  profession    String
+  address       String
+  contactNumber String   @default("")
+  profilePhoto  String?
+  isDeleted     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  user          User     @relation(fields: [userId], references: [id])
 
   @@map("userProfiles")
 }
@@ -71,16 +72,15 @@ model Flat {
 }
 
 model Booking {
-  id          String        @id @default(uuid())
-  flatId      String
-  userId      String
-  flatOwnerId String        @default("")
-  status      BookingStatus @default(PENDING)
-  isDeleted   Boolean       @default(false)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  user        User          @relation(fields: [userId], references: [id])
-  flat        Flat          @relation(fields: [flatId], references: [id])
+  id        String        @id @default(uuid())
+  flatId    String
+  userId    String
+  status    BookingStatus @default(PENDING)
+  isDeleted Boolean       @default(false)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  user      User          @relation(fields: [userId], references: [id])
+  flat      Flat          @relation(fields: [flatId], references: [id])
 
   @@map("bookings")
 }

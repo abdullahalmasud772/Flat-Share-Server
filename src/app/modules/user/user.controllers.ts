@@ -25,7 +25,7 @@ const createUser = catchAsync(
   }
 );
 
-/// seller 
+/// seller
 const getSeller = catchAsync(async (req: Request, res: Response) => {
   const result = await userServices.getSellerIntoDB();
   sendResponse(res, {
@@ -49,7 +49,7 @@ const getSingleSeller = catchAsync(async (req: Request, res: Response) => {
 
 const updateSingleSeller = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await userServices.updateSingleSellerIntoDB(id,req.body);
+  const result = await userServices.updateSingleSellerIntoDB(id, req.body);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -91,15 +91,39 @@ const updateSingleBuyer = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-/// get me
+/// get my profile
 const getMyProfile = catchAsync(async (req: Request, res: Response) => {
   const user = req.user;
   const result = await userServices.getMyProfileIntoDB(user);
-
+  console.log("result", result);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "Get my profile successfully!",
+    data: result,
+  });
+});
+
+/// get my userProfile data
+const getMyUserProfileData = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await userServices.getMyUserProfileDataIntoDB(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Get my user profile data fetched!",
+    data: result,
+  });
+});
+
+/// update user info
+const updateMyProfile = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user;
+  const result = await userServices.updateMyProfileIntoDB(user, req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Update Profile data fetched!",
     data: result,
   });
 });
@@ -113,4 +137,6 @@ export const UserControllers = {
   getSingleBuyer,
   updateSingleBuyer,
   getMyProfile,
+  getMyUserProfileData,
+  updateMyProfile,
 };

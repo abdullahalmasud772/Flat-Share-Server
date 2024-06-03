@@ -6,16 +6,6 @@
     "auditLog": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\.73f5089bf699a73ff82299e474e1d46bcf62e141-audit.json",
     "files": [
         {
-            "date": 1716225739689,
-            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-20-05-23-error.log",
-            "hash": "ea26093069286ea4fdd1b54f9eeb7238c6e10e7e17c5a8d6c75266ec9aaec41a"
-        },
-        {
-            "date": 1716229625342,
-            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-21-05-00-error.log",
-            "hash": "4c437f4208d98e42fe8f6633b1d7c32de5c1049eb57dca1c35ea54a82531558e"
-        },
-        {
             "date": 1716309685104,
             "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-21-05-22-error.log",
             "hash": "8b8b7dd6adb87c9769d20261b545d86c1f5f8f8d7d42224f00441fc5de65024b"
@@ -224,6 +214,26 @@
             "date": 1717345594282,
             "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-02-06-22-error.log",
             "hash": "795f3f4b4ed2d34c45e43d3ffbeba4fdfd9b2cf53f1db2b684e2aa1f4bb12080"
+        },
+        {
+            "date": 1717428197536,
+            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-03-06-21-error.log",
+            "hash": "4fcdf5f429fa26e19a4671c8afd0904a37f12b100f2ba7d12ff7331d2daf5699"
+        },
+        {
+            "date": 1717430679265,
+            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-03-06-22-error.log",
+            "hash": "3f8c31e00f622bc166ceae618ed37ab1d70eadfac9ebb43f72a1f666675d1d26"
+        },
+        {
+            "date": 1717438757497,
+            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-04-06-00-error.log",
+            "hash": "4c7e25a23c0a195ccf61aa317f41cb824e85f7caeadfead1ebfc7f12a97791bb"
+        },
+        {
+            "date": 1717442140911,
+            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-04-06-01-error.log",
+            "hash": "77edefa310118a41223352193510e012a22ce7cc96663034ff93301bc0627182"
         }
     ],
     "hashType": "sha256"

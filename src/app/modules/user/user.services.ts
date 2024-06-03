@@ -1,7 +1,7 @@
 import { Request } from "express";
 import prisma from "../../../shared/prisma";
 import { hashedPassword } from "../../../helpers/hashPasswordHelper";
-import { User, UserRole, UserStatus } from "@prisma/client";
+import { User, UserProfile, UserRole, UserStatus } from "@prisma/client";
 import { IUploadFile } from "../../../interfaces/file";
 import { FileUploadHelper } from "../../../helpers/fileUploadHelper";
 import ApiError from "../../../errors/ApiError";
@@ -51,7 +51,7 @@ const createUserIntoDB = async (req: Request) => {
   return result;
 };
 
-/////// seller 
+/////// seller
 const getSellerIntoDB = async () => {
   const result = await prisma.user.findMany({
     where: {
@@ -89,8 +89,7 @@ const updateSingleSellerIntoDB = async (
   return result;
 };
 
-
-/////  buyer 
+/////  buyer
 const getBuyerIntoDB = async () => {
   const result = await prisma.user.findMany({
     where: {
@@ -144,6 +143,8 @@ const getMyProfileIntoDB = async (authUser: any) => {
     },
   });
 
+  console.log("userData", userData);
+
   let profileData;
   if (userData?.role === UserRole.ADMIN) {
     profileData = await prisma.userProfile.findUnique({
@@ -164,6 +165,53 @@ const getMyProfileIntoDB = async (authUser: any) => {
       },
     });
   }
+  console.log({ ...profileData });
+  return { ...profileData, userData };
+};
+
+/// get my userProfile data
+const getMyUserProfileDataIntoDB = async (
+  id: string
+): Promise<UserProfile | null> => {
+  const result = await prisma.userProfile.findUnique({
+    where: {
+      id,
+      isDeleted: false,
+    },
+    include: {
+      user: true,
+    },
+  });
+  return result;
+};
+
+//// update user profile
+const updateMyProfileIntoDB = async (authUser: any, req: Request) => {
+  const userData = await prisma.user.findUnique({
+    where: {
+      id: authUser.userId,
+      status: UserStatus.ACTIVE,
+    },
+  });
+  if (!userData) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "User does not exists!");
+  }
+
+  const file = req.file as IUploadFile;
+  if (file) {
+    const uploadedProfileImage = await FileUploadHelper.uploadToCloudinary(
+      file
+    );
+    req.body.profilePhoto = uploadedProfileImage?.secure_url;
+  }
+
+  let profileData;
+  profileData = await prisma.userProfile.update({
+    where: {
+      userId: userData?.id,
+    },
+    data: req.body,
+  });
   return { ...profileData, ...userData };
 };
 
@@ -176,4 +224,6 @@ export const userServices = {
   getSingleBuyerIntoDB,
   updateSingleBuyerIntoDB,
   getMyProfileIntoDB,
+  getMyUserProfileDataIntoDB,
+  updateMyProfileIntoDB,
 };
