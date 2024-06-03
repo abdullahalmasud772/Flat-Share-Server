@@ -25,6 +25,7 @@ const createUser = catchAsync(
   }
 );
 
+/// seller 
 const getSeller = catchAsync(async (req: Request, res: Response) => {
   const result = await userServices.getSellerIntoDB();
   sendResponse(res, {
@@ -48,12 +49,22 @@ const getSingleSeller = catchAsync(async (req: Request, res: Response) => {
 
 const updateSingleSeller = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await userServices.getSingleSellerIntoDB(id);
-  console.log(result);
+  const result = await userServices.updateSingleSellerIntoDB(id,req.body);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Get single seller successfullay!",
+    message: "Update single seller successfullay!",
+    data: result,
+  });
+});
+
+//// buyer
+const getBuyer = catchAsync(async (req: Request, res: Response) => {
+  const result = await userServices.getBuyerIntoDB();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Get all buyer successfullay!",
     data: result,
   });
 });
@@ -69,16 +80,6 @@ const getSingleBuyer = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getBuyer = catchAsync(async (req: Request, res: Response) => {
-  const result = await userServices.getBuyerIntoDB();
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Get all buyer successfullay!",
-    data: result,
-  });
-});
-
 const updateSingleBuyer = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await userServices.updateSingleBuyerIntoDB(id, req.body);
@@ -90,6 +91,7 @@ const updateSingleBuyer = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+/// get me
 const getMyProfile = catchAsync(async (req: Request, res: Response) => {
   const user = req.user;
   const result = await userServices.getMyProfileIntoDB(user);

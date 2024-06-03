@@ -27,6 +27,18 @@ router.get(
   UserControllers.getSingleSeller
 );
 
+router.patch(
+  "/seller/:id",
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  UserControllers.updateSingleSeller
+);
+
+router.get(
+  "/buyer",
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  UserControllers.getBuyer
+);
+
 router.get(
   "/buyer/:id",
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
@@ -39,11 +51,7 @@ router.patch(
   UserControllers.updateSingleBuyer
 );
 
-router.get(
-  "/buyer",
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  UserControllers.getBuyer
-);
+
 
 router.get(
   "/me",

@@ -51,6 +51,7 @@ const createUserIntoDB = async (req: Request) => {
   return result;
 };
 
+/////// seller 
 const getSellerIntoDB = async () => {
   const result = await prisma.user.findMany({
     where: {
@@ -75,19 +76,29 @@ const getSingleSellerIntoDB = async (id: string): Promise<User | null> => {
   return result;
 };
 
-const updateSingleSellerIntoDB = async () => {
-  ///
-};
-const updateSingleBuyerIntoDB = async (
+const updateSingleSellerIntoDB = async (
   id: string,
   payload: Partial<IAdminUpdate>
 ): Promise<User | null> => {
-  console.log(payload);
   const result = await prisma.user.update({
     where: {
       id,
     },
     data: payload,
+  });
+  return result;
+};
+
+
+/////  buyer 
+const getBuyerIntoDB = async () => {
+  const result = await prisma.user.findMany({
+    where: {
+      role: "BUYER",
+    },
+    include: {
+      userProfile: true,
+    },
   });
   return result;
 };
@@ -104,18 +115,20 @@ const getSingleBuyerIntoDB = async (id: string): Promise<User | null> => {
   return result;
 };
 
-const getBuyerIntoDB = async () => {
-  const result = await prisma.user.findMany({
+const updateSingleBuyerIntoDB = async (
+  id: string,
+  payload: Partial<IAdminUpdate>
+): Promise<User | null> => {
+  const result = await prisma.user.update({
     where: {
-      role: "BUYER",
+      id,
     },
-    include: {
-      userProfile: true,
-    },
+    data: payload,
   });
   return result;
 };
 
+//// get Me
 const getMyProfileIntoDB = async (authUser: any) => {
   const userData = await prisma.user.findUnique({
     where: {
