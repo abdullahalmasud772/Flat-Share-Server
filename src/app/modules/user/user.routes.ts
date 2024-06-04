@@ -90,4 +90,16 @@ router.patch(
   }
 );
 
+/// update every userProfile data
+router.patch(
+  "/:id",
+  auth(
+    ENUM_USER_ROLE.SUPER_ADMIN,
+    ENUM_USER_ROLE.ADMIN,
+    ENUM_USER_ROLE.BUYER,
+    ENUM_USER_ROLE.SELLER
+  ),
+  UserControllers.updateEveryUserProfileData
+);
+
 export const UserRoutes = router;

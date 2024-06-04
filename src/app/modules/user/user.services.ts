@@ -7,6 +7,7 @@ import { FileUploadHelper } from "../../../helpers/fileUploadHelper";
 import ApiError from "../../../errors/ApiError";
 import httpStatus from "http-status";
 import { ENUM_USER_ROLE } from "../../../enums/user";
+import { IUserProfileDataUpdate } from "./user.constants";
 
 export type IAdminUpdate = {
   role: ENUM_USER_ROLE;
@@ -41,6 +42,8 @@ const createUserIntoDB = async (req: Request) => {
       data: {
         userId: newUser.id,
         name: req.body.user.name,
+        contactNumber: Number(req.body.user.contactNumber),
+        gender: req.body.user.gender,
         profession: req.body.user.profession,
         address: req.body.user.address,
         profilePhoto: req.body.user.profilePhoto,
@@ -178,9 +181,6 @@ const getMyUserProfileDataIntoDB = async (
       id,
       isDeleted: false,
     },
-    include: {
-      user: true,
-    },
   });
   return result;
 };
@@ -215,6 +215,30 @@ const updateMyProfileIntoDB = async (authUser: any, req: Request) => {
   return { ...profileData, ...userData };
 };
 
+const updateEveryUserProfileDataIntoDB = async (
+  id: string,
+  payload: Partial<IUserProfileDataUpdate>
+) /* : Promise<UserProfile | null> */ => {
+  const { ...userProfileData } = payload;
+  console.log("doctorData", userProfileData);
+  const result = await prisma.$transaction(async (transactionClient) => {
+    const res = await transactionClient.userProfile.update({
+      where: {
+        id,
+      },
+      data: userProfileData,
+    });
+    if (!res) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        "Unable to update userProfile data!"
+      );
+    }
+    return res;
+  });
+  return result;
+};
+
 export const userServices = {
   createUserIntoDB,
   getSellerIntoDB,
@@ -226,4 +250,5 @@ export const userServices = {
   getMyProfileIntoDB,
   getMyUserProfileDataIntoDB,
   updateMyProfileIntoDB,
+  updateEveryUserProfileDataIntoDB,
 };
