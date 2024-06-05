@@ -4,11 +4,7 @@ import prisma from "../../../shared/prisma";
 import { Booking, UserRole } from "@prisma/client";
 
 const createBookingIntoDB = async (req: Request) => {
-  //const token = req.headers.authorization;
-  //const decoded = jwt.decode(token as string);
-  // const { id } = decoded as JwtPayload;
   const userId = req?.user?.userId;
-  console.log(req.body.userId);
 
   await prisma.flat.findUniqueOrThrow({
     where: {

@@ -52,43 +52,40 @@ const changePasswordIntoDB = async (
   user: JwtPayload | null,
   payload: IChangePassword
 ): Promise<void> => {
-  console.log(user, payload);
   const { oldPassword, newPassword } = payload;
 
   const isUserExist = await prisma.user.findUnique({
-      where: {
-          id: user?.userId,
-          status: UserStatus.ACTIVE
-      }
+    where: {
+      id: user?.userId,
+      status: UserStatus.ACTIVE,
+    },
   });
 
   if (!isUserExist) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
+    throw new ApiError(httpStatus.NOT_FOUND, "User does not exist");
   }
 
   // checking old password
   if (
-      isUserExist.password &&
-      !(await AuthUtils.comparePasswords(oldPassword, isUserExist.password))
+    isUserExist.password &&
+    !(await AuthUtils.comparePasswords(oldPassword, isUserExist.password))
   ) {
-      throw new ApiError(httpStatus.UNAUTHORIZED, 'Old Password is incorrect');
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Old Password is incorrect");
   }
-
-
 
   const hashPassword = await hashedPassword(newPassword);
 
   await prisma.user.update({
-      where: {
-          id: isUserExist.id
-      },
-      data: {
-          password: hashPassword,
-      }
-  })
+    where: {
+      id: isUserExist.id,
+    },
+    data: {
+      password: hashPassword,
+    },
+  });
 };
 
 export const AuthServices = {
   loginUserIntoDB,
-  changePasswordIntoDB
+  changePasswordIntoDB,
 };

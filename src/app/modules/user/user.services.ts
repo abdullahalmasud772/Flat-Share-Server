@@ -146,8 +146,6 @@ const getMyProfileIntoDB = async (authUser: any) => {
     },
   });
 
-  console.log("userData", userData);
-
   let profileData;
   if (userData?.role === UserRole.ADMIN) {
     profileData = await prisma.userProfile.findUnique({
@@ -168,7 +166,6 @@ const getMyProfileIntoDB = async (authUser: any) => {
       },
     });
   }
-  console.log({ ...profileData });
   return { ...profileData, userData };
 };
 
@@ -218,9 +215,8 @@ const updateMyProfileIntoDB = async (authUser: any, req: Request) => {
 const updateEveryUserProfileDataIntoDB = async (
   id: string,
   payload: Partial<IUserProfileDataUpdate>
-) /* : Promise<UserProfile | null> */ => {
+): Promise<UserProfile | null> => {
   const { ...userProfileData } = payload;
-  console.log("doctorData", userProfileData);
   const result = await prisma.$transaction(async (transactionClient) => {
     const res = await transactionClient.userProfile.update({
       where: {

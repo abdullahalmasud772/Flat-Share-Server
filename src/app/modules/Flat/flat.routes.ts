@@ -29,4 +29,6 @@ router.get("/:id", FlatController.getSingleFlat);
 
 router.put("/flats/:flatId", auth(), FlatController.updateFlat);
 
+router.delete("/:id", auth(ENUM_USER_ROLE.ADMIN), FlatController.deleteFlat);
+
 export const FlatRoutes = router;

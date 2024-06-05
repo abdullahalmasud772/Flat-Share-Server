@@ -9,6 +9,8 @@ import { IPaginationOptions } from "../../../interfaces/pagination";
 import { IGenericResponse } from "../../../interfaces/common";
 import { paginationHelper } from "../../../helpers/paginationHelper";
 import { JwtPayload } from "jsonwebtoken";
+import ApiError from "../../../errors/ApiError";
+import httpStatus from "http-status";
 
 interface FlatCreateInput {
   flatName: string | null;
@@ -29,6 +31,16 @@ interface FlatCreateInput {
 const createFlatIntoDB = async (req: Request) => {
   const user = req.user;
   const file = req.file as IUploadFile;
+
+  const existingFlat = await prisma.flat.findUnique({
+    where: {
+      flatName: req.body.flatName,
+    },
+  });
+
+  if (existingFlat) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "This flat you alrady created!");
+  }
 
   if (user?.role === "SELLER") {
     if (file) {
@@ -55,7 +67,6 @@ const createFlatIntoDB = async (req: Request) => {
           flatPhoto: req.body.flatPhoto,
         },
       });
-      console.log(createFlat);
       return createFlat;
     });
     return result;
@@ -68,7 +79,6 @@ const getAllFlatsIntoDB = async (
   filters: IFlatFilterRequest,
   options: IPaginationOptions
 ): Promise<IGenericResponse<Flat[]>> => {
-  console.log(filters);
   const { limit, page, skip } = paginationHelper.calculatePagination(options);
   const { searchTerm, ...filterData } = filters;
   const andConditions = [];
@@ -118,10 +128,6 @@ const getAllFlatsIntoDB = async (
     where: whereConditions,
   });
 
-  // const result = await prisma.flat.findMany({
-  //   where: whereConditions,
-  // });
-
   return {
     meta: {
       total,
@@ -133,7 +139,6 @@ const getAllFlatsIntoDB = async (
 };
 
 const getSellerFlatsIntoDB = async (user: JwtPayload | null) => {
-  console.log(user);
   const result = await prisma.flat.findMany({
     where: {
       userId: user?.userId,
@@ -171,10 +176,20 @@ const updateFlatIntoDB = async (
   return result;
 };
 
+const deleteFlatIntoDB = async (id: string) => {
+  const result = await prisma.flat.delete({
+    where: {
+      id,
+    },
+  });
+  return result;
+};
+
 export const FlatServices = {
   createFlatIntoDB,
   getAllFlatsIntoDB,
   getSellerFlatsIntoDB,
   getSingleFlatIntoDB,
   updateFlatIntoDB,
+  deleteFlatIntoDB,
 };

@@ -50,7 +50,7 @@ model UserProfile {
 
 model Flat {
   id                   String    @id @default(uuid())
-  flatName             String
+  flatName             String    @unique
   userId               String
   squareFeet           Int
   totalBedrooms        Int

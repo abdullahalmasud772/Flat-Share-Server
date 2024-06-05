@@ -6,7 +6,6 @@ import { userServices } from "./user.services";
 
 const createUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    console.log('data', req.body);
     const result = await userServices.createUserIntoDB(req);
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -17,7 +16,7 @@ const createUser = catchAsync(
         name: result?.userProfile.name,
         username: result?.newUser.username,
         email: result?.newUser.email,
-        gender:result?.userProfile?.gender,
+        gender: result?.userProfile?.gender,
         bio: result?.userProfile.bio,
         profession: result?.userProfile.profession,
         address: result?.userProfile.address,
@@ -97,7 +96,6 @@ const updateSingleBuyer = catchAsync(async (req: Request, res: Response) => {
 const getMyProfile = catchAsync(async (req: Request, res: Response) => {
   const user = req.user;
   const result = await userServices.getMyProfileIntoDB(user);
-  console.log("result", result);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -130,20 +128,24 @@ const updateMyProfile = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-
-//// update user profile data 
-const updateEveryUserProfileData = catchAsync(async(req: Request, res:Response)=>{
-  const { id } = req.params;
-  const payload = req.body;
-  const { ...doctorData } = payload;
-  const result = await userServices.updateEveryUserProfileDataIntoDB(id, doctorData);
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Update userProfile data fetched!",
-    data: result,
-  });
-})
+//// update user profile data
+const updateEveryUserProfileData = catchAsync(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const payload = req.body;
+    const { ...doctorData } = payload;
+    const result = await userServices.updateEveryUserProfileDataIntoDB(
+      id,
+      doctorData
+    );
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Update userProfile data fetched!",
+      data: result,
+    });
+  }
+);
 
 export const UserControllers = {
   createUser,
@@ -156,5 +158,5 @@ export const UserControllers = {
   getMyProfile,
   getMyUserProfileData,
   updateMyProfile,
-  updateEveryUserProfileData
+  updateEveryUserProfileData,
 };

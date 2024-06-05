@@ -15,18 +15,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
 const http_status_1 = __importDefault(require("http-status"));
+const routes_1 = __importDefault(require("./app/routes"));
+const globalErrorHandler_1 = __importDefault(require("./app/middlewares/globalErrorHandler"));
 //import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 //import routes from "./app/routes";
 //import cron from "node-cron";
 //import { AppointmentServices } from "./app/modules/appointment/appointment.services";
 //import { errorlogger } from "./shared/logger";
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    origin: ["http://localhost:3000", "http://localhost:3001"],
+    credentials: true,
+}));
 //app.use(cookieParser());
 //parser
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
-//app.use("/api/v1", routes);
+app.use("/api/v1", routes_1.default);
 app.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.status(200).json({
         message: "Assignment-09 Server working....!",
@@ -41,7 +46,7 @@ app.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 //   }
 // });
 //global error handler
-//app.use(globalErrorHandler);
+app.use(globalErrorHandler_1.default);
 //handle not found
 app.use((req, res, next) => {
     res.status(http_status_1.default.NOT_FOUND).json({

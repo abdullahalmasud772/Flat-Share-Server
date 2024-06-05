@@ -9,15 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const catchAsync = (fn) => {
-    return (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-        //  Promise.resolve(fn(req, res, next)).catch((err) => next(err));
-        try {
-            yield fn(req, res, next);
-        }
-        catch (err) {
-            next(err);
-        }
-    });
-};
+const catchAsync = (fn) => (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield fn(req, res, next);
+    }
+    catch (error) {
+        next(error);
+    }
+});
 exports.default = catchAsync;
