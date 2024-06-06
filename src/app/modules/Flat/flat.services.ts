@@ -122,6 +122,7 @@ const getAllFlatsIntoDB = async (
           },
     include: {
       user: true,
+      booking: true,
     },
   });
   const total = await prisma.flat.count({
@@ -151,6 +152,10 @@ const getSingleFlatIntoDB = async (id: string): Promise<Flat | null> => {
   const result = await prisma.flat.findUniqueOrThrow({
     where: {
       id,
+    },
+    include: {
+      user: true,
+      booking: true,
     },
   });
   return result;
