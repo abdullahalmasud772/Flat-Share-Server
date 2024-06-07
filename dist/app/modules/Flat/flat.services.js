@@ -28,9 +28,19 @@ const prisma_1 = __importDefault(require("../../../shared/prisma"));
 const flat_constant_1 = require("./flat.constant");
 const fileUploadHelper_1 = require("../../../helpers/fileUploadHelper");
 const paginationHelper_1 = require("../../../helpers/paginationHelper");
+const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
+const http_status_1 = __importDefault(require("http-status"));
 const createFlatIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;
     const file = req.file;
+    const existingFlat = yield prisma_1.default.flat.findUnique({
+        where: {
+            flatName: req.body.flatName,
+        },
+    });
+    if (existingFlat) {
+        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, "This flat you alrady created!");
+    }
     if ((user === null || user === void 0 ? void 0 : user.role) === "SELLER") {
         if (file) {
             const uploadedProfileImage = yield fileUploadHelper_1.FileUploadHelper.uploadToCloudinary(file);
@@ -53,7 +63,6 @@ const createFlatIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* ()
                     flatPhoto: req.body.flatPhoto,
                 },
             });
-            console.log(createFlat);
             return createFlat;
         }));
         return result;
@@ -63,7 +72,6 @@ const createFlatIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 const getAllFlatsIntoDB = (filters, options) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(filters);
     const { limit, page, skip } = paginationHelper_1.paginationHelper.calculatePagination(options);
     const { searchTerm } = filters, filterData = __rest(filters, ["searchTerm"]);
     const andConditions = [];
@@ -101,14 +109,12 @@ const getAllFlatsIntoDB = (filters, options) => __awaiter(void 0, void 0, void 0
             },
         include: {
             user: true,
+            booking: true,
         },
     });
     const total = yield prisma_1.default.flat.count({
         where: whereConditions,
     });
-    // const result = await prisma.flat.findMany({
-    //   where: whereConditions,
-    // });
     return {
         meta: {
             total,
@@ -119,7 +125,6 @@ const getAllFlatsIntoDB = (filters, options) => __awaiter(void 0, void 0, void 0
     };
 });
 const getSellerFlatsIntoDB = (user) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(user);
     const result = yield prisma_1.default.flat.findMany({
         where: {
             userId: user === null || user === void 0 ? void 0 : user.userId,
@@ -132,6 +137,10 @@ const getSingleFlatIntoDB = (id) => __awaiter(void 0, void 0, void 0, function* 
         where: {
             id,
         },
+        include: {
+            user: true,
+            /* booking: true, */
+        },
     });
     return result;
 });
@@ -141,11 +150,20 @@ const updateFlatIntoDB = (flatId, data) => __awaiter(void 0, void 0, void 0, fun
             id: flatId,
         },
     });
+    console.log(data);
     const result = yield prisma_1.default.flat.update({
         where: {
             id: flatId,
         },
         data,
+    });
+    return result;
+});
+const deleteFlatIntoDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma_1.default.flat.delete({
+        where: {
+            id,
+        },
     });
     return result;
 });
@@ -155,4 +173,5 @@ exports.FlatServices = {
     getSellerFlatsIntoDB,
     getSingleFlatIntoDB,
     updateFlatIntoDB,
+    deleteFlatIntoDB,
 };

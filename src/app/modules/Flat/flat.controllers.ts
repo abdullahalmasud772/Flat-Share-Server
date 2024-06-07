@@ -54,8 +54,8 @@ const getSingleFlat = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateFlat = catchAsync(async (req: Request, res: Response) => {
-  const { flatId } = req.params;
-  const result = await FlatServices.updateFlatIntoDB(flatId, req.body);
+  const { id } = req.params;
+  const result = await FlatServices.updateFlatIntoDB(id, req.body);
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,

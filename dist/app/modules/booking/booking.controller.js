@@ -36,6 +36,15 @@ const getBooking = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
         data: result,
     });
 }));
+const getSingleBooking = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield booking_services_1.BookingServices.getSingleBookingIntoDB(req);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "Get single booking retrieved successfully",
+        data: result,
+    });
+}));
 const updateBookingStatus = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { bookingId } = req.params;
     const result = yield booking_services_1.BookingServices.updateBookingStatusIntoDB(bookingId, req.body);
@@ -49,5 +58,6 @@ const updateBookingStatus = (0, catchAsync_1.default)((req, res) => __awaiter(vo
 exports.BookingController = {
     createBooking,
     getBooking,
+    getSingleBooking,
     updateBookingStatus,
 };

@@ -1,6 +1,6 @@
 import { Request } from "express";
 import prisma from "../../../shared/prisma";
-import { Flat, Prisma } from "@prisma/client";
+import { Booking, Flat, Prisma } from "@prisma/client";
 import { flatSearchableFields } from "./flat.constant";
 import { IUploadFile } from "../../../interfaces/file";
 import { FileUploadHelper } from "../../../helpers/fileUploadHelper";
@@ -26,6 +26,23 @@ interface FlatCreateInput {
   advanceAmount: number | null;
   availability: Boolean;
   flatPhoto: string | null;
+}
+
+interface IUpdateFlat {
+  flatName: string | null | undefined;
+  userId: string | null | undefined;
+  squareFeet: number | null | undefined;
+  totalBedrooms: number | null | undefined;
+  totalRooms: number | null | undefined;
+  utilitiesDescription: string | null | undefined;
+  location: String | null | undefined;
+  description: String | null | undefined;
+  amenities: String | null | undefined;
+  rent: number | null | undefined;
+  advanceAmount?: number | null | undefined;
+  availability?: Boolean | undefined;
+  flatPhoto?: string | null | undefined;
+  booking?: Booking;
 }
 
 const createFlatIntoDB = async (req: Request) => {
@@ -155,7 +172,7 @@ const getSingleFlatIntoDB = async (id: string): Promise<Flat | null> => {
     },
     include: {
       user: true,
-      booking: true,
+      /* booking: true, */
     },
   });
   return result;
@@ -171,6 +188,7 @@ const updateFlatIntoDB = async (
     },
   });
 
+  console.log(data);
   const result = await prisma.flat.update({
     where: {
       id: flatId,

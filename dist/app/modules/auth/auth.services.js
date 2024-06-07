@@ -44,33 +44,32 @@ const loginUserIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function*
     };
 });
 const changePasswordIntoDB = (user, payload) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(user, payload);
     const { oldPassword, newPassword } = payload;
     const isUserExist = yield prisma_1.default.user.findUnique({
         where: {
             id: user === null || user === void 0 ? void 0 : user.userId,
-            status: client_1.UserStatus.ACTIVE
-        }
+            status: client_1.UserStatus.ACTIVE,
+        },
     });
     if (!isUserExist) {
-        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'User does not exist');
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, "User does not exist");
     }
     // checking old password
     if (isUserExist.password &&
         !(yield auth_utils_1.AuthUtils.comparePasswords(oldPassword, isUserExist.password))) {
-        throw new ApiError_1.default(http_status_1.default.UNAUTHORIZED, 'Old Password is incorrect');
+        throw new ApiError_1.default(http_status_1.default.UNAUTHORIZED, "Old Password is incorrect");
     }
     const hashPassword = yield (0, hashPasswordHelper_1.hashedPassword)(newPassword);
     yield prisma_1.default.user.update({
         where: {
-            id: isUserExist.id
+            id: isUserExist.id,
         },
         data: {
             password: hashPassword,
-        }
+        },
     });
 });
 exports.AuthServices = {
     loginUserIntoDB,
-    changePasswordIntoDB
+    changePasswordIntoDB,
 };

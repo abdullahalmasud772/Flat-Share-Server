@@ -76,6 +76,10 @@ const getBookingIntoDB = async (req: Request) => {
   return result;
 };
 
+const getSingleBookingIntoDB = async (req: Request) => {
+  ///
+};
+
 const updateBookingStatusIntoDB = async (
   bookingId: string,
   data: Partial<Booking>
@@ -98,5 +102,6 @@ const updateBookingStatusIntoDB = async (
 export const BookingServices = {
   createBookingIntoDB,
   getBookingIntoDB,
+  getSingleBookingIntoDB,
   updateBookingStatusIntoDB,
 };

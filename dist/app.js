@@ -24,7 +24,7 @@ const globalErrorHandler_1 = __importDefault(require("./app/middlewares/globalEr
 //import { errorlogger } from "./shared/logger";
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: ["http://localhost:3000", "http://localhost:3001"],
+    origin: ["http://localhost:3000", "https://assignment09-client.vercel.app"],
     credentials: true,
 }));
 //app.use(cookieParser());
@@ -37,14 +37,6 @@ app.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         message: "Assignment-09 Server working....!",
     });
 }));
-// Schedule to run every minute
-// cron.schedule("* * * * *", async (): Promise<void> => {
-//   try {
-//     await AppointmentServices.cancelUnpaidAppointments();
-//   } catch (error) {
-//     // errorlogger.error(error);
-//   }
-// });
 //global error handler
 app.use(globalErrorHandler_1.default);
 //handle not found

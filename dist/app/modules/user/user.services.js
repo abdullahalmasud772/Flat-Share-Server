@@ -54,6 +54,7 @@ const createUserIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* ()
             data: {
                 userId: newUser.id,
                 name: req.body.user.name,
+                email: req.body.email,
                 contactNumber: Number(req.body.user.contactNumber),
                 gender: req.body.user.gender,
                 profession: req.body.user.profession,
@@ -144,7 +145,6 @@ const getMyProfileIntoDB = (authUser) => __awaiter(void 0, void 0, void 0, funct
             status: true,
         },
     });
-    console.log("userData", userData);
     let profileData;
     if ((userData === null || userData === void 0 ? void 0 : userData.role) === client_1.UserRole.ADMIN) {
         profileData = yield prisma_1.default.userProfile.findUnique({
@@ -167,7 +167,6 @@ const getMyProfileIntoDB = (authUser) => __awaiter(void 0, void 0, void 0, funct
             },
         });
     }
-    console.log(Object.assign({}, profileData));
     return Object.assign(Object.assign({}, profileData), { userData });
 });
 /// get my userProfile data
@@ -207,7 +206,6 @@ const updateMyProfileIntoDB = (authUser, req) => __awaiter(void 0, void 0, void 
 });
 const updateEveryUserProfileDataIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
     const userProfileData = __rest(payload, []);
-    console.log("doctorData", userProfileData);
     const result = yield prisma_1.default.$transaction((transactionClient) => __awaiter(void 0, void 0, void 0, function* () {
         const res = yield transactionClient.userProfile.update({
             where: {

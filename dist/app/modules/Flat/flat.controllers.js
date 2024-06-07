@@ -62,12 +62,22 @@ const getSingleFlat = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
     });
 }));
 const updateFlat = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { flatId } = req.params;
-    const result = yield flat_services_1.FlatServices.updateFlatIntoDB(flatId, req.body);
+    const { id } = req.params;
+    const result = yield flat_services_1.FlatServices.updateFlatIntoDB(id, req.body);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
         message: "Flat information updated successfully",
+        data: result,
+    });
+}));
+const deleteFlat = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield flat_services_1.FlatServices.deleteFlatIntoDB(id);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "Flat deleted successfully",
         data: result,
     });
 }));
@@ -77,4 +87,5 @@ exports.FlatController = {
     getSellerFlats,
     getSingleFlat,
     updateFlat,
+    deleteFlat,
 };

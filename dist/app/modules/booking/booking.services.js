@@ -17,11 +17,7 @@ const prisma_1 = __importDefault(require("../../../shared/prisma"));
 const client_1 = require("@prisma/client");
 const createBookingIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    //const token = req.headers.authorization;
-    //const decoded = jwt.decode(token as string);
-    // const { id } = decoded as JwtPayload;
     const userId = (_a = req === null || req === void 0 ? void 0 : req.user) === null || _a === void 0 ? void 0 : _a.userId;
-    console.log(req.body.userId);
     yield prisma_1.default.flat.findUniqueOrThrow({
         where: {
             id: req.body.flatId,
@@ -84,6 +80,9 @@ const getBookingIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* ()
     }));
     return result;
 });
+const getSingleBookingIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* () {
+    ///
+});
 const updateBookingStatusIntoDB = (bookingId, data) => __awaiter(void 0, void 0, void 0, function* () {
     yield prisma_1.default.booking.findUniqueOrThrow({
         where: {
@@ -101,5 +100,6 @@ const updateBookingStatusIntoDB = (bookingId, data) => __awaiter(void 0, void 0,
 exports.BookingServices = {
     createBookingIntoDB,
     getBookingIntoDB,
+    getSingleBookingIntoDB,
     updateBookingStatusIntoDB,
 };

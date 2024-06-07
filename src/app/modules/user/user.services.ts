@@ -42,6 +42,7 @@ const createUserIntoDB = async (req: Request) => {
       data: {
         userId: newUser.id,
         name: req.body.user.name,
+        email: req.body.email,
         contactNumber: Number(req.body.user.contactNumber),
         gender: req.body.user.gender,
         profession: req.body.user.profession,

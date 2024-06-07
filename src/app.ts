@@ -13,7 +13,7 @@ const app: Application = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:3001"],
+    origin: ["http://localhost:3000", "https://assignment09-client.vercel.app"],
     credentials: true,
   })
 );
@@ -30,15 +30,6 @@ app.get("/", async (req: Request, res: Response) => {
     message: "Assignment-09 Server working....!",
   });
 });
-
-// Schedule to run every minute
-// cron.schedule("* * * * *", async (): Promise<void> => {
-//   try {
-//     await AppointmentServices.cancelUnpaidAppointments();
-//   } catch (error) {
-//     // errorlogger.error(error);
-//   }
-// });
 
 //global error handler
 app.use(globalErrorHandler);

@@ -30,7 +30,6 @@ const http_status_1 = __importDefault(require("http-status"));
 const user_services_1 = require("./user.services");
 const createUser = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    console.log('data', req.body);
     const result = yield user_services_1.userServices.createUserIntoDB(req);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
@@ -113,7 +112,6 @@ const updateSingleBuyer = (0, catchAsync_1.default)((req, res) => __awaiter(void
 const getMyProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;
     const result = yield user_services_1.userServices.getMyProfileIntoDB(user);
-    console.log("result", result);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
@@ -143,7 +141,7 @@ const updateMyProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void 0
         data: result,
     });
 }));
-//// update user profile data 
+//// update user profile data
 const updateEveryUserProfileData = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const payload = req.body;
@@ -167,5 +165,5 @@ exports.UserControllers = {
     getMyProfile,
     getMyUserProfileData,
     updateMyProfile,
-    updateEveryUserProfileData
+    updateEveryUserProfileData,
 };
