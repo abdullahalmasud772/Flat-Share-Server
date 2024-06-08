@@ -28,19 +28,18 @@ const prisma_1 = __importDefault(require("../../../shared/prisma"));
 const flat_constant_1 = require("./flat.constant");
 const fileUploadHelper_1 = require("../../../helpers/fileUploadHelper");
 const paginationHelper_1 = require("../../../helpers/paginationHelper");
-const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
-const http_status_1 = __importDefault(require("http-status"));
 const createFlatIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;
     const file = req.file;
-    const existingFlat = yield prisma_1.default.flat.findUnique({
-        where: {
-            flatName: req.body.flatName,
-        },
-    });
-    if (existingFlat) {
-        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, "This flat you alrady created!");
-    }
+    /*  const existingFlat = await prisma.flat.findUnique({
+       where: {
+         flatName: req.body.flatName,
+       },
+     });
+   
+     if (existingFlat) {
+       throw new ApiError(httpStatus.BAD_REQUEST, "This flat you alrady created!");
+     } */
     if ((user === null || user === void 0 ? void 0 : user.role) === "SELLER") {
         if (file) {
             const uploadedProfileImage = yield fileUploadHelper_1.FileUploadHelper.uploadToCloudinary(file);

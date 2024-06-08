@@ -49,7 +49,7 @@ const createFlatIntoDB = async (req: Request) => {
   const user = req.user;
   const file = req.file as IUploadFile;
 
-  const existingFlat = await prisma.flat.findUnique({
+ /*  const existingFlat = await prisma.flat.findUnique({
     where: {
       flatName: req.body.flatName,
     },
@@ -57,7 +57,7 @@ const createFlatIntoDB = async (req: Request) => {
 
   if (existingFlat) {
     throw new ApiError(httpStatus.BAD_REQUEST, "This flat you alrady created!");
-  }
+  } */
 
   if (user?.role === "SELLER") {
     if (file) {

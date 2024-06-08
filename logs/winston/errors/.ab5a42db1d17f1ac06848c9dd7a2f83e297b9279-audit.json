@@ -6,11 +6,6 @@
     "auditLog": "D:\\Programing\\FullStack\\Assignments\\assignment-09\\assignment-09-server\\logs\\winston\\errors\\.ab5a42db1d17f1ac06848c9dd7a2f83e297b9279-audit.json",
     "files": [
         {
-            "date": 1716625623735,
-            "name": "D:\\Programing\\FullStack\\Assignments\\assignment-09\\assignment-09-server\\logs\\winston\\errors\\phu-2024-25-05-14-error.log",
-            "hash": "5eed29ec1d7f45fa00cfe86dba18d54610d24eba229091c7101447d5aeb99620"
-        },
-        {
             "date": 1716640732125,
             "name": "D:\\Programing\\FullStack\\Assignments\\assignment-09\\assignment-09-server\\logs\\winston\\errors\\phu-2024-25-05-18-error.log",
             "hash": "c8089345830e8fe41b2a3b02b8aaed4b93c01f85cdf3bcc7e669e12724ddf517"
@@ -164,6 +159,16 @@
             "date": 1717677375649,
             "name": "D:\\Programing\\FullStack\\Assignments\\assignment-09\\assignment-09-server\\logs\\winston\\errors\\phu-2024-06-06-18-error.log",
             "hash": "84b044beea67887fc8f9afd4209882aaaeabebed0b73e4bb1a45bc31735e5d52"
+        },
+        {
+            "date": 1717836629266,
+            "name": "D:\\Programing\\FullStack\\Assignments\\assignment-09\\assignment-09-server\\logs\\winston\\errors\\phu-2024-08-06-14-error.log",
+            "hash": "1fb69801045cc97749aa0b93b2b3f6da3b4759080a6adee83accbb5a95ea598f"
+        },
+        {
+            "date": 1717840849578,
+            "name": "D:\\Programing\\FullStack\\Assignments\\assignment-09\\assignment-09-server\\logs\\winston\\errors\\phu-2024-08-06-16-error.log",
+            "hash": "9962e68d827e0b6d2582423deb70c4c8fce7342a290a9130befb2d8d929f5def"
         }
     ],
     "hashType": "sha256"

@@ -14,17 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
-const http_status_1 = __importDefault(require("http-status"));
 const routes_1 = __importDefault(require("./app/routes"));
-const globalErrorHandler_1 = __importDefault(require("./app/middlewares/globalErrorHandler"));
-//import globalErrorHandler from "./app/middlewares/globalErrorHandler";
-//import routes from "./app/routes";
-//import cron from "node-cron";
-//import { AppointmentServices } from "./app/modules/appointment/appointment.services";
-//import { errorlogger } from "./shared/logger";
+const notFound_1 = __importDefault(require("./app/middlewares/notFound"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: ["http://localhost:3000", "https://assignment09-client.vercel.app"],
+    origin: ["https://assignment09-client.vercel.app"],
     credentials: true,
 }));
 //app.use(cookieParser());
@@ -38,19 +32,7 @@ app.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     });
 }));
 //global error handler
-app.use(globalErrorHandler_1.default);
+//app.use(globalErrorHandler);
 //handle not found
-app.use((req, res, next) => {
-    res.status(http_status_1.default.NOT_FOUND).json({
-        success: false,
-        message: "Not Found",
-        errorMessages: [
-            {
-                path: req.originalUrl,
-                message: "API Not Found",
-            },
-        ],
-    });
-    next();
-});
+app.use(notFound_1.default);
 exports.default = app;

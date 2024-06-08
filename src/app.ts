@@ -1,19 +1,14 @@
 import cors from "cors";
-import express, { Application, NextFunction, Request, Response } from "express";
-import httpStatus from "http-status";
+import express, { Application, Request, Response } from "express";
 import router from "./app/routes";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
-//import globalErrorHandler from "./app/middlewares/globalErrorHandler";
-//import routes from "./app/routes";
-//import cron from "node-cron";
-//import { AppointmentServices } from "./app/modules/appointment/appointment.services";
-//import { errorlogger } from "./shared/logger";
+import notFound from "./app/middlewares/notFound";
 
 const app: Application = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://assignment09-client.vercel.app"],
+    origin: ["https://assignment09-client.vercel.app"],
     credentials: true,
   })
 );
@@ -32,21 +27,9 @@ app.get("/", async (req: Request, res: Response) => {
 });
 
 //global error handler
-app.use(globalErrorHandler);
+//app.use(globalErrorHandler);
 
 //handle not found
-app.use((req: Request, res: Response, next: NextFunction) => {
-  res.status(httpStatus.NOT_FOUND).json({
-    success: false,
-    message: "Not Found",
-    errorMessages: [
-      {
-        path: req.originalUrl,
-        message: "API Not Found",
-      },
-    ],
-  });
-  next();
-});
+app.use(notFound);
 
 export default app;
