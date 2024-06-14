@@ -8,10 +8,11 @@ const app: Application = express();
 
 app.use(
   cors({
-    origin: ["https://assignment09-client.vercel.app"],
+    origin: ["https://assignment-09-flat-share-client.vercel.app"],
     credentials: true,
   })
 );
+//app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
 //app.use(cookieParser());
 
 //parser
