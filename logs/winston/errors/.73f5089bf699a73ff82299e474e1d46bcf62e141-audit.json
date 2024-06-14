@@ -6,86 +6,6 @@
     "auditLog": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\.73f5089bf699a73ff82299e474e1d46bcf62e141-audit.json",
     "files": [
         {
-            "date": 1717083799178,
-            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-30-05-21-error.log",
-            "hash": "68cf6ae642bd4868c73c648a7ec4489076d3ea7416d58d107db68b2422801b98"
-        },
-        {
-            "date": 1717087563834,
-            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-30-05-22-error.log",
-            "hash": "3ea9052397429ee8fda27f12b8a9e3cf4bfd75828afafaa157727195938bcd96"
-        },
-        {
-            "date": 1717088731430,
-            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-30-05-23-error.log",
-            "hash": "6160f8beedbcb152400c6f09a2ace2bda632f129f4bc17ecb81f9c6de9498bd1"
-        },
-        {
-            "date": 1717092089236,
-            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-31-05-00-error.log",
-            "hash": "2302b5501ca0a1a02b2442dd5264725243019f900c65cb9ae0afe986b9bee82f"
-        },
-        {
-            "date": 1717095645036,
-            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-31-05-01-error.log",
-            "hash": "a4143902b9802bd21a763ce24c3db115f5c6820d68e66b3f4e20857ed8b4360d"
-        },
-        {
-            "date": 1717099306762,
-            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-31-05-02-error.log",
-            "hash": "7ac3e56139153cfceb5b8f7e1431e3c1d96f504f46f850b1c0e354d44e46154b"
-        },
-        {
-            "date": 1717134958576,
-            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-31-05-11-error.log",
-            "hash": "8e15279dbabc889f25dc4bcb4d150f6157f9d3f646ae183bb66b3d370991b757"
-        },
-        {
-            "date": 1717135271485,
-            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-31-05-12-error.log",
-            "hash": "1f37b79014a567f3f855c74e104dd88f7f742afac32e860fd914c415a4267a49"
-        },
-        {
-            "date": 1717145340382,
-            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-31-05-14-error.log",
-            "hash": "132217966be1b98143ce85ed349cd24573a23f7003b9947e597e72f26fa10bbe"
-        },
-        {
-            "date": 1717146094549,
-            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-31-05-15-error.log",
-            "hash": "571e2445fdbb7e6da73e64345040c21eb11bdc912c8517db8a39989f5c58f7c1"
-        },
-        {
-            "date": 1717149653203,
-            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-31-05-16-error.log",
-            "hash": "429eb7aa706d98b3528fbac1ef460c9e6ae05bdfa0b08b99cf640e4b1f7f2ae8"
-        },
-        {
-            "date": 1717159220948,
-            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-31-05-18-error.log",
-            "hash": "8156415f0b70541a7d197a5e56d48939f89c8c6bdb9d8c5d00d099fcd798c154"
-        },
-        {
-            "date": 1717163269286,
-            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-31-05-19-error.log",
-            "hash": "f8f9abece51dedfd5fe62156f259df22e4184afdc3ad12e95b31a9c23015dc28"
-        },
-        {
-            "date": 1717171530431,
-            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-31-05-22-error.log",
-            "hash": "17bc1f724233eca0f6f6806140295f6a75c9c75408a562aaa1481f60639442ba"
-        },
-        {
-            "date": 1717175583567,
-            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-31-05-23-error.log",
-            "hash": "1c848608a1aea0ffe83935fac53cc20d2f237356a2b987461615af9dec41f60c"
-        },
-        {
-            "date": 1717179693394,
-            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-01-06-00-error.log",
-            "hash": "a85bb119c3494c33537be9ac987e9d645a7a8a02938ace259c5535ac5619259f"
-        },
-        {
             "date": 1717254966508,
             "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-01-06-21-error.log",
             "hash": "f8c07c7cb94e682c4c08780feead2008b714b007e5c3ea326ec8f85d6678bbc6"
@@ -234,6 +154,16 @@
             "date": 1718247182702,
             "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-13-06-08-error.log",
             "hash": "ef7c662ebc654426c5ccd5d7996c48fb4ade1700d449c5f201ec03a363bb46e3"
+        },
+        {
+            "date": 1718363346015,
+            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-14-06-17-error.log",
+            "hash": "af65284626cce61ef5fbe6b2b3e4548ac34ca032ff31619f2fd9c398c355ca66"
+        },
+        {
+            "date": 1718391191421,
+            "name": "D:\\Programing\\Label_2_web_development\\Assignments\\Assignment-09\\assignment09-server\\logs\\winston\\errors\\phu-2024-15-06-00-error.log",
+            "hash": "fd7a248c1ab57bce084a2c5334a00e81ba542e3aa6c3192057c9645b0bd15671"
         }
     ],
     "hashType": "sha256"

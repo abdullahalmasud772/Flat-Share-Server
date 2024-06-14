@@ -3,8 +3,19 @@ import { UserControllers } from "./user.controllers";
 import { FileUploadHelper } from "../../../helpers/fileUploadHelper";
 import { ENUM_USER_ROLE } from "../../../enums/user";
 import auth from "../../middlewares/auth";
+import { UserValidation } from "./user.validation";
 
 const router = Router();
+
+//// Create Admin
+router.post(
+  "/create-admin",
+  /* auth(ENUM_USER_ROLE.ADMIN), */ FileUploadHelper.upload.single("file"),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = UserValidation.createAdmin.parse(JSON.parse(req.body.data));
+    return UserControllers.createAdmin(req, res, next);
+  }
+);
 
 router.post(
   "/",
@@ -85,7 +96,7 @@ router.patch(
   ),
   FileUploadHelper.upload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {
-    req.body = JSON.parse(req.body.data);
+    req.body = JSON.parse(req?.body?.data);
     return UserControllers.updateMyProfile(req, res, next);
   }
 );

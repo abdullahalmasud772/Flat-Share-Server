@@ -27,6 +27,7 @@ exports.AuthControllers = void 0;
 const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
 const auth_services_1 = require("./auth.services");
+const config_1 = __importDefault(require("../../../config"));
 const loginUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield auth_services_1.AuthServices.loginUserIntoDB(req.body);
     (0, sendResponse_1.default)(res, {
@@ -38,6 +39,22 @@ const loginUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void
         },
     });
 }));
+const CreateRefreshToken = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { refreshToken } = req.cookies;
+    const result = yield auth_services_1.AuthServices.createRefreshTokenIntoService(refreshToken);
+    // set refresh token into cookie
+    const cookieOptions = {
+        secure: config_1.default.env === "production",
+        httpOnly: true,
+    };
+    res.cookie("refreshToken", refreshToken, cookieOptions);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        success: true,
+        message: "User logged in successfully !",
+        data: result,
+    });
+}));
 const changePassword = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;
     const passwordData = __rest(req.body, []);
@@ -45,14 +62,15 @@ const changePassword = (0, catchAsync_1.default)((req, res) => __awaiter(void 0,
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         success: true,
-        message: 'Password changed successfully!',
+        message: "Password changed successfully!",
         data: {
             status: 200,
-            message: 'Password changed successfully!',
+            message: "Password changed successfully!",
         },
     });
 }));
 exports.AuthControllers = {
     loginUser,
-    changePassword
+    CreateRefreshToken,
+    changePassword,
 };

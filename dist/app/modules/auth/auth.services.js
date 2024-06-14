@@ -43,6 +43,34 @@ const loginUserIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function*
         refreshToken,
     };
 });
+const createRefreshTokenIntoService = (token) => __awaiter(void 0, void 0, void 0, function* () {
+    //verify token
+    // invalid token - synchronous
+    let verifiedToken = null;
+    try {
+        verifiedToken = jwtHelpers_1.jwtHelpers.verifyToken(token, config_1.default.jwt.jwt_refresh_secret);
+    }
+    catch (err) {
+        throw new ApiError_1.default(http_status_1.default.FORBIDDEN, "Invalid Refresh Token");
+    }
+    const { userId } = verifiedToken;
+    const isUserExist = yield prisma_1.default.user.findUnique({
+        where: {
+            id: userId,
+            status: client_1.UserStatus.ACTIVE,
+        },
+    });
+    if (!isUserExist) {
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, "User does not exist");
+    }
+    const newAccessToken = jwtHelpers_1.jwtHelpers.createToken({
+        userId: isUserExist.id,
+        role: isUserExist.role,
+    }, config_1.default.jwt.jwt_secret, config_1.default.jwt.jwt_secret_expires_in);
+    return {
+        accessToken: newAccessToken,
+    };
+});
 const changePasswordIntoDB = (user, payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { oldPassword, newPassword } = payload;
     const isUserExist = yield prisma_1.default.user.findUnique({
@@ -71,5 +99,6 @@ const changePasswordIntoDB = (user, payload) => __awaiter(void 0, void 0, void 0
 });
 exports.AuthServices = {
     loginUserIntoDB,
+    createRefreshTokenIntoService,
     changePasswordIntoDB,
 };

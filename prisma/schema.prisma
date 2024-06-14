@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,45 +11,81 @@ datasource db {
 }
 
 model User {
-  id          String       @id @default(uuid())
-  username    String       @unique
-  email       String       @unique
-  password    String
-  role        UserRole
-  status      UserStatus   @default(ACTIVE)
-  isDeleted   Boolean      @default(false)
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  booking     Booking[]
-  flat        Flat[]
-  userProfile UserProfile?
+  id        String     @id @default(uuid())
+  email     String     @unique
+  password  String
+  role      UserRole
+  status    UserStatus @default(ACTIVE)
+  isDeleted Boolean    @default(false)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  booking   Booking[]
+  flat      Flat[]
+  admin     Admin?
+  seller    Seller?
+  buyer     Buyer?
 
   @@map("users")
 }
 
-model UserProfile {
-  id            String       @id @default(uuid())
-  userId        String       @unique
-  email         String       @unique
+model Admin {
+  id            String   @id @default(uuid())
   name          String
+  email         String   @unique
+  contactNumber String
+  profilePhoto  String?
+  isDeleted     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  user          User     @relation(fields: [email], references: [email])
+
+  @@map("admins")
+}
+
+model Seller {
+  id            String       @id @default(uuid())
+  name          String
+  email         String       @unique
   bio           String?
   profession    String
+  contactNumber String
   address       String
-  contactNumber Int
   gender        GenderStatus
   profilePhoto  String?
+  averageRating Float        @default(0.0)
   isDeleted     Boolean      @default(false)
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
-  user          User         @relation(fields: [userId], references: [id])
+  user          User         @relation(fields: [email], references: [email])
+  review        Review[]
 
-  @@map("userProfiles")
+  @@map("sellers")
+}
+
+model Buyer {
+  id            String       @id @default(uuid())
+  name          String
+  email         String       @unique
+  bio           String?
+  profession    String
+  contactNumber String
+  address       String
+  gender        GenderStatus
+  profilePhoto  String?
+  averageRating Float        @default(0.0)
+  isDeleted     Boolean      @default(false)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  user          User         @relation(fields: [email], references: [email])
+  review        Review[]
+
+  @@map("buyers")
 }
 
 model Flat {
   id                   String    @id @default(uuid())
   flatName             String    @unique
-  userId               String
+  email                String
   squareFeet           Int
   totalBedrooms        Int
   totalRooms           Int
@@ -67,8 +100,9 @@ model Flat {
   isDeleted            Boolean   @default(false)
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
-  user                 User      @relation(fields: [userId], references: [id])
+  user                 User      @relation(fields: [email], references: [email])
   booking              Booking[]
+  review               Review?
 
   @@map("flats")
 }
@@ -76,15 +110,34 @@ model Flat {
 model Booking {
   id        String        @id @default(uuid())
   flatId    String
-  userId    String
+  email     String
   status    BookingStatus @default(PENDING)
   isDeleted Boolean       @default(false)
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
-  user      User          @relation(fields: [userId], references: [id])
+  user      User          @relation(fields: [email], references: [email])
   flat      Flat          @relation(fields: [flatId], references: [id])
 
   @@map("bookings")
+}
+
+model Review {
+  id       String @id @default(uuid())
+  buyerId  String
+  buyer    Buyer  @relation(fields: [buyerId], references: [id])
+  sellerId String
+  seller   Seller @relation(fields: [sellerId], references: [id])
+
+  flatId String @unique
+  flat   Flat   @relation(fields: [flatId], references: [id])
+
+  rating    Float
+  comment   String
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("reviews")
 }
 
 enum BookingStatus {

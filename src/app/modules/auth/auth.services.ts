@@ -1,7 +1,11 @@
 import httpStatus from "http-status";
 import ApiError from "../../../errors/ApiError";
 import prisma from "../../../shared/prisma";
-import { IChangePassword, ILoginUser } from "./auth.interface";
+import {
+  IChangePassword,
+  ILoginUser,
+  IRefreshTokenResponse,
+} from "./auth.interface";
 import { AuthUtils } from "./auth.utils";
 import { jwtHelpers } from "../../../helpers/jwtHelpers";
 import config from "../../../config";
@@ -48,6 +52,47 @@ const loginUserIntoDB = async (payload: ILoginUser) => {
   };
 };
 
+const createRefreshTokenIntoService = async (
+  token: string
+): Promise<IRefreshTokenResponse> => {
+  //verify token
+  // invalid token - synchronous
+  let verifiedToken = null;
+  try {
+    verifiedToken = jwtHelpers.verifyToken(
+      token,
+      config.jwt.jwt_refresh_secret as Secret
+    );
+  } catch (err) {
+    throw new ApiError(httpStatus.FORBIDDEN, "Invalid Refresh Token");
+  }
+
+  const { userId } = verifiedToken;
+
+  const isUserExist = await prisma.user.findUnique({
+    where: {
+      id: userId,
+      status: UserStatus.ACTIVE,
+    },
+  });
+  if (!isUserExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User does not exist");
+  }
+
+  const newAccessToken = jwtHelpers.createToken(
+    {
+      userId: isUserExist.id,
+      role: isUserExist.role,
+    },
+    config.jwt.jwt_secret as Secret,
+    config.jwt.jwt_secret_expires_in as string
+  );
+
+  return {
+    accessToken: newAccessToken,
+  };
+};
+
 const changePasswordIntoDB = async (
   user: JwtPayload | null,
   payload: IChangePassword
@@ -87,5 +132,6 @@ const changePasswordIntoDB = async (
 
 export const AuthServices = {
   loginUserIntoDB,
+  createRefreshTokenIntoService,
   changePasswordIntoDB,
 };

@@ -18,11 +18,18 @@ const routes_1 = __importDefault(require("./app/routes"));
 const notFound_1 = __importDefault(require("./app/middlewares/notFound"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: ["https://assignment-09-flat-share-client.vercel.app"],
+    origin: [
+        "https://assignment-09-flat-share-client.vercel.app",
+        "https://assignment09-client.vercel.app",
+    ],
     credentials: true,
 }));
-//app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
-//app.use(cookieParser());
+// app.use(
+//   cors({
+//     origin: ["http://localhost:3000", "http://localhost:3001"],
+//     credentials: true,
+//   })
+// );
 //parser
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));

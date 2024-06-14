@@ -8,12 +8,20 @@ const app: Application = express();
 
 app.use(
   cors({
-    origin: ["https://assignment-09-flat-share-client.vercel.app"],
+    origin: [
+      "https://assignment-09-flat-share-client.vercel.app",
+      "https://assignment09-client.vercel.app",
+    ],
     credentials: true,
   })
 );
-//app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
-//app.use(cookieParser());
+
+// app.use(
+//   cors({
+//     origin: ["http://localhost:3000", "http://localhost:3001"],
+//     credentials: true,
+//   })
+// );
 
 //parser
 app.use(express.json());
@@ -28,7 +36,7 @@ app.get("/", async (req: Request, res: Response) => {
 });
 
 //global error handler
-//app.use(globalErrorHandler);
+app.use(globalErrorHandler);
 
 //handle not found
 app.use(notFound);

@@ -1,7 +1,7 @@
 import { Request } from "express";
 import prisma from "../../../shared/prisma";
 import { hashedPassword } from "../../../helpers/hashPasswordHelper";
-import { User, UserProfile, UserRole, UserStatus } from "@prisma/client";
+import { User, UserRole, UserStatus } from "@prisma/client";
 import { IUploadFile } from "../../../interfaces/file";
 import { FileUploadHelper } from "../../../helpers/fileUploadHelper";
 import ApiError from "../../../errors/ApiError";
@@ -12,6 +12,35 @@ import { IUserProfileDataUpdate } from "./user.constants";
 export type IAdminUpdate = {
   role: ENUM_USER_ROLE;
   status: UserStatus;
+};
+
+const createAdminIntoDB = async (req: Request) => {
+  const file = req.file as IUploadFile;
+
+  if (file) {
+    const uploadedProfileImage = await FileUploadHelper.uploadToCloudinary(
+      file
+    );
+    req.body.admin.profilePhoto = uploadedProfileImage?.secure_url;
+  }
+
+  const hashPassword = await hashedPassword(req.body.password);
+  const result = await prisma.$transaction(async (transactionClient) => {
+    const newUser = await transactionClient.user.create({
+      data: {
+        email: req.body.admin.email,
+        password: hashPassword,
+        role: UserRole.ADMIN,
+      },
+    });
+    const newAdmin = await transactionClient.admin.create({
+      data: req.body.admin,
+    });
+
+    return newAdmin;
+  });
+
+  return result;
 };
 
 const createUserIntoDB = async (req: Request) => {
@@ -204,12 +233,31 @@ const updateMyProfileIntoDB = async (authUser: any, req: Request) => {
   }
 
   let profileData;
-  profileData = await prisma.userProfile.update({
-    where: {
-      userId: userData?.id,
-    },
-    data: req.body,
-  });
+  if (userData?.role === UserRole.ADMIN) {
+    profileData = await prisma.userProfile.update({
+      where: {
+        userId: userData?.id,
+      },
+      data: req.body,
+    });
+  } else if (userData?.role === UserRole.SELLER) {
+    profileData = await prisma.userProfile.update({
+      where: {
+        userId: userData?.id,
+      },
+      data: req.body,
+    });
+  } else if (userData?.role === UserRole.BUYER) {
+    profileData = await prisma.userProfile.update({
+      where: {
+        userId: userData?.id,
+      },
+      data: req.body,
+    });
+  }
+
+  console.log(profileData, userData);
+
   return { ...profileData, ...userData };
 };
 
@@ -237,6 +285,8 @@ const updateEveryUserProfileDataIntoDB = async (
 };
 
 export const userServices = {
+  createAdminIntoDB,
+
   createUserIntoDB,
   getSellerIntoDB,
   getSingleSellerIntoDB,

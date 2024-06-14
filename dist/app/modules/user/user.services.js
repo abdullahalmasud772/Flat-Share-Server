@@ -196,12 +196,31 @@ const updateMyProfileIntoDB = (authUser, req) => __awaiter(void 0, void 0, void 
         req.body.profilePhoto = uploadedProfileImage === null || uploadedProfileImage === void 0 ? void 0 : uploadedProfileImage.secure_url;
     }
     let profileData;
-    profileData = yield prisma_1.default.userProfile.update({
-        where: {
-            userId: userData === null || userData === void 0 ? void 0 : userData.id,
-        },
-        data: req.body,
-    });
+    if ((userData === null || userData === void 0 ? void 0 : userData.role) === client_1.UserRole.ADMIN) {
+        profileData = yield prisma_1.default.userProfile.update({
+            where: {
+                userId: userData === null || userData === void 0 ? void 0 : userData.id,
+            },
+            data: req.body,
+        });
+    }
+    else if ((userData === null || userData === void 0 ? void 0 : userData.role) === client_1.UserRole.SELLER) {
+        profileData = yield prisma_1.default.userProfile.update({
+            where: {
+                userId: userData === null || userData === void 0 ? void 0 : userData.id,
+            },
+            data: req.body,
+        });
+    }
+    else if ((userData === null || userData === void 0 ? void 0 : userData.role) === client_1.UserRole.BUYER) {
+        profileData = yield prisma_1.default.userProfile.update({
+            where: {
+                userId: userData === null || userData === void 0 ? void 0 : userData.id,
+            },
+            data: req.body,
+        });
+    }
+    console.log(profileData, userData);
     return Object.assign(Object.assign({}, profileData), userData);
 });
 const updateEveryUserProfileDataIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {

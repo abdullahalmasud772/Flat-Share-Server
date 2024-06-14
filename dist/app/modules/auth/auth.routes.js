@@ -10,7 +10,8 @@ const auth_1 = __importDefault(require("../../middlewares/auth"));
 const user_1 = require("../../../enums/user");
 const router = (0, express_1.Router)();
 router.post("/login", auth_controller_1.AuthControllers.loginUser);
-router.post('/change-password', 
+router.post("/refresh-token", auth_controller_1.AuthControllers.CreateRefreshToken);
+router.post("/change-password", 
 /*   validateRequest(AuthValidation.changePasswordZodSchema), */
 (0, auth_1.default)(user_1.ENUM_USER_ROLE.SUPER_ADMIN, user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_USER_ROLE.BUYER, user_1.ENUM_USER_ROLE.SELLER), auth_controller_1.AuthControllers.changePassword);
 exports.AuthRoutes = router;

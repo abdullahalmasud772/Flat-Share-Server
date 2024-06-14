@@ -4,6 +4,16 @@ import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
 import { userServices } from "./user.services";
 
+const createAdmin = catchAsync(async (req: Request, res: Response) => {
+  const result = await userServices.createAdminIntoDB(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Admin created successfullay!",
+    data: result,
+  });
+});
+
 const createUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const result = await userServices.createUserIntoDB(req);
@@ -14,7 +24,6 @@ const createUser = catchAsync(
       data: {
         id: result?.newUser.id,
         name: result?.userProfile.name,
-        username: result?.newUser.username,
         email: result?.newUser.email,
         gender: result?.userProfile?.gender,
         bio: result?.userProfile.bio,
@@ -133,10 +142,10 @@ const updateEveryUserProfileData = catchAsync(
   async (req: Request, res: Response) => {
     const { id } = req.params;
     const payload = req.body;
-    const { ...doctorData } = payload;
+    const { ...userData } = payload;
     const result = await userServices.updateEveryUserProfileDataIntoDB(
       id,
-      doctorData
+      userData
     );
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -148,6 +157,8 @@ const updateEveryUserProfileData = catchAsync(
 );
 
 export const UserControllers = {
+  createAdmin,
+
   createUser,
   getSeller,
   getSingleSeller,

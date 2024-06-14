@@ -25,7 +25,8 @@ router.get("/me", (0, auth_1.default)(user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_U
 router.get("/me/:id", (0, auth_1.default)(user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_USER_ROLE.BUYER, user_1.ENUM_USER_ROLE.SELLER, user_1.ENUM_USER_ROLE.SUPER_ADMIN), user_controllers_1.UserControllers.getMyUserProfileData);
 //// update my profile
 router.patch("/update-my-profile", (0, auth_1.default)(user_1.ENUM_USER_ROLE.SUPER_ADMIN, user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_USER_ROLE.BUYER, user_1.ENUM_USER_ROLE.SELLER), fileUploadHelper_1.FileUploadHelper.upload.single("file"), (req, res, next) => {
-    req.body = JSON.parse(req.body.data);
+    var _a;
+    req.body = JSON.parse((_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.data);
     return user_controllers_1.UserControllers.updateMyProfile(req, res, next);
 });
 /// update every userProfile data
