@@ -1,7 +1,7 @@
 import { Request } from "express";
 import prisma from "../../../shared/prisma";
 import { hashedPassword } from "../../../helpers/hashPasswordHelper";
-import { User, UserRole, UserStatus } from "@prisma/client";
+import { Admin, Buyer, Seller, User, UserRole, UserStatus } from "@prisma/client";
 import { IUploadFile } from "../../../interfaces/file";
 import { FileUploadHelper } from "../../../helpers/fileUploadHelper";
 import ApiError from "../../../errors/ApiError";
@@ -14,7 +14,7 @@ export type IAdminUpdate = {
   status: UserStatus;
 };
 
-const createAdminIntoDB = async (req: Request) => {
+const createAdminIntoDB = async (req: Request): Promise<Admin> => {
   const file = req.file as IUploadFile;
 
   if (file) {
@@ -43,6 +43,64 @@ const createAdminIntoDB = async (req: Request) => {
   return result;
 };
 
+const createSellerIntoDB = async (req: Request): Promise<Seller> => {
+  const file = req.file as IUploadFile;
+
+  if (file) {
+    const uploadedProfileImage = await FileUploadHelper.uploadToCloudinary(
+      file
+    );
+    req.body.seller.profilePhoto = uploadedProfileImage?.secure_url;
+  }
+
+  const hashPassword = await hashedPassword(req.body.password);
+  const result = await prisma.$transaction(async (transactionClient) => {
+    const newUser = await transactionClient.user.create({
+      data: {
+        email: req.body.seller.email,
+        password: hashPassword,
+        role: UserRole.SELLER,
+      },
+    });
+    const newSeller = await transactionClient.seller.create({
+      data: req.body.seller,
+    });
+
+    return newSeller;
+  });
+
+  return result;
+};
+
+const createBuyerIntoDB = async (req: Request): Promise<Buyer> => {
+  const file = req.file as IUploadFile;
+
+  if (file) {
+    const uploadedProfileImage = await FileUploadHelper.uploadToCloudinary(
+      file
+    );
+    req.body.buyer.profilePhoto = uploadedProfileImage?.secure_url;
+  }
+
+  const hashPassword = await hashedPassword(req.body.password);
+  const result = await prisma.$transaction(async (transactionClient) => {
+    const newUser = await transactionClient.user.create({
+      data: {
+        email: req.body.buyer.email,
+        password: hashPassword,
+        role: UserRole.BUYER,
+      },
+    });
+    const newBuyer = await transactionClient.buyer.create({
+      data: req.body.buyer,
+    });
+
+    return newBuyer;
+  });
+
+  return result;
+};
+
 const createUserIntoDB = async (req: Request) => {
   const file = req.file as IUploadFile;
   const user = req?.user;
@@ -60,7 +118,6 @@ const createUserIntoDB = async (req: Request) => {
   const result = await prisma.$transaction(async (transactionClient) => {
     const newUser = await transactionClient.user.create({
       data: {
-        username: req.body.username,
         email: req.body.email,
         password: hashPassword,
         role: req.body.role,
@@ -284,8 +341,10 @@ const updateEveryUserProfileDataIntoDB = async (
   return result;
 };
 
-export const userServices = {
+export const UserServices = {
   createAdminIntoDB,
+  createSellerIntoDB,
+  createBuyerIntoDB,
 
   createUserIntoDB,
   getSellerIntoDB,

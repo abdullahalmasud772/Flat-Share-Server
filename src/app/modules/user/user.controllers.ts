@@ -2,14 +2,34 @@ import { NextFunction, Request, Response } from "express";
 import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
-import { userServices } from "./user.services";
+import { UserServices } from "./user.services";
 
 const createAdmin = catchAsync(async (req: Request, res: Response) => {
-  const result = await userServices.createAdminIntoDB(req);
+  const result = await UserServices.createAdminIntoDB(req);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "Admin created successfullay!",
+    data: result,
+  });
+});
+
+const createSeller = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserServices.createSellerIntoDB(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Seller created successfullay!",
+    data: result,
+  });
+});
+
+const createBuyer = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserServices.createBuyerIntoDB(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Buyer created successfullay!",
     data: result,
   });
 });
@@ -158,6 +178,8 @@ const updateEveryUserProfileData = catchAsync(
 
 export const UserControllers = {
   createAdmin,
+  createSeller,
+  createBuyer,
 
   createUser,
   getSeller,

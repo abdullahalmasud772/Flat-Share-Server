@@ -10,10 +10,31 @@ const router = Router();
 //// Create Admin
 router.post(
   "/create-admin",
-  /* auth(ENUM_USER_ROLE.ADMIN), */ FileUploadHelper.upload.single("file"),
+  auth(ENUM_USER_ROLE.ADMIN),
+  FileUploadHelper.upload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = UserValidation.createAdmin.parse(JSON.parse(req.body.data));
     return UserControllers.createAdmin(req, res, next);
+  }
+);
+
+//// Create Seller
+router.post(
+  "/create-seller",
+  FileUploadHelper.upload.single("file"),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = UserValidation.createSeller.parse(JSON.parse(req.body.data));
+    return UserControllers.createSeller(req, res, next);
+  }
+);
+
+//// Create Buyer
+router.post(
+  "/create-buyer",
+  FileUploadHelper.upload.single("file"),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = UserValidation.createBuyer.parse(JSON.parse(req.body.data));
+    return UserControllers.createBuyer(req, res, next);
   }
 );
 
