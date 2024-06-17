@@ -25,7 +25,19 @@ const getSingleBuyer = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateSingleBuyer = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await BuyerServices.updateSingleBuyerIntoDB(id, req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Update single buyer successfullay!",
+    data: result,
+  });
+});
+
 export const BuyerControllers = {
   getAllBuyer,
   getSingleBuyer,
+  updateSingleBuyer,
 };

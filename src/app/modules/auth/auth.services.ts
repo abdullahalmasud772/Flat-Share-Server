@@ -16,6 +16,7 @@ import { hashedPassword } from "../../../helpers/hashPasswordHelper";
 const loginUserIntoDB = async (payload: ILoginUser) => {
   const { email, password } = payload;
 
+
   const isUserExist = await prisma.user.findUnique({
     where: {
       email,

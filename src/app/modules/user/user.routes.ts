@@ -38,51 +38,7 @@ router.post(
   }
 );
 
-router.post(
-  "/",
-  FileUploadHelper.upload.single("file"),
-  (req: Request, res: Response, next: NextFunction) => {
-    req.body = JSON.parse(req.body.data);
-    return UserControllers.createUser(req, res, next);
-  }
-);
-
-router.get(
-  "/seller",
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  UserControllers.getSeller
-);
-
-router.get(
-  "/seller/:id",
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  UserControllers.getSingleSeller
-);
-
-router.patch(
-  "/seller/:id",
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  UserControllers.updateSingleSeller
-);
-
-router.get(
-  "/buyer",
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  UserControllers.getBuyer
-);
-
-router.get(
-  "/buyer/:id",
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  UserControllers.getSingleBuyer
-);
-
-router.patch(
-  "/buyer/:id",
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  UserControllers.updateSingleBuyer
-);
-
+//// get my profile
 router.get(
   "/me",
   auth(
@@ -92,18 +48,6 @@ router.get(
     ENUM_USER_ROLE.SUPER_ADMIN
   ),
   UserControllers.getMyProfile
-);
-
-//// get my profileData
-router.get(
-  "/me/:id",
-  auth(
-    ENUM_USER_ROLE.ADMIN,
-    ENUM_USER_ROLE.BUYER,
-    ENUM_USER_ROLE.SELLER,
-    ENUM_USER_ROLE.SUPER_ADMIN
-  ),
-  UserControllers.getMyUserProfileData
 );
 
 //// update my profile
@@ -120,6 +64,34 @@ router.patch(
     req.body = JSON.parse(req?.body?.data);
     return UserControllers.updateMyProfile(req, res, next);
   }
+);
+
+/// Update user status
+router.patch(
+  "/update-user-status/:id",
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.BUYER),
+  UserControllers.updateUserStatus
+);
+
+router.post(
+  "/",
+  FileUploadHelper.upload.single("file"),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body.data);
+    return UserControllers.createUser(req, res, next);
+  }
+);
+
+//// get my profileData
+router.get(
+  "/me/:id",
+  auth(
+    ENUM_USER_ROLE.ADMIN,
+    ENUM_USER_ROLE.BUYER,
+    ENUM_USER_ROLE.SELLER,
+    ENUM_USER_ROLE.SUPER_ADMIN
+  ),
+  UserControllers.getMyUserProfileData
 );
 
 /// update every userProfile data

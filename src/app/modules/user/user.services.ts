@@ -1,7 +1,14 @@
 import { Request } from "express";
 import prisma from "../../../shared/prisma";
 import { hashedPassword } from "../../../helpers/hashPasswordHelper";
-import { Admin, Buyer, Seller, User, UserRole, UserStatus } from "@prisma/client";
+import {
+  Admin,
+  Buyer,
+  Seller,
+  User,
+  UserRole,
+  UserStatus,
+} from "@prisma/client";
 import { IUploadFile } from "../../../interfaces/file";
 import { FileUploadHelper } from "../../../helpers/fileUploadHelper";
 import ApiError from "../../../errors/ApiError";
@@ -9,11 +16,12 @@ import httpStatus from "http-status";
 import { ENUM_USER_ROLE } from "../../../enums/user";
 import { IUserProfileDataUpdate } from "./user.constants";
 
-export type IAdminUpdate = {
+export type IAdminUpdateBuyer = {
   role: ENUM_USER_ROLE;
   status: UserStatus;
 };
 
+/// Create Admin
 const createAdminIntoDB = async (req: Request): Promise<Admin> => {
   const file = req.file as IUploadFile;
 
@@ -42,7 +50,7 @@ const createAdminIntoDB = async (req: Request): Promise<Admin> => {
 
   return result;
 };
-
+/// Create Seller
 const createSellerIntoDB = async (req: Request): Promise<Seller> => {
   const file = req.file as IUploadFile;
 
@@ -72,6 +80,7 @@ const createSellerIntoDB = async (req: Request): Promise<Seller> => {
   return result;
 };
 
+/// Create Buyer
 const createBuyerIntoDB = async (req: Request): Promise<Buyer> => {
   const file = req.file as IUploadFile;
 
@@ -98,6 +107,128 @@ const createBuyerIntoDB = async (req: Request): Promise<Buyer> => {
     return newBuyer;
   });
 
+  return result;
+};
+
+//// get My Profile
+const getMyProfileIntoDB = async (authUser: any) => {
+  const userData = await prisma.user.findUnique({
+    where: {
+      id: authUser.userId,
+      status: UserStatus.ACTIVE,
+    },
+    select: {
+      email: true,
+      role: true,
+      status: true,
+    },
+  });
+
+  let profileData;
+  if (userData?.role === UserRole.ADMIN) {
+    profileData = await prisma.admin.findUnique({
+      where: {
+        email: userData?.email,
+      },
+    });
+  } else if (userData?.role === UserRole.BUYER) {
+    profileData = await prisma.buyer.findUnique({
+      where: {
+        email: userData.email,
+      },
+    });
+  } else if (userData?.role === UserRole.SELLER) {
+    profileData = await prisma.seller.findUnique({
+      where: {
+        email: userData.email,
+      },
+    });
+  }
+  return { ...profileData, ...userData };
+};
+
+//// update my profile
+const updateMyProfileIntoDB = async (authUser: any, req: Request) => {
+  const userData = await prisma.user.findUnique({
+    where: {
+      id: authUser.userId,
+      status: UserStatus.ACTIVE,
+    },
+    select: {
+      email: true,
+      role: true,
+      status: true,
+    },
+  });
+  if (!userData) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "User does not exists!");
+  }
+
+  const file = req.file as IUploadFile;
+  if (file) {
+    const uploadedProfileImage = await FileUploadHelper.uploadToCloudinary(
+      file
+    );
+    req.body.profilePhoto = uploadedProfileImage?.secure_url;
+  }
+
+  let profileData;
+  if (userData?.role === UserRole.ADMIN) {
+    profileData = await prisma.admin.update({
+      where: {
+        email: userData?.email,
+      },
+      data: req.body,
+    });
+  } else if (userData?.role === UserRole.SELLER) {
+    profileData = await prisma.seller.update({
+      where: {
+        email: userData?.email,
+      },
+      data: req.body,
+    });
+  } else if (userData?.role === UserRole.BUYER) {
+    profileData = await prisma.buyer.update({
+      where: {
+        email: userData?.email,
+      },
+      data: req.body,
+    });
+  }
+
+  return { ...profileData, ...userData };
+};
+
+/// Update user (Seller & Buyer)
+const updateUserStatusIntoDB = async (
+  id: string,
+  payload: Partial<IAdminUpdateBuyer>
+) => {
+  const result = await prisma.user.update({
+    where: {
+      id,
+    },
+    select: {
+      email: true,
+      role: true,
+      status: true,
+    },
+    data: payload,
+  });
+
+  return result;
+};
+
+/// get my userProfile data
+const getMyUserProfileDataIntoDB = async (
+  id: string
+): Promise<UserProfile | null> => {
+  const result = await prisma.userProfile.findUnique({
+    where: {
+      id,
+      isDeleted: false,
+    },
+  });
   return result;
 };
 
@@ -141,183 +272,6 @@ const createUserIntoDB = async (req: Request) => {
   return result;
 };
 
-/////// seller
-const getSellerIntoDB = async () => {
-  const result = await prisma.user.findMany({
-    where: {
-      role: "SELLER",
-    },
-    include: {
-      userProfile: true,
-    },
-  });
-  return result;
-};
-
-const getSingleSellerIntoDB = async (id: string): Promise<User | null> => {
-  const result = await prisma.user.findUniqueOrThrow({
-    where: {
-      id,
-    },
-    include: {
-      userProfile: true,
-    },
-  });
-  return result;
-};
-
-const updateSingleSellerIntoDB = async (
-  id: string,
-  payload: Partial<IAdminUpdate>
-): Promise<User | null> => {
-  const result = await prisma.user.update({
-    where: {
-      id,
-    },
-    data: payload,
-  });
-  return result;
-};
-
-/////  buyer
-const getBuyerIntoDB = async () => {
-  const result = await prisma.user.findMany({
-    where: {
-      role: "BUYER",
-    },
-    include: {
-      userProfile: true,
-    },
-  });
-  return result;
-};
-
-const getSingleBuyerIntoDB = async (id: string): Promise<User | null> => {
-  const result = await prisma.user.findUniqueOrThrow({
-    where: {
-      id,
-    },
-    include: {
-      userProfile: true,
-    },
-  });
-  return result;
-};
-
-const updateSingleBuyerIntoDB = async (
-  id: string,
-  payload: Partial<IAdminUpdate>
-): Promise<User | null> => {
-  const result = await prisma.user.update({
-    where: {
-      id,
-    },
-    data: payload,
-  });
-  return result;
-};
-
-//// get Me
-const getMyProfileIntoDB = async (authUser: any) => {
-  const userData = await prisma.user.findUnique({
-    where: {
-      id: authUser.userId,
-      status: UserStatus.ACTIVE,
-    },
-    select: {
-      id: true,
-      email: true,
-      role: true,
-      username: true,
-      status: true,
-    },
-  });
-
-  let profileData;
-  if (userData?.role === UserRole.ADMIN) {
-    profileData = await prisma.userProfile.findUnique({
-      where: {
-        userId: userData?.id,
-      },
-    });
-  } else if (userData?.role === UserRole.BUYER) {
-    profileData = await prisma.userProfile.findUnique({
-      where: {
-        userId: userData.id,
-      },
-    });
-  } else if (userData?.role === UserRole.SELLER) {
-    profileData = await prisma.userProfile.findUnique({
-      where: {
-        userId: userData.id,
-      },
-    });
-  }
-  return { ...profileData, userData };
-};
-
-/// get my userProfile data
-const getMyUserProfileDataIntoDB = async (
-  id: string
-): Promise<UserProfile | null> => {
-  const result = await prisma.userProfile.findUnique({
-    where: {
-      id,
-      isDeleted: false,
-    },
-  });
-  return result;
-};
-
-//// update user profile
-const updateMyProfileIntoDB = async (authUser: any, req: Request) => {
-  const userData = await prisma.user.findUnique({
-    where: {
-      id: authUser.userId,
-      status: UserStatus.ACTIVE,
-    },
-  });
-  if (!userData) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "User does not exists!");
-  }
-
-  const file = req.file as IUploadFile;
-  if (file) {
-    const uploadedProfileImage = await FileUploadHelper.uploadToCloudinary(
-      file
-    );
-    req.body.profilePhoto = uploadedProfileImage?.secure_url;
-  }
-
-  let profileData;
-  if (userData?.role === UserRole.ADMIN) {
-    profileData = await prisma.userProfile.update({
-      where: {
-        userId: userData?.id,
-      },
-      data: req.body,
-    });
-  } else if (userData?.role === UserRole.SELLER) {
-    profileData = await prisma.userProfile.update({
-      where: {
-        userId: userData?.id,
-      },
-      data: req.body,
-    });
-  } else if (userData?.role === UserRole.BUYER) {
-    profileData = await prisma.userProfile.update({
-      where: {
-        userId: userData?.id,
-      },
-      data: req.body,
-    });
-  }
-
-  console.log(profileData, userData);
-
-  return { ...profileData, ...userData };
-};
-
 const updateEveryUserProfileDataIntoDB = async (
   id: string,
   payload: Partial<IUserProfileDataUpdate>
@@ -345,14 +299,9 @@ export const UserServices = {
   createAdminIntoDB,
   createSellerIntoDB,
   createBuyerIntoDB,
+  updateUserStatusIntoDB,
 
   createUserIntoDB,
-  getSellerIntoDB,
-  getSingleSellerIntoDB,
-  updateSingleSellerIntoDB,
-  getBuyerIntoDB,
-  getSingleBuyerIntoDB,
-  updateSingleBuyerIntoDB,
   getMyProfileIntoDB,
   getMyUserProfileDataIntoDB,
   updateMyProfileIntoDB,

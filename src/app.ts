@@ -6,22 +6,22 @@ import notFound from "./app/middlewares/notFound";
 
 const app: Application = express();
 
-app.use(
-  cors({
-    origin: [
-      "https://assignment-09-flat-share-client.vercel.app",
-      "https://assignment09-client.vercel.app",
-    ],
-    credentials: true,
-  })
-);
-
 // app.use(
 //   cors({
-//     origin: ["http://localhost:3000", "http://localhost:3001"],
+//     origin: [
+//       "https://assignment-09-flat-share-client.vercel.app",
+//       "https://assignment09-client.vercel.app",
+//     ],
 //     credentials: true,
 //   })
 // );
+
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "http://localhost:3001"],
+    credentials: true,
+  })
+);
 
 //parser
 app.use(express.json());
