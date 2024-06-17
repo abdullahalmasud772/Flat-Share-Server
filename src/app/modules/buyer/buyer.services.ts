@@ -1,13 +1,5 @@
-import { User, UserStatus } from "@prisma/client";
+import { Buyer, User } from "@prisma/client";
 import prisma from "../../../shared/prisma";
-import { ENUM_USER_ROLE } from "../../../enums/user";
-import { IAuthUser } from "../../../interfaces/common";
-import { JwtPayload } from "jsonwebtoken";
-
-export type IAdminUpdateBuyer = {
-  role: ENUM_USER_ROLE;
-  status: UserStatus;
-};
 
 const getAllBuyerIntoDB = async () => {
   const result = await prisma.buyer.findMany();
@@ -34,13 +26,14 @@ const getSingleBuyerIntoDB = async (id: string) => {
 
 const updateSingleBuyerIntoDB = async (
   id: string,
-  payload: Partial<IAdminUpdateBuyer>,
-): Promise<User | null> => {
-  const result = await prisma.user.update({
+  payload: Partial<Buyer>
+): Promise<Buyer | null> => {
+  const { ...buyerData } = payload;
+  const result = await prisma.buyer.update({
     where: {
       id,
     },
-    data: payload,
+    data: buyerData,
   });
 
   return result;

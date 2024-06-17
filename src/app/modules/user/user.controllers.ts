@@ -64,7 +64,7 @@ const updateMyProfile = catchAsync(async (req: Request, res: Response) => {
 /// Update User Statuus
 const updateUserStatus = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await UserServices.updateUserStatusIntoDB(id,req.body);
+  const result = await UserServices.updateUserStatusIntoDB(id, req.body);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -94,46 +94,13 @@ const createUser = catchAsync(
   }
 );
 
-/// get my userProfile data
-const getMyUserProfileData = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const result = await userServices.getMyUserProfileDataIntoDB(id);
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Get my user profile data fetched!",
-    data: result,
-  });
-});
-
-//// update user profile data
-const updateEveryUserProfileData = catchAsync(
-  async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const payload = req.body;
-    const { ...userData } = payload;
-    const result = await userServices.updateEveryUserProfileDataIntoDB(
-      id,
-      userData
-    );
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: "Update userProfile data fetched!",
-      data: result,
-    });
-  }
-);
-
 export const UserControllers = {
   createAdmin,
   createSeller,
   createBuyer,
+  getMyProfile,
+  updateMyProfile,
   updateUserStatus,
 
   createUser,
-  getMyProfile,
-  getMyUserProfileData,
-  updateMyProfile,
-  updateEveryUserProfileData,
 };

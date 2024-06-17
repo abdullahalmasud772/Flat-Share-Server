@@ -5,6 +5,7 @@ import { FlatRoutes } from "../modules/Flat/flat.routes";
 import { BookingRoutes } from "../modules/booking/booking.routers";
 import { SellerRoutes } from "../modules/seller/seller.routes";
 import { BuyerRoutes } from "../modules/buyer/buyer.routes";
+import { AdminRoutes } from "../modules/admin/admin.routes";
 
 const router = Router();
 
@@ -12,6 +13,10 @@ const modulesRoutes = [
   {
     path: "/user",
     route: UserRoutes,
+  },
+  {
+    path: "/admin",
+    route: AdminRoutes,
   },
   {
     path: "/seller",

@@ -1,11 +1,5 @@
-import { User, UserStatus } from "@prisma/client";
-import { ENUM_USER_ROLE } from "../../../enums/user";
+import { Seller } from "@prisma/client";
 import prisma from "../../../shared/prisma";
-
-export type IAdminUpdateSeller = {
-  role: ENUM_USER_ROLE;
-  status: UserStatus;
-};
 
 const getAllSellerIntoDB = async () => {
   const result = await prisma.seller.findMany({
@@ -36,13 +30,14 @@ const getSingleSellerIntoDB = async (id: string) => {
 
 const updateSingleSellerIntoDB = async (
   id: string,
-  payload: Partial<IAdminUpdateSeller>
-): Promise<User | null> => {
-  const result = await prisma.user.update({
+  payload: Partial<Seller>
+): Promise<Seller | null> => {
+  const { ...sellerData } = payload;
+  const result = await prisma.seller.update({
     where: {
       id,
     },
-    data: payload,
+    data: sellerData,
   });
   return result;
 };

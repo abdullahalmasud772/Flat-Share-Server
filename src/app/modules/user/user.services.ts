@@ -199,7 +199,7 @@ const updateMyProfileIntoDB = async (authUser: any, req: Request) => {
   return { ...profileData, ...userData };
 };
 
-/// Update user (Seller & Buyer)
+/// Update user status (Seller & Buyer)
 const updateUserStatusIntoDB = async (
   id: string,
   payload: Partial<IAdminUpdateBuyer>
@@ -216,19 +216,6 @@ const updateUserStatusIntoDB = async (
     data: payload,
   });
 
-  return result;
-};
-
-/// get my userProfile data
-const getMyUserProfileDataIntoDB = async (
-  id: string
-): Promise<UserProfile | null> => {
-  const result = await prisma.userProfile.findUnique({
-    where: {
-      id,
-      isDeleted: false,
-    },
-  });
   return result;
 };
 
@@ -272,38 +259,14 @@ const createUserIntoDB = async (req: Request) => {
   return result;
 };
 
-const updateEveryUserProfileDataIntoDB = async (
-  id: string,
-  payload: Partial<IUserProfileDataUpdate>
-): Promise<UserProfile | null> => {
-  const { ...userProfileData } = payload;
-  const result = await prisma.$transaction(async (transactionClient) => {
-    const res = await transactionClient.userProfile.update({
-      where: {
-        id,
-      },
-      data: userProfileData,
-    });
-    if (!res) {
-      throw new ApiError(
-        httpStatus.BAD_REQUEST,
-        "Unable to update userProfile data!"
-      );
-    }
-    return res;
-  });
-  return result;
-};
 
 export const UserServices = {
   createAdminIntoDB,
   createSellerIntoDB,
   createBuyerIntoDB,
+  getMyProfileIntoDB,
+  updateMyProfileIntoDB,
   updateUserStatusIntoDB,
 
   createUserIntoDB,
-  getMyProfileIntoDB,
-  getMyUserProfileDataIntoDB,
-  updateMyProfileIntoDB,
-  updateEveryUserProfileDataIntoDB,
 };
