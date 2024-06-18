@@ -73,27 +73,6 @@ const updateUserStatus = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const createUser = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const result = await userServices.createUserIntoDB(req);
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: "User created successfully!",
-      data: {
-        id: result?.newUser.id,
-        name: result?.userProfile.name,
-        email: result?.newUser.email,
-        gender: result?.userProfile?.gender,
-        bio: result?.userProfile.bio,
-        profession: result?.userProfile.profession,
-        address: result?.userProfile.address,
-        profilePhoto: result?.userProfile.profilePhoto,
-      },
-    });
-  }
-);
-
 export const UserControllers = {
   createAdmin,
   createSeller,
@@ -101,6 +80,4 @@ export const UserControllers = {
   getMyProfile,
   updateMyProfile,
   updateUserStatus,
-
-  createUser,
 };

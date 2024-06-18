@@ -65,13 +65,13 @@ const createSellerIntoDB = async (req: Request): Promise<Seller> => {
   const result = await prisma.$transaction(async (transactionClient) => {
     const newUser = await transactionClient.user.create({
       data: {
-        email: req.body.seller.email,
+        email: req.body.prifileData.email,
         password: hashPassword,
         role: UserRole.SELLER,
       },
     });
     const newSeller = await transactionClient.seller.create({
-      data: req.body.seller,
+      data: req.body.prifileData,
     });
 
     return newSeller;
@@ -95,13 +95,13 @@ const createBuyerIntoDB = async (req: Request): Promise<Buyer> => {
   const result = await prisma.$transaction(async (transactionClient) => {
     const newUser = await transactionClient.user.create({
       data: {
-        email: req.body.buyer.email,
+        email: req.body.prifileData.email,
         password: hashPassword,
         role: UserRole.BUYER,
       },
     });
     const newBuyer = await transactionClient.buyer.create({
-      data: req.body.buyer,
+      data: req.body.prifileData,
     });
 
     return newBuyer;
@@ -219,46 +219,6 @@ const updateUserStatusIntoDB = async (
   return result;
 };
 
-const createUserIntoDB = async (req: Request) => {
-  const file = req.file as IUploadFile;
-  const user = req?.user;
-
-  if (file) {
-    const uploadedProfileImage = await FileUploadHelper.uploadToCloudinary(
-      file
-    );
-    req.body.user.profilePhoto = uploadedProfileImage?.secure_url;
-  }
-  if (req.body.role === "ADMIN" && !(user?.role === "ADMIN")) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized!");
-  }
-  const hashPassword = await hashedPassword(req.body.password);
-  const result = await prisma.$transaction(async (transactionClient) => {
-    const newUser = await transactionClient.user.create({
-      data: {
-        email: req.body.email,
-        password: hashPassword,
-        role: req.body.role,
-      },
-    });
-
-    const userProfile = await transactionClient.userProfile.create({
-      data: {
-        userId: newUser.id,
-        name: req.body.user.name,
-        email: req.body.email,
-        contactNumber: Number(req.body.user.contactNumber),
-        gender: req.body.user.gender,
-        profession: req.body.user.profession,
-        address: req.body.user.address,
-        profilePhoto: req.body.user.profilePhoto,
-      },
-    });
-    return { newUser, userProfile };
-  });
-  return result;
-};
-
 
 export const UserServices = {
   createAdminIntoDB,
@@ -267,6 +227,4 @@ export const UserServices = {
   getMyProfileIntoDB,
   updateMyProfileIntoDB,
   updateUserStatusIntoDB,
-
-  createUserIntoDB,
 };

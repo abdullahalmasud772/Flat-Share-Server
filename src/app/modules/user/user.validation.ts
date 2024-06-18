@@ -11,7 +11,7 @@ const createAdmin = z.object({
 
 const createSeller = z.object({
   password: z.string(),
-  seller: z.object({
+  prifileData: z.object({
     name: z.string(),
     email: z.string().email(),
     bio: z.string().optional(),
@@ -24,7 +24,7 @@ const createSeller = z.object({
 
 const createBuyer = z.object({
   password: z.string(),
-  buyer: z.object({
+  prifileData: z.object({
     name: z.string(),
     email: z.string().email(),
     bio: z.string().optional(),

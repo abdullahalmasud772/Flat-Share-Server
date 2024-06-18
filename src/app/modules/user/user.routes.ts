@@ -73,13 +73,4 @@ router.patch(
   UserControllers.updateUserStatus
 );
 
-router.post(
-  "/",
-  FileUploadHelper.upload.single("file"),
-  (req: Request, res: Response, next: NextFunction) => {
-    req.body = JSON.parse(req.body.data);
-    return UserControllers.createUser(req, res, next);
-  }
-);
-
 export const UserRoutes = router;
