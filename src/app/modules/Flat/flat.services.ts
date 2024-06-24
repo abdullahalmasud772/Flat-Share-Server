@@ -1,7 +1,7 @@
 import { Request } from "express";
 import prisma from "../../../shared/prisma";
 import { Booking, Flat, Prisma } from "@prisma/client";
-import { flatSearchableFields } from "./flat.constant";
+import { FlatCreateInput, flatSearchableFields } from "./flat.constant";
 import { IUploadFile } from "../../../interfaces/file";
 import { FileUploadHelper } from "../../../helpers/fileUploadHelper";
 import { IFlatFilterRequest } from "./flat.interface";
@@ -12,44 +12,11 @@ import { JwtPayload } from "jsonwebtoken";
 import ApiError from "../../../errors/ApiError";
 import httpStatus from "http-status";
 
-interface FlatCreateInput {
-  flatName: string | null;
-  userId: string | null;
-  squareFeet: number | null;
-  totalBedrooms: number | null;
-  totalRooms: number | null;
-  utilitiesDescription: string | null;
-  location: String | null;
-  description: String | null;
-  amenities: String | null;
-  rent: number | null;
-  advanceAmount: number | null;
-  availability: Boolean;
-  flatPhoto: string | null;
-}
-
-interface IUpdateFlat {
-  flatName: string | null | undefined;
-  userId: string | null | undefined;
-  squareFeet: number | null | undefined;
-  totalBedrooms: number | null | undefined;
-  totalRooms: number | null | undefined;
-  utilitiesDescription: string | null | undefined;
-  location: String | null | undefined;
-  description: String | null | undefined;
-  amenities: String | null | undefined;
-  rent: number | null | undefined;
-  advanceAmount?: number | null | undefined;
-  availability?: Boolean | undefined;
-  flatPhoto?: string | null | undefined;
-  booking?: Booking;
-}
-
 const createFlatIntoDB = async (req: Request) => {
   const user = req.user;
   const file = req.file as IUploadFile;
 
- /*  const existingFlat = await prisma.flat.findUnique({
+  const existingFlat = await prisma.flat.findUnique({
     where: {
       flatName: req.body.flatName,
     },
@@ -57,7 +24,7 @@ const createFlatIntoDB = async (req: Request) => {
 
   if (existingFlat) {
     throw new ApiError(httpStatus.BAD_REQUEST, "This flat you alrady created!");
-  } */
+  }
 
   if (user?.role === "SELLER") {
     if (file) {
@@ -70,7 +37,7 @@ const createFlatIntoDB = async (req: Request) => {
     const result = await prisma.$transaction(async (transactionClient) => {
       const createFlat: FlatCreateInput = await transactionClient.flat.create({
         data: {
-          userId: user?.userId,
+          email: user?.email,
           flatName: req.body.flatName,
           squareFeet: req.body.squareFeet,
           totalBedrooms: req.body.totalBedrooms,
@@ -159,7 +126,8 @@ const getAllFlatsIntoDB = async (
 const getSellerFlatsIntoDB = async (user: JwtPayload | null) => {
   const result = await prisma.flat.findMany({
     where: {
-      userId: user?.userId,
+      email: user?.email,
+      isDeleted: false,
     },
   });
   return result;
@@ -169,6 +137,7 @@ const getSingleFlatIntoDB = async (id: string): Promise<Flat | null> => {
   const result = await prisma.flat.findUniqueOrThrow({
     where: {
       id,
+      isDeleted: false,
     },
     include: {
       user: true,
@@ -185,10 +154,10 @@ const updateFlatIntoDB = async (
   await prisma.flat.findUniqueOrThrow({
     where: {
       id: flatId,
+      isDeleted: false,
     },
   });
 
-  console.log(data);
   const result = await prisma.flat.update({
     where: {
       id: flatId,
@@ -199,6 +168,18 @@ const updateFlatIntoDB = async (
   return result;
 };
 
+const softDeleteFlatIntoDB = async (id: string) => {
+  const result = await prisma.flat.update({
+    where: {
+      id,
+      isDeleted: false,
+    },
+    data: {
+      isDeleted: true,
+    },
+  });
+  return result;
+};
 const deleteFlatIntoDB = async (id: string) => {
   const result = await prisma.flat.delete({
     where: {
@@ -214,5 +195,6 @@ export const FlatServices = {
   getSellerFlatsIntoDB,
   getSingleFlatIntoDB,
   updateFlatIntoDB,
+  softDeleteFlatIntoDB,
   deleteFlatIntoDB,
 };

@@ -15,21 +15,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
 const routes_1 = __importDefault(require("./app/routes"));
+const globalErrorHandler_1 = __importDefault(require("./app/middlewares/globalErrorHandler"));
 const notFound_1 = __importDefault(require("./app/middlewares/notFound"));
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)({
-    origin: [
-        "https://assignment-09-flat-share-client.vercel.app",
-        "https://assignment09-client.vercel.app",
-    ],
-    credentials: true,
-}));
 // app.use(
 //   cors({
-//     origin: ["http://localhost:3000", "http://localhost:3001"],
+//     origin: [
+//       "https://assignment-09-flat-share-client.vercel.app",
+//       "https://assignment09-client.vercel.app",
+//     ],
 //     credentials: true,
 //   })
 // );
+app.use((0, cors_1.default)({
+    origin: ["http://localhost:3000", "http://localhost:3001"],
+    credentials: true,
+}));
 //parser
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
@@ -40,7 +41,7 @@ app.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     });
 }));
 //global error handler
-//app.use(globalErrorHandler);
+app.use(globalErrorHandler_1.default);
 //handle not found
 app.use(notFound_1.default);
 exports.default = app;

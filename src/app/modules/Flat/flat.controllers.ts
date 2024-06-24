@@ -64,6 +64,16 @@ const updateFlat = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const softDeleteFlat = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await FlatServices.deleteFlatIntoDB(id);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Flat soft deleted successfully",
+    data: result,
+  });
+});
 const deleteFlat = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await FlatServices.deleteFlatIntoDB(id);
@@ -81,5 +91,6 @@ export const FlatController = {
   getSellerFlats,
   getSingleFlat,
   updateFlat,
+  softDeleteFlat,
   deleteFlat,
 };
