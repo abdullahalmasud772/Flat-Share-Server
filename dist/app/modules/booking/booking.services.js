@@ -17,7 +17,8 @@ const prisma_1 = __importDefault(require("../../../shared/prisma"));
 const client_1 = require("@prisma/client");
 const createBookingIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    const userId = (_a = req === null || req === void 0 ? void 0 : req.user) === null || _a === void 0 ? void 0 : _a.userId;
+    // const userId = req?.user?.userId;
+    const email = (_a = req === null || req === void 0 ? void 0 : req.user) === null || _a === void 0 ? void 0 : _a.email;
     yield prisma_1.default.flat.findUniqueOrThrow({
         where: {
             id: req.body.flatId,
@@ -26,7 +27,7 @@ const createBookingIntoDB = (req) => __awaiter(void 0, void 0, void 0, function*
     });
     const findbooking = yield prisma_1.default.booking.count({
         where: {
-            userId: userId,
+            email: email,
             flatId: req.body.flatId,
         },
     });
@@ -35,7 +36,7 @@ const createBookingIntoDB = (req) => __awaiter(void 0, void 0, void 0, function*
         throw new Error("This flat you alrady booked!");
     }
     const flatData = {
-        userId: userId,
+        email: email,
         flatId: req.body.flatId,
     };
     const result = yield prisma_1.default.booking.create({
@@ -45,7 +46,8 @@ const createBookingIntoDB = (req) => __awaiter(void 0, void 0, void 0, function*
 });
 const getBookingIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* () {
     var _b, _c;
-    const userId = (_b = req === null || req === void 0 ? void 0 : req.user) === null || _b === void 0 ? void 0 : _b.userId;
+    // const userId = req?.user?.userId;
+    const email = (_b = req === null || req === void 0 ? void 0 : req.user) === null || _b === void 0 ? void 0 : _b.email;
     const role = (_c = req === null || req === void 0 ? void 0 : req.user) === null || _c === void 0 ? void 0 : _c.role;
     const result = yield prisma_1.default.$transaction((transactionClient) => __awaiter(void 0, void 0, void 0, function* () {
         if (role === client_1.UserRole.ADMIN) {
@@ -56,7 +58,7 @@ const getBookingIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* ()
             const result = yield transactionClient.booking.findMany({
                 where: {
                     flat: {
-                        userId: userId,
+                        email: email,
                     },
                 },
                 include: {
@@ -69,7 +71,7 @@ const getBookingIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* ()
         if (role === client_1.UserRole.BUYER) {
             const result = yield transactionClient.booking.findMany({
                 where: {
-                    userId: userId,
+                    email: email,
                 },
                 include: {
                     flat: true,

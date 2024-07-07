@@ -219,7 +219,6 @@ const updateUserStatusIntoDB = async (
   return result;
 };
 
-
 export const UserServices = {
   createAdminIntoDB,
   createSellerIntoDB,

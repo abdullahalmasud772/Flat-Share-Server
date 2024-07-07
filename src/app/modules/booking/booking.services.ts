@@ -4,7 +4,8 @@ import prisma from "../../../shared/prisma";
 import { Booking, UserRole } from "@prisma/client";
 
 const createBookingIntoDB = async (req: Request) => {
-  const userId = req?.user?.userId;
+  // const userId = req?.user?.userId;
+  const email = req?.user?.email;
 
   await prisma.flat.findUniqueOrThrow({
     where: {
@@ -15,7 +16,7 @@ const createBookingIntoDB = async (req: Request) => {
 
   const findbooking = await prisma.booking.count({
     where: {
-      userId: userId,
+      email: email,
       flatId: req.body.flatId,
     },
   });
@@ -26,7 +27,7 @@ const createBookingIntoDB = async (req: Request) => {
   }
 
   const flatData = {
-    userId: userId,
+    email: email,
     flatId: req.body.flatId,
   };
 
@@ -38,7 +39,8 @@ const createBookingIntoDB = async (req: Request) => {
 };
 
 const getBookingIntoDB = async (req: Request) => {
-  const userId = req?.user?.userId;
+  // const userId = req?.user?.userId;
+  const email = req?.user?.email;
   const role = req?.user?.role;
 
   const result = await prisma.$transaction(async (transactionClient) => {
@@ -50,7 +52,7 @@ const getBookingIntoDB = async (req: Request) => {
       const result = await transactionClient.booking.findMany({
         where: {
           flat: {
-            userId: userId,
+            email: email,
           },
         },
         include: {
@@ -63,7 +65,7 @@ const getBookingIntoDB = async (req: Request) => {
     if (role === UserRole.BUYER) {
       const result = await transactionClient.booking.findMany({
         where: {
-          userId: userId,
+          email: email,
         },
         include: {
           flat: true,

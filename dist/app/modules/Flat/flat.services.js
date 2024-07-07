@@ -28,18 +28,19 @@ const prisma_1 = __importDefault(require("../../../shared/prisma"));
 const flat_constant_1 = require("./flat.constant");
 const fileUploadHelper_1 = require("../../../helpers/fileUploadHelper");
 const paginationHelper_1 = require("../../../helpers/paginationHelper");
+const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
+const http_status_1 = __importDefault(require("http-status"));
 const createFlatIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;
     const file = req.file;
-    /*  const existingFlat = await prisma.flat.findUnique({
-       where: {
-         flatName: req.body.flatName,
-       },
-     });
-   
-     if (existingFlat) {
-       throw new ApiError(httpStatus.BAD_REQUEST, "This flat you alrady created!");
-     } */
+    const existingFlat = yield prisma_1.default.flat.findUnique({
+        where: {
+            flatName: req.body.flatName,
+        },
+    });
+    if (existingFlat) {
+        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, "This flat you alrady created!");
+    }
     if ((user === null || user === void 0 ? void 0 : user.role) === "SELLER") {
         if (file) {
             const uploadedProfileImage = yield fileUploadHelper_1.FileUploadHelper.uploadToCloudinary(file);
@@ -48,7 +49,7 @@ const createFlatIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* ()
         const result = yield prisma_1.default.$transaction((transactionClient) => __awaiter(void 0, void 0, void 0, function* () {
             const createFlat = yield transactionClient.flat.create({
                 data: {
-                    userId: user === null || user === void 0 ? void 0 : user.userId,
+                    email: user === null || user === void 0 ? void 0 : user.email,
                     flatName: req.body.flatName,
                     squareFeet: req.body.squareFeet,
                     totalBedrooms: req.body.totalBedrooms,
@@ -126,7 +127,8 @@ const getAllFlatsIntoDB = (filters, options) => __awaiter(void 0, void 0, void 0
 const getSellerFlatsIntoDB = (user) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma_1.default.flat.findMany({
         where: {
-            userId: user === null || user === void 0 ? void 0 : user.userId,
+            email: user === null || user === void 0 ? void 0 : user.email,
+            isDeleted: false,
         },
     });
     return result;
@@ -135,6 +137,7 @@ const getSingleFlatIntoDB = (id) => __awaiter(void 0, void 0, void 0, function* 
     const result = yield prisma_1.default.flat.findUniqueOrThrow({
         where: {
             id,
+            isDeleted: false,
         },
         include: {
             user: true,
@@ -143,18 +146,35 @@ const getSingleFlatIntoDB = (id) => __awaiter(void 0, void 0, void 0, function* 
     });
     return result;
 });
-const updateFlatIntoDB = (flatId, data) => __awaiter(void 0, void 0, void 0, function* () {
+const updateFlatIntoDB = (flatId, req) => __awaiter(void 0, void 0, void 0, function* () {
     yield prisma_1.default.flat.findUniqueOrThrow({
         where: {
             id: flatId,
+            isDeleted: false,
         },
     });
-    console.log(data);
+    const file = req.file;
+    if (file) {
+        const uploadedProfileImage = yield fileUploadHelper_1.FileUploadHelper.uploadToCloudinary(file);
+        req.body.flatPhoto = uploadedProfileImage === null || uploadedProfileImage === void 0 ? void 0 : uploadedProfileImage.secure_url;
+    }
     const result = yield prisma_1.default.flat.update({
         where: {
             id: flatId,
         },
-        data,
+        data: req.body,
+    });
+    return result;
+});
+const softDeleteFlatIntoDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma_1.default.flat.update({
+        where: {
+            id,
+            isDeleted: false,
+        },
+        data: {
+            isDeleted: true,
+        },
     });
     return result;
 });
@@ -172,5 +192,6 @@ exports.FlatServices = {
     getSellerFlatsIntoDB,
     getSingleFlatIntoDB,
     updateFlatIntoDB,
+    softDeleteFlatIntoDB,
     deleteFlatIntoDB,
 };

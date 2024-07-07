@@ -18,7 +18,12 @@ const app: Application = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:3001"],
+    origin: [
+      "https://assignment-09-flat-share-client.vercel.app",
+      "https://assignment-09-flat-share-client.vercel.app",
+      "http://localhost:3000",
+      "http://localhost:3001",
+    ],
     credentials: true,
   })
 );
@@ -36,7 +41,7 @@ app.get("/", async (req: Request, res: Response) => {
 });
 
 //global error handler
-app.use(globalErrorHandler);
+//app.use(globalErrorHandler);
 
 //handle not found
 app.use(notFound);

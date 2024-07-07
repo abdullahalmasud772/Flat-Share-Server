@@ -18,6 +18,15 @@ router.post("/", (0, auth_1.default)(client_1.UserRole.SELLER), fileUploadHelper
 router.get("/", flat_controllers_1.FlatController.getAllFlats);
 router.get("/seller", (0, auth_1.default)(user_1.ENUM_USER_ROLE.SELLER), flat_controllers_1.FlatController.getSellerFlats);
 router.get("/:id", flat_controllers_1.FlatController.getSingleFlat);
-router.patch("/:id", (0, auth_1.default)(user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_USER_ROLE.SELLER), flat_controllers_1.FlatController.updateFlat);
+router.patch(
+//"/updateFlat",
+"/:id", (0, auth_1.default)(user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_USER_ROLE.SELLER), flat_controllers_1.FlatController.updateFlat
+// FileUploadHelper.upload.single("file"),
+// (req: Request, res: Response, next: NextFunction) => {
+//   req.body = JSON.parse(req?.body?.data);
+//   return FlatController.updateFlat(req, res, next);
+// }
+);
+router.delete("/soft/:id", (0, auth_1.default)(user_1.ENUM_USER_ROLE.ADMIN), flat_controllers_1.FlatController.softDeleteFlat);
 router.delete("/:id", (0, auth_1.default)(user_1.ENUM_USER_ROLE.ADMIN), flat_controllers_1.FlatController.deleteFlat);
 exports.FlatRoutes = router;

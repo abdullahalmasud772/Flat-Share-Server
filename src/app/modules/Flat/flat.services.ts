@@ -149,8 +149,8 @@ const getSingleFlatIntoDB = async (id: string): Promise<Flat | null> => {
 
 const updateFlatIntoDB = async (
   flatId: string,
-  data: Partial<Flat>
-): Promise<Flat> => {
+  req: Request
+) /* : Promise<Flat>  */ => {
   await prisma.flat.findUniqueOrThrow({
     where: {
       id: flatId,
@@ -158,11 +158,19 @@ const updateFlatIntoDB = async (
     },
   });
 
+  const file = req.file as IUploadFile;
+  if (file) {
+    const uploadedProfileImage = await FileUploadHelper.uploadToCloudinary(
+      file
+    );
+    req.body.flatPhoto = uploadedProfileImage?.secure_url;
+  }
+
   const result = await prisma.flat.update({
     where: {
       id: flatId,
     },
-    data,
+    data: req.body,
   });
 
   return result;
