@@ -28,7 +28,7 @@ const app = (0, express_1.default)();
 // );
 app.use((0, cors_1.default)({
     origin: [
-        "https://assignment-09-flat-share-client.vercel.app",
+        "https://assignment09-client.vercel.app",
         "https://assignment-09-flat-share-client.vercel.app",
         "http://localhost:3000",
         "http://localhost:3001",
