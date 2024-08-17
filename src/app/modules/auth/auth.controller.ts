@@ -8,6 +8,13 @@ import config from "../../../config";
 const loginUser = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthServices.loginUserIntoDB(req.body);
 
+  const { refreshToken } = result;
+
+  res.cookie("refreshToken", refreshToken, {
+    secure: false,
+    httpOnly: true,
+  });
+
   sendResponse<ILoginUserResponse>(res, {
     statusCode: 200,
     success: true,
@@ -20,16 +27,15 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
 
 const CreateRefreshToken = catchAsync(async (req: Request, res: Response) => {
   const { refreshToken } = req.cookies;
-
   const result = await AuthServices.createRefreshTokenIntoService(refreshToken);
 
   // set refresh token into cookie
-  const cookieOptions = {
-    secure: config.env === "production",
-    httpOnly: true,
-  };
+  // const cookieOptions = {
+  //   secure: config.env === "production",
+  //   httpOnly: true,
+  // };
 
-  res.cookie("refreshToken", refreshToken, cookieOptions);
+  // res.cookie("refreshToken", refreshToken, cookieOptions);
 
   sendResponse<IRefreshTokenResponse>(res, {
     statusCode: 200,
