@@ -20,7 +20,8 @@ router.get("/seller", (0, auth_1.default)(user_1.ENUM_USER_ROLE.SELLER), flat_co
 router.get("/:id", flat_controllers_1.FlatController.getSingleFlat);
 router.patch(
 //"/updateFlat",
-"/:id", (0, auth_1.default)(user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_USER_ROLE.SELLER), 
+"/:id", 
+//  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SELLER),
 /* FlatController.updateFlat, */
 fileUploadHelper_1.FileUploadHelper.upload.single("file"), (req, res, next) => {
     var _a;
