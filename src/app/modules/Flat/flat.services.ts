@@ -102,8 +102,8 @@ const getAllFlatsIntoDB = async (
       options.sortBy && options.sortOrder
         ? { [options.sortBy]: options.sortOrder }
         : {
-            createdAt: "desc",
-          },
+          createdAt: "desc",
+        },
     include: {
       user: true,
       booking: true,
@@ -134,6 +134,7 @@ const getSellerFlatsIntoDB = async (user: JwtPayload | null) => {
 };
 
 const getSingleFlatIntoDB = async (id: string): Promise<Flat | null> => {
+
   const result = await prisma.flat.findUniqueOrThrow({
     where: {
       id,
@@ -144,6 +145,9 @@ const getSingleFlatIntoDB = async (id: string): Promise<Flat | null> => {
       /* booking: true, */
     },
   });
+
+
+
   return result;
 };
 

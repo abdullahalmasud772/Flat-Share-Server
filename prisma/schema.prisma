@@ -96,6 +96,7 @@ model Flat {
   rent                 Int
   advanceAmount        Int
   availability         Boolean   @default(true)
+  viewFlat             Int       @default(0)
   flatPhoto            String?
   isDeleted            Boolean   @default(false)
   createdAt            DateTime  @default(now())

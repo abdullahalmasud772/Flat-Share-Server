@@ -25,7 +25,9 @@ router.get(
   FlatController.getSellerFlats
 );
 
-router.get("/:id", FlatController.getSingleFlat);
+router.get("/:id", FlatController.getSingleFlat,
+
+);
 
 router.patch(
   //"/updateFlat",

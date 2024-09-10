@@ -20,6 +20,7 @@ const app: Application = express();
 app.use(
   cors({
     origin: [
+      "https://flatshare.vercel.app",
       "https://assignment09-client.vercel.app",
       "https://assignment-09-flat-share-client.vercel.app",
       "http://localhost:3000",
