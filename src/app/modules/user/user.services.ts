@@ -165,12 +165,15 @@ const updateMyProfileIntoDB = async (authUser: any, req: Request) => {
   }
 
   const file = req.file as IUploadFile;
-  if (file) {
-    const uploadedProfileImage = await FileUploadHelper.uploadToCloudinary(
-      file
-    );
-    req.body.profilePhoto = uploadedProfileImage?.secure_url;
-  }
+  // console.log(file, 'masud');
+
+  req.body.profilePhoto = file?.path;
+  // if (file) {
+  //   const uploadedProfileImage = await FileUploadHelper.uploadToCloudinary(
+  //     file
+  //   );
+  //   req.body.profilePhoto = uploadedProfileImage?.secure_url;
+  // }
 
   let profileData;
   if (userData?.role === UserRole.ADMIN) {

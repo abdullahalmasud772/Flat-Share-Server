@@ -142,10 +142,14 @@ const updateMyProfileIntoDB = (authUser, req) => __awaiter(void 0, void 0, void 
         throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, "User does not exists!");
     }
     const file = req.file;
-    if (file) {
-        const uploadedProfileImage = yield fileUploadHelper_1.FileUploadHelper.uploadToCloudinary(file);
-        req.body.profilePhoto = uploadedProfileImage === null || uploadedProfileImage === void 0 ? void 0 : uploadedProfileImage.secure_url;
-    }
+    // console.log(file, 'masud');
+    req.body.profilePhoto = file === null || file === void 0 ? void 0 : file.path;
+    // if (file) {
+    //   const uploadedProfileImage = await FileUploadHelper.uploadToCloudinary(
+    //     file
+    //   );
+    //   req.body.profilePhoto = uploadedProfileImage?.secure_url;
+    // }
     let profileData;
     if ((userData === null || userData === void 0 ? void 0 : userData.role) === client_1.UserRole.ADMIN) {
         profileData = yield prisma_1.default.admin.update({

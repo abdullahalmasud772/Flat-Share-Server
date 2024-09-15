@@ -18,20 +18,9 @@ const routes_1 = __importDefault(require("./app/routes"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const notFound_1 = __importDefault(require("./app/middlewares/notFound"));
 const app = (0, express_1.default)();
-// app.use(
-//   cors({
-//     origin: [
-//       "https://assignment-09-flat-share-client.vercel.app",
-//       "https://assignment09-client.vercel.app",
-//     ],
-//     credentials: true,
-//   })
-// );
 app.use((0, cors_1.default)({
     origin: [
         "https://flatshare.vercel.app",
-        "https://assignment09-client.vercel.app",
-        "https://assignment-09-flat-share-client.vercel.app",
         "http://localhost:3000",
         "http://localhost:3001",
     ],
