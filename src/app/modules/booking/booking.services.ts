@@ -49,7 +49,6 @@ const getBookingIntoDB = async (req: Request) => {
       return result;
     }
     if (role === UserRole.SELLER) {
-
       const result = await transactionClient.booking.findMany({
         where: {
           flat: {
@@ -58,17 +57,13 @@ const getBookingIntoDB = async (req: Request) => {
         },
         include: {
           user: {
-            include:{
-              buyer:true
-            }
+            include: {
+              buyer: true,
+            },
           },
           flat: true,
         },
-      },
-
-
-    
-    );
+      });
       return result;
     }
     if (role === UserRole.BUYER) {
@@ -91,28 +86,58 @@ const getSingleBookingIntoDB = async (req: Request) => {
   ///
 };
 
-const updateBookingStatusIntoDB = async (
-  bookingId: string,
-  data: Partial<Booking>
-): Promise<Booking> => {
-
-  
-
+const updateBookingStatusIntoDB = async (req: Request, bookingId: string) => {
   await prisma.booking.findUniqueOrThrow({
     where: {
       id: bookingId,
     },
   });
 
-  const result = await prisma.booking.update({
-    where: {
-      id: bookingId,
-    },
-    data,
+  const result = await prisma.$transaction(async (transactionClient) => {
+    const email = req?.user?.email;
+
+    const result = await transactionClient.booking?.findMany({
+      where: {
+        flat: {
+          email: email,
+        },
+        flatId: req?.body?.flatId,
+      },
+    });
+
+    if (result?.length > 1) {
+      const filteredResults = result.filter((item) => item.id !== bookingId);
+      const [flatId] = filteredResults.map((item) => item.flatId);
+
+      const updateRejectBooking = await transactionClient.booking?.updateMany({
+        where: {
+          id: { not: bookingId },
+          flatId: flatId,
+        },
+        data: { status: "REJECTED" },
+      });
+    }
+
+    const updateConfirmBooking = await transactionClient.booking?.update({
+      where: {
+        id: bookingId,
+      },
+      data: req?.body?.values,
+    });
+
+    const [flatId] = result?.map((item) => item?.flatId);
+    const updateBookingFlatStatus = await transactionClient.flat?.update({
+      where: {
+        id: flatId,
+      },
+      data: { availability: false },
+    });
+
+    return { updateConfirmBooking, updateBookingFlatStatus };
   });
+
   return result;
 };
-
 
 export const BookingServices = {
   createBookingIntoDB,

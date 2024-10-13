@@ -38,10 +38,9 @@ const getSingleBooking = catchAsync(async (req: Request, res: Response) => {
 const updateBookingStatus = catchAsync(async (req: Request, res: Response) => {
   const { bookingId } = req.params;
   const result = await BookingServices.updateBookingStatusIntoDB(
-    bookingId,
-    req.body
+    req,
+    bookingId
   );
-  console.log(req.body)
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
