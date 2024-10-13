@@ -129,12 +129,14 @@ const getSellerFlatsIntoDB = async (user: JwtPayload | null) => {
       email: user?.email,
       isDeleted: false,
     },
+    include:{
+      booking:true
+    }
   });
   return result;
 };
 
 const getSingleFlatIntoDB = async (id: string): Promise<Flat | null> => {
-
   const result = await prisma.flat.findUniqueOrThrow({
     where: {
       id,
@@ -145,8 +147,6 @@ const getSingleFlatIntoDB = async (id: string): Promise<Flat | null> => {
       /* booking: true, */
     },
   });
-
-
 
   return result;
 };
@@ -192,6 +192,7 @@ const softDeleteFlatIntoDB = async (id: string) => {
   });
   return result;
 };
+
 const deleteFlatIntoDB = async (id: string) => {
   const result = await prisma.flat.delete({
     where: {

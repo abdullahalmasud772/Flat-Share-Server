@@ -41,6 +41,7 @@ const updateBookingStatus = catchAsync(async (req: Request, res: Response) => {
     bookingId,
     req.body
   );
+  console.log(req.body)
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,

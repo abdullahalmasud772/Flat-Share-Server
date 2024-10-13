@@ -20,10 +20,12 @@ router.get(
   BookingController.getSingleBooking
 );
 
-router.put(
-  "/booking-requests/:bookingId",
-  auth(),
+router.patch(
+  "/booking-request/:bookingId",
+ auth(ENUM_USER_ROLE.SELLER),
   BookingController.updateBookingStatus
 );
+
+
 
 export const BookingRoutes = router;

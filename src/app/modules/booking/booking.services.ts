@@ -49,6 +49,7 @@ const getBookingIntoDB = async (req: Request) => {
       return result;
     }
     if (role === UserRole.SELLER) {
+
       const result = await transactionClient.booking.findMany({
         where: {
           flat: {
@@ -56,10 +57,18 @@ const getBookingIntoDB = async (req: Request) => {
           },
         },
         include: {
-          user: true,
+          user: {
+            include:{
+              buyer:true
+            }
+          },
           flat: true,
         },
-      });
+      },
+
+
+    
+    );
       return result;
     }
     if (role === UserRole.BUYER) {
@@ -86,6 +95,9 @@ const updateBookingStatusIntoDB = async (
   bookingId: string,
   data: Partial<Booking>
 ): Promise<Booking> => {
+
+  
+
   await prisma.booking.findUniqueOrThrow({
     where: {
       id: bookingId,
@@ -100,6 +112,7 @@ const updateBookingStatusIntoDB = async (
   });
   return result;
 };
+
 
 export const BookingServices = {
   createBookingIntoDB,

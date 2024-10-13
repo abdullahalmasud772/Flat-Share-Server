@@ -69,7 +69,7 @@ router.patch(
 /// Update user status
 router.patch(
   "/update-user-status/:id",
-  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.BUYER),
+  auth(ENUM_USER_ROLE.ADMIN),
   UserControllers.updateUserStatus
 );
 

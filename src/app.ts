@@ -27,7 +27,7 @@ app.use("/api/v1", router);
 
 app.get("/", async (req: Request, res: Response) => {
   res.status(200).json({
-    message: "Assignment-09 Server working....!",
+    message: "Flat Share Server working....!",
   });
 });
 
