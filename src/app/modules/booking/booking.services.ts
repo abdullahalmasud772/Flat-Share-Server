@@ -133,6 +133,16 @@ const updateBookingStatusIntoDB = async (req: Request, bookingId: string) => {
       data: { availability: false },
     });
 
+    const paymentData = {
+      bookingId: "dfgfdgdf",
+      amount: 5000,
+      transactionId: "gfhgfhfh",
+    };
+
+    const createPaymentData = await transactionClient.payment.create({
+      data: paymentData,
+    });
+
     return { updateConfirmBooking, updateBookingFlatStatus };
   });
 

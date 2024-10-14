@@ -15,6 +15,12 @@ import ApiError from "../../../errors/ApiError";
 import httpStatus from "http-status";
 import { ENUM_USER_ROLE } from "../../../enums/user";
 import { IUserProfileDataUpdate } from "./user.constants";
+import { generateUserId } from "./user.utils";
+// import {
+//   generateAdminId,
+//   generateBuyerId,
+//   generateSellerId,
+// } from "./user.utils";
 
 export type IAdminUpdateBuyer = {
   role: ENUM_USER_ROLE;
@@ -32,10 +38,12 @@ const createAdminIntoDB = async (req: Request): Promise<Admin> => {
     req.body.admin.profilePhoto = uploadedProfileImage?.secure_url;
   }
 
+   const adminId = await generateUserId("admin");
   const hashPassword = await hashedPassword(req.body.password);
   const result = await prisma.$transaction(async (transactionClient) => {
     const newUser = await transactionClient.user.create({
       data: {
+        userId: adminId,
         email: req.body.admin.email,
         password: hashPassword,
         role: UserRole.ADMIN,
@@ -50,6 +58,7 @@ const createAdminIntoDB = async (req: Request): Promise<Admin> => {
 
   return result;
 };
+
 /// Create Seller
 const createSellerIntoDB = async (req: Request): Promise<Seller> => {
   const file = req.file as IUploadFile;
@@ -61,10 +70,12 @@ const createSellerIntoDB = async (req: Request): Promise<Seller> => {
     req.body.seller.profilePhoto = uploadedProfileImage?.secure_url;
   }
 
+  const sellerId = await generateUserId("seller");
   const hashPassword = await hashedPassword(req.body.password);
   const result = await prisma.$transaction(async (transactionClient) => {
     const newUser = await transactionClient.user.create({
       data: {
+        userId: sellerId,
         email: req.body.prifileData.email,
         password: hashPassword,
         role: UserRole.SELLER,
@@ -91,10 +102,13 @@ const createBuyerIntoDB = async (req: Request): Promise<Buyer> => {
     req.body.buyer.profilePhoto = uploadedProfileImage?.secure_url;
   }
 
+  const buyerId = await generateUserId("buyer");
   const hashPassword = await hashedPassword(req.body.password);
+
   const result = await prisma.$transaction(async (transactionClient) => {
     const newUser = await transactionClient.user.create({
       data: {
+        userId: buyerId,
         email: req.body.prifileData.email,
         password: hashPassword,
         role: UserRole.BUYER,
@@ -104,10 +118,10 @@ const createBuyerIntoDB = async (req: Request): Promise<Buyer> => {
       data: req.body.prifileData,
     });
 
-    return newBuyer;
+   return newBuyer;
   });
 
-  return result;
+return result;
 };
 
 //// get My Profile
