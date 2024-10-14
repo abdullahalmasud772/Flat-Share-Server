@@ -2,6 +2,7 @@ import { Request } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import prisma from "../../../shared/prisma";
 import { Booking, UserRole } from "@prisma/client";
+import generateTransactionId from "../payment/payment.utils";
 
 const createBookingIntoDB = async (req: Request) => {
   // const userId = req?.user?.userId;
@@ -109,7 +110,7 @@ const updateBookingStatusIntoDB = async (req: Request, bookingId: string) => {
       const filteredResults = result.filter((item) => item.id !== bookingId);
       const [flatId] = filteredResults.map((item) => item.flatId);
 
-      const updateRejectBooking = await transactionClient.booking?.updateMany({
+      await transactionClient.booking?.updateMany({
         where: {
           id: { not: bookingId },
           flatId: flatId,
@@ -133,17 +134,31 @@ const updateBookingStatusIntoDB = async (req: Request, bookingId: string) => {
       data: { availability: false },
     });
 
+    const flatAmountData = await transactionClient?.flat?.findFirstOrThrow({
+      where: {
+        id: req?.body?.flatId,
+      },
+      select: {
+        advanceAmount: true,
+        rent: true,
+      },
+    });
+
+    const rentWithAdvanceAmount =
+      flatAmountData?.advanceAmount + flatAmountData?.rent;
+
+    const transactionId = await generateTransactionId();
     const paymentData = {
-      bookingId: "dfgfdgdf",
-      amount: 5000,
-      transactionId: "gfhgfhfh",
+      bookingId: bookingId,
+      amount: rentWithAdvanceAmount,
+      transactionId: transactionId,
     };
 
     const createPaymentData = await transactionClient.payment.create({
       data: paymentData,
     });
 
-    return { updateConfirmBooking, updateBookingFlatStatus };
+    return { updateConfirmBooking, updateBookingFlatStatus, createPaymentData };
   });
 
   return result;

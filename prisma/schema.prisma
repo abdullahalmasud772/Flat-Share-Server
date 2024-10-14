@@ -85,7 +85,7 @@ model Buyer {
 
 model Flat {
   id                   String    @id @default(uuid())
-  flatNo               String    
+  flatNo               String    @unique
   flatName             String    @unique
   email                String
   squareFeet           Int

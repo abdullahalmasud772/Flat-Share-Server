@@ -11,14 +11,15 @@ import { paginationHelper } from "../../../helpers/paginationHelper";
 import { JwtPayload } from "jsonwebtoken";
 import ApiError from "../../../errors/ApiError";
 import httpStatus from "http-status";
+import { generateFlatNumber } from "./flat.utils";
 
 const createFlatIntoDB = async (req: Request) => {
-  const user = req.user;
+  const user = req?.user;
   const file = req.file as IUploadFile;
 
   const existingFlat = await prisma.flat.findUnique({
     where: {
-      flatName: req.body.flatName,
+      flatName: req?.body?.flatName,
     },
   });
 
@@ -34,9 +35,11 @@ const createFlatIntoDB = async (req: Request) => {
       req.body.flatPhoto = uploadedProfileImage?.secure_url;
     }
 
+    const flatNo = await generateFlatNumber();
     const result = await prisma.$transaction(async (transactionClient) => {
       const createFlat: FlatCreateInput = await transactionClient.flat.create({
         data: {
+          flatNo: flatNo,
           email: user?.email,
           flatName: req.body.flatName,
           squareFeet: req.body.squareFeet,
@@ -102,8 +105,8 @@ const getAllFlatsIntoDB = async (
       options.sortBy && options.sortOrder
         ? { [options.sortBy]: options.sortOrder }
         : {
-          createdAt: "desc",
-        },
+            createdAt: "desc",
+          },
     include: {
       user: true,
       booking: true,
@@ -129,9 +132,9 @@ const getSellerFlatsIntoDB = async (user: JwtPayload | null) => {
       email: user?.email,
       isDeleted: false,
     },
-    include:{
-      booking:true
-    }
+    include: {
+      booking: true,
+    },
   });
   return result;
 };
@@ -155,6 +158,7 @@ const updateFlatIntoDB = async (
   flatId: string,
   req: Request
 ) /* : Promise<Flat>  */ => {
+  console.log(req.body)
   await prisma.flat.findUniqueOrThrow({
     where: {
       id: flatId,
