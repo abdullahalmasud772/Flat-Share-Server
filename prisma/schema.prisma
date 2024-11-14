@@ -150,7 +150,7 @@ model Payment {
   bookingId         String        @unique
   booking           Booking       @relation(fields: [bookingId], references: [id])
   amount            Float
-  transactionId     String
+  transactionId     String        @unique
   payStatus         PaymentStatus @default(UNPAID)
   paymentGetwayData Json?
   isDeleted         Boolean       @default(false)

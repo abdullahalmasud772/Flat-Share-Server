@@ -16,11 +16,6 @@ import httpStatus from "http-status";
 import { ENUM_USER_ROLE } from "../../../enums/user";
 import { IUserProfileDataUpdate } from "./user.constants";
 import { generateUserId } from "./user.utils";
-// import {
-//   generateAdminId,
-//   generateBuyerId,
-//   generateSellerId,
-// } from "./user.utils";
 
 export type IAdminUpdateBuyer = {
   role: ENUM_USER_ROLE;
