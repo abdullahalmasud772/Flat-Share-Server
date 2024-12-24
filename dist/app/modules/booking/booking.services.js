@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BookingServices = void 0;
 const prisma_1 = __importDefault(require("../../../shared/prisma"));
 const client_1 = require("@prisma/client");
+const payment_utils_1 = __importDefault(require("../payment/payment.utils"));
 const createBookingIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     // const userId = req?.user?.userId;
@@ -62,7 +63,11 @@ const getBookingIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* ()
                     },
                 },
                 include: {
-                    user: true,
+                    user: {
+                        include: {
+                            buyer: true,
+                        },
+                    },
                     flat: true,
                 },
             });
@@ -85,18 +90,68 @@ const getBookingIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* ()
 const getSingleBookingIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* () {
     ///
 });
-const updateBookingStatusIntoDB = (bookingId, data) => __awaiter(void 0, void 0, void 0, function* () {
+const updateBookingStatusIntoDB = (req, bookingId) => __awaiter(void 0, void 0, void 0, function* () {
     yield prisma_1.default.booking.findUniqueOrThrow({
         where: {
             id: bookingId,
         },
     });
-    const result = yield prisma_1.default.booking.update({
-        where: {
-            id: bookingId,
-        },
-        data,
-    });
+    const result = yield prisma_1.default.$transaction((transactionClient) => __awaiter(void 0, void 0, void 0, function* () {
+        var _d, _e, _f, _g, _h, _j, _k, _l, _m;
+        const email = (_d = req === null || req === void 0 ? void 0 : req.user) === null || _d === void 0 ? void 0 : _d.email;
+        const result = yield ((_e = transactionClient.booking) === null || _e === void 0 ? void 0 : _e.findMany({
+            where: {
+                flat: {
+                    email: email,
+                },
+                flatId: (_f = req === null || req === void 0 ? void 0 : req.body) === null || _f === void 0 ? void 0 : _f.flatId,
+            },
+        }));
+        if ((result === null || result === void 0 ? void 0 : result.length) > 1) {
+            const filteredResults = result.filter((item) => item.id !== bookingId);
+            const [flatId] = filteredResults.map((item) => item.flatId);
+            yield ((_g = transactionClient.booking) === null || _g === void 0 ? void 0 : _g.updateMany({
+                where: {
+                    id: { not: bookingId },
+                    flatId: flatId,
+                },
+                data: { status: "REJECTED" },
+            }));
+        }
+        const updateConfirmBooking = yield ((_h = transactionClient.booking) === null || _h === void 0 ? void 0 : _h.update({
+            where: {
+                id: bookingId,
+            },
+            data: (_j = req === null || req === void 0 ? void 0 : req.body) === null || _j === void 0 ? void 0 : _j.values,
+        }));
+        const [flatId] = result === null || result === void 0 ? void 0 : result.map((item) => item === null || item === void 0 ? void 0 : item.flatId);
+        const updateBookingFlatStatus = yield ((_k = transactionClient.flat) === null || _k === void 0 ? void 0 : _k.update({
+            where: {
+                id: flatId,
+            },
+            data: { availability: false },
+        }));
+        const flatAmountData = yield ((_l = transactionClient === null || transactionClient === void 0 ? void 0 : transactionClient.flat) === null || _l === void 0 ? void 0 : _l.findFirstOrThrow({
+            where: {
+                id: (_m = req === null || req === void 0 ? void 0 : req.body) === null || _m === void 0 ? void 0 : _m.flatId,
+            },
+            select: {
+                advanceAmount: true,
+                rent: true,
+            },
+        }));
+        const rentWithAdvanceAmount = (flatAmountData === null || flatAmountData === void 0 ? void 0 : flatAmountData.advanceAmount) + (flatAmountData === null || flatAmountData === void 0 ? void 0 : flatAmountData.rent);
+        const transactionId = yield (0, payment_utils_1.default)();
+        const paymentData = {
+            bookingId: bookingId,
+            amount: rentWithAdvanceAmount,
+            transactionId: transactionId,
+        };
+        const createPaymentData = yield transactionClient.payment.create({
+            data: paymentData,
+        });
+        return { updateConfirmBooking, updateBookingFlatStatus, createPaymentData };
+    }));
     return result;
 });
 exports.BookingServices = {

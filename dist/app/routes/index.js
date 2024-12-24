@@ -8,6 +8,7 @@ const booking_routers_1 = require("../modules/booking/booking.routers");
 const seller_routes_1 = require("../modules/seller/seller.routes");
 const buyer_routes_1 = require("../modules/buyer/buyer.routes");
 const admin_routes_1 = require("../modules/admin/admin.routes");
+const payment_routes_1 = require("../modules/payment/payment.routes");
 const router = (0, express_1.Router)();
 const modulesRoutes = [
     {
@@ -37,6 +38,10 @@ const modulesRoutes = [
     {
         path: "/booking",
         route: booking_routers_1.BookingRoutes,
+    },
+    {
+        path: "/payment",
+        route: payment_routes_1.PaymentRoutes,
     },
 ];
 modulesRoutes.forEach((route) => router.use(route.path, route.route));

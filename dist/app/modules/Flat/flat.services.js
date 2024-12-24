@@ -30,12 +30,14 @@ const fileUploadHelper_1 = require("../../../helpers/fileUploadHelper");
 const paginationHelper_1 = require("../../../helpers/paginationHelper");
 const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
 const http_status_1 = __importDefault(require("http-status"));
+const flat_utils_1 = require("./flat.utils");
 const createFlatIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = req.user;
+    var _a;
+    const user = req === null || req === void 0 ? void 0 : req.user;
     const file = req.file;
     const existingFlat = yield prisma_1.default.flat.findUnique({
         where: {
-            flatName: req.body.flatName,
+            flatName: (_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.flatName,
         },
     });
     if (existingFlat) {
@@ -46,9 +48,11 @@ const createFlatIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* ()
             const uploadedProfileImage = yield fileUploadHelper_1.FileUploadHelper.uploadToCloudinary(file);
             req.body.flatPhoto = uploadedProfileImage === null || uploadedProfileImage === void 0 ? void 0 : uploadedProfileImage.secure_url;
         }
+        const flatNo = yield (0, flat_utils_1.generateFlatNumber)();
         const result = yield prisma_1.default.$transaction((transactionClient) => __awaiter(void 0, void 0, void 0, function* () {
             const createFlat = yield transactionClient.flat.create({
                 data: {
+                    flatNo: flatNo,
                     email: user === null || user === void 0 ? void 0 : user.email,
                     flatName: req.body.flatName,
                     squareFeet: req.body.squareFeet,
@@ -130,6 +134,9 @@ const getSellerFlatsIntoDB = (user) => __awaiter(void 0, void 0, void 0, functio
             email: user === null || user === void 0 ? void 0 : user.email,
             isDeleted: false,
         },
+        include: {
+            booking: true,
+        },
     });
     return result;
 });
@@ -147,6 +154,7 @@ const getSingleFlatIntoDB = (id) => __awaiter(void 0, void 0, void 0, function* 
     return result;
 });
 const updateFlatIntoDB = (flatId, req) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.body);
     yield prisma_1.default.flat.findUniqueOrThrow({
         where: {
             id: flatId,

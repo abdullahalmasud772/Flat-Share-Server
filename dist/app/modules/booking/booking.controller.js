@@ -47,7 +47,7 @@ const getSingleBooking = (0, catchAsync_1.default)((req, res) => __awaiter(void 
 }));
 const updateBookingStatus = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { bookingId } = req.params;
-    const result = yield booking_services_1.BookingServices.updateBookingStatusIntoDB(bookingId, req.body);
+    const result = yield booking_services_1.BookingServices.updateBookingStatusIntoDB(req, bookingId);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,

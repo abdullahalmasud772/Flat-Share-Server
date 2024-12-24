@@ -35,5 +35,5 @@ router.patch("/update-my-profile", (0, auth_1.default)(user_1.ENUM_USER_ROLE.SUP
     return user_controllers_1.UserControllers.updateMyProfile(req, res, next);
 });
 /// Update user status
-router.patch("/update-user-status/:id", (0, auth_1.default)(user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_USER_ROLE.BUYER), user_controllers_1.UserControllers.updateUserStatus);
+router.patch("/update-user-status/:id", (0, auth_1.default)(user_1.ENUM_USER_ROLE.ADMIN), user_controllers_1.UserControllers.updateUserStatus);
 exports.UserRoutes = router;

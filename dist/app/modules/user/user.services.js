@@ -19,6 +19,7 @@ const client_1 = require("@prisma/client");
 const fileUploadHelper_1 = require("../../../helpers/fileUploadHelper");
 const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
 const http_status_1 = __importDefault(require("http-status"));
+const user_utils_1 = require("./user.utils");
 /// Create Admin
 const createAdminIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* () {
     const file = req.file;
@@ -26,10 +27,12 @@ const createAdminIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* (
         const uploadedProfileImage = yield fileUploadHelper_1.FileUploadHelper.uploadToCloudinary(file);
         req.body.admin.profilePhoto = uploadedProfileImage === null || uploadedProfileImage === void 0 ? void 0 : uploadedProfileImage.secure_url;
     }
+    const adminId = yield (0, user_utils_1.generateUserId)("admin");
     const hashPassword = yield (0, hashPasswordHelper_1.hashedPassword)(req.body.password);
     const result = yield prisma_1.default.$transaction((transactionClient) => __awaiter(void 0, void 0, void 0, function* () {
         const newUser = yield transactionClient.user.create({
             data: {
+                userId: adminId,
                 email: req.body.admin.email,
                 password: hashPassword,
                 role: client_1.UserRole.ADMIN,
@@ -49,10 +52,12 @@ const createSellerIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* 
         const uploadedProfileImage = yield fileUploadHelper_1.FileUploadHelper.uploadToCloudinary(file);
         req.body.seller.profilePhoto = uploadedProfileImage === null || uploadedProfileImage === void 0 ? void 0 : uploadedProfileImage.secure_url;
     }
+    const sellerId = yield (0, user_utils_1.generateUserId)("seller");
     const hashPassword = yield (0, hashPasswordHelper_1.hashedPassword)(req.body.password);
     const result = yield prisma_1.default.$transaction((transactionClient) => __awaiter(void 0, void 0, void 0, function* () {
         const newUser = yield transactionClient.user.create({
             data: {
+                userId: sellerId,
                 email: req.body.prifileData.email,
                 password: hashPassword,
                 role: client_1.UserRole.SELLER,
@@ -72,10 +77,12 @@ const createBuyerIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* (
         const uploadedProfileImage = yield fileUploadHelper_1.FileUploadHelper.uploadToCloudinary(file);
         req.body.buyer.profilePhoto = uploadedProfileImage === null || uploadedProfileImage === void 0 ? void 0 : uploadedProfileImage.secure_url;
     }
+    const buyerId = yield (0, user_utils_1.generateUserId)("buyer");
     const hashPassword = yield (0, hashPasswordHelper_1.hashedPassword)(req.body.password);
     const result = yield prisma_1.default.$transaction((transactionClient) => __awaiter(void 0, void 0, void 0, function* () {
         const newUser = yield transactionClient.user.create({
             data: {
+                userId: buyerId,
                 email: req.body.prifileData.email,
                 password: hashPassword,
                 role: client_1.UserRole.BUYER,

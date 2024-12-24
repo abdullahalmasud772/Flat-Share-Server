@@ -1,11 +1,14 @@
 import cors from "cors";
 import express, { Application, Request, Response } from "express";
 import router from "./app/routes";
-import cookieParser from 'cookie-parser';
+import cookieParser from "cookie-parser";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 import notFound from "./app/middlewares/notFound";
+import path from "path";
+import favicon from "serve-favicon";
 
 const app: Application = express();
+app.use(favicon(path.join(__dirname, "../public", "favicon.ico")));
 
 app.use(
   cors({
