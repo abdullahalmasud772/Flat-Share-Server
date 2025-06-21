@@ -33,7 +33,7 @@ const createAdminIntoDB = async (req: Request): Promise<Admin> => {
     req.body.admin.profilePhoto = uploadedProfileImage?.secure_url;
   }
 
-   const adminId = await generateUserId("admin");
+  const adminId = await generateUserId("admin");
   const hashPassword = await hashedPassword(req.body.password);
   const result = await prisma.$transaction(async (transactionClient) => {
     const newUser = await transactionClient.user.create({
@@ -113,10 +113,10 @@ const createBuyerIntoDB = async (req: Request): Promise<Buyer> => {
       data: req.body.prifileData,
     });
 
-   return newBuyer;
+    return newBuyer;
   });
 
-return result;
+  return result;
 };
 
 //// get My Profile

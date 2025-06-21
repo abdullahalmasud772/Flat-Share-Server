@@ -40,7 +40,7 @@ app.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     });
 }));
 //global error handler
-//app.use(globalErrorHandler);
+// app.use(globalErrorHandler);
 //handle not found
 app.use(notFound_1.default);
 exports.default = app;

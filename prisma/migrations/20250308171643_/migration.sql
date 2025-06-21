@@ -10,9 +10,13 @@ CREATE TYPE "UserStatus" AS ENUM ('BLOCKED', 'ACTIVE', 'PENDING', 'DELETED');
 -- CreateEnum
 CREATE TYPE "GenderStatus" AS ENUM ('MALE', 'FEMALE');
 
+-- CreateEnum
+CREATE TYPE "PaymentStatus" AS ENUM ('PAID', 'UNPAID');
+
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "role" "UserRole" NOT NULL,
@@ -79,6 +83,7 @@ CREATE TABLE "buyers" (
 -- CreateTable
 CREATE TABLE "flats" (
     "id" TEXT NOT NULL,
+    "flatNo" TEXT NOT NULL,
     "flatName" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "squareFeet" INTEGER NOT NULL,
@@ -91,6 +96,7 @@ CREATE TABLE "flats" (
     "rent" INTEGER NOT NULL,
     "advanceAmount" INTEGER NOT NULL,
     "availability" BOOLEAN NOT NULL DEFAULT true,
+    "viewFlat" INTEGER NOT NULL DEFAULT 0,
     "flatPhoto" TEXT,
     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -105,6 +111,7 @@ CREATE TABLE "bookings" (
     "flatId" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "status" "BookingStatus" NOT NULL DEFAULT 'PENDING',
+    "paymentStatus" "PaymentStatus" NOT NULL DEFAULT 'UNPAID',
     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -127,6 +134,24 @@ CREATE TABLE "reviews" (
     CONSTRAINT "reviews_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Payment" (
+    "id" TEXT NOT NULL,
+    "bookingId" TEXT NOT NULL,
+    "amount" DOUBLE PRECISION NOT NULL,
+    "transactionId" TEXT NOT NULL,
+    "payStatus" "PaymentStatus" NOT NULL DEFAULT 'UNPAID',
+    "paymentGetwayData" JSONB,
+    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Payment_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_userId_key" ON "users"("userId");
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
@@ -140,10 +165,19 @@ CREATE UNIQUE INDEX "sellers_email_key" ON "sellers"("email");
 CREATE UNIQUE INDEX "buyers_email_key" ON "buyers"("email");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "flats_flatNo_key" ON "flats"("flatNo");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "flats_flatName_key" ON "flats"("flatName");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "reviews_flatId_key" ON "reviews"("flatId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Payment_bookingId_key" ON "Payment"("bookingId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Payment_transactionId_key" ON "Payment"("transactionId");
 
 -- AddForeignKey
 ALTER TABLE "admins" ADD CONSTRAINT "admins_email_fkey" FOREIGN KEY ("email") REFERENCES "users"("email") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -171,3 +205,6 @@ ALTER TABLE "reviews" ADD CONSTRAINT "reviews_sellerId_fkey" FOREIGN KEY ("selle
 
 -- AddForeignKey
 ALTER TABLE "reviews" ADD CONSTRAINT "reviews_flatId_fkey" FOREIGN KEY ("flatId") REFERENCES "flats"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Payment" ADD CONSTRAINT "Payment_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "bookings"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

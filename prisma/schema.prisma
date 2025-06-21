@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -20,11 +17,11 @@ model User {
   isDeleted Boolean    @default(false)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  booking   Booking[]
-  flat      Flat[]
   admin     Admin?
-  seller    Seller?
+  booking   Booking[]
   buyer     Buyer?
+  flat      Flat[]
+  seller    Seller?
 
   @@map("users")
 }
@@ -57,8 +54,8 @@ model Seller {
   isDeleted     Boolean      @default(false)
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
-  user          User         @relation(fields: [email], references: [email])
   review        Review[]
+  user          User         @relation(fields: [email], references: [email])
 
   @@map("sellers")
 }
@@ -103,8 +100,8 @@ model Flat {
   isDeleted            Boolean   @default(false)
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
-  user                 User      @relation(fields: [email], references: [email])
   booking              Booking[]
+  user                 User      @relation(fields: [email], references: [email])
   review               Review?
 
   @@map("flats")
@@ -119,28 +116,26 @@ model Booking {
   isDeleted     Boolean       @default(false)
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
+  payment       Payment?
   user          User          @relation(fields: [email], references: [email])
   flat          Flat          @relation(fields: [flatId], references: [id])
-  payment       Payment?
 
   @@map("bookings")
 }
 
 model Review {
-  id       String @id @default(uuid())
-  buyerId  String
-  buyer    Buyer  @relation(fields: [buyerId], references: [id])
-  sellerId String
-  seller   Seller @relation(fields: [sellerId], references: [id])
-
-  flatId String @unique
-  flat   Flat   @relation(fields: [flatId], references: [id])
-
+  id        String   @id @default(uuid())
+  buyerId   String
+  sellerId  String
+  flatId    String   @unique
   rating    Float
   comment   String
   isDeleted Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  buyer     Buyer    @relation(fields: [buyerId], references: [id])
+  flat      Flat     @relation(fields: [flatId], references: [id])
+  seller    Seller   @relation(fields: [sellerId], references: [id])
 
   @@map("reviews")
 }
@@ -148,7 +143,6 @@ model Review {
 model Payment {
   id                String        @id @default(uuid())
   bookingId         String        @unique
-  booking           Booking       @relation(fields: [bookingId], references: [id])
   amount            Float
   transactionId     String        @unique
   payStatus         PaymentStatus @default(UNPAID)
@@ -156,6 +150,7 @@ model Payment {
   isDeleted         Boolean       @default(false)
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
+  booking           Booking       @relation(fields: [bookingId], references: [id])
 }
 
 enum BookingStatus {

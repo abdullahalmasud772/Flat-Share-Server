@@ -1,0 +1,30 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "D:\\Programing\\FullStack_Projects\\Flat_Share\\Flat-Share-Server\\logs\\winston\\errors\\.2f99f1c3b295e7b891f26012454747b3fb63fc20-audit.json",
+    "files": [
+        {
+            "date": 1741455114249,
+            "name": "D:\\Programing\\FullStack_Projects\\Flat_Share\\Flat-Share-Server\\logs\\winston\\errors\\phu-2025-08-03-23-error.log",
+            "hash": "4b5dd95f85b2d054b66d31b9d9694e589ff62f963ba9a6d4e4fecaeb1edbd508"
+        },
+        {
+            "date": 1741456995750,
+            "name": "D:\\Programing\\FullStack_Projects\\Flat_Share\\Flat-Share-Server\\logs\\winston\\errors\\phu-2025-09-03-00-error.log",
+            "hash": "d904b58217a6fed2087cc6ca6624f6eb0164771581360c0437dcda7bcecaf657"
+        },
+        {
+            "date": 1741460442113,
+            "name": "D:\\Programing\\FullStack_Projects\\Flat_Share\\Flat-Share-Server\\logs\\winston\\errors\\phu-2025-09-03-01-error.log",
+            "hash": "e387a1f1713571af5beb3c1c3e746020c345ba91d1178dff7ca3f0a2dc9ad134"
+        },
+        {
+            "date": 1741971548874,
+            "name": "D:\\Programing\\FullStack_Projects\\Flat_Share\\Flat-Share-Server\\logs\\winston\\errors\\phu-2025-14-03-22-error.log",
+            "hash": "2aa442bdbd4cadc519ee2803eaa5fc9c04135133a895800897019b92a415827d"
+        }
+    ],
+    "hashType": "sha256"
+}

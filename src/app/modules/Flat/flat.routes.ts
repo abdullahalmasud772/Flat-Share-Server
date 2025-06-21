@@ -28,12 +28,13 @@ router.get(
 router.get("/:id", FlatController.getSingleFlat);
 
 router.patch(
-  //"/updateFlat",
   "/:id",
-  //  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SELLER),
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SELLER),
   /* FlatController.updateFlat, */
   FileUploadHelper.upload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.file, "file");
+    console.log(req.body, "body");
     req.body = JSON.parse(req?.body?.data);
     return FlatController.updateFlat(req, res, next);
   }
