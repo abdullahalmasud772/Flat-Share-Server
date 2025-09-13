@@ -45,7 +45,13 @@ const getAllBookingIntoDB = async (req: Request) => {
 
   const result = await prisma.$transaction(async (transactionClient) => {
     if (role === UserRole.ADMIN) {
-      const result = await transactionClient.booking.findMany();
+      const result = await transactionClient.booking.findMany({
+        include: {
+          flat: {
+            select: { flatName:true,email:true }
+          },
+        },
+      });
       return result;
     }
     if (role === UserRole.SELLER) {
@@ -71,9 +77,9 @@ const getAllBookingIntoDB = async (req: Request) => {
         where: {
           email: email,
         },
-        include: {
-          flat: true,
-        },
+        // include: {
+        //   flat: true,
+        // },
       });
       return result;
     }
