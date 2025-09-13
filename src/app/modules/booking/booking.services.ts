@@ -42,13 +42,29 @@ const createBookingIntoDB = async (req: Request) => {
 const getAllBookingIntoDB = async (req: Request) => {
   const email = req?.user?.email;
   const role = req?.user?.role;
-
+  // include: {
+  //   flat: {
+  //     select: { flatName:true,email:true }
+  //   },
+  // },
   const result = await prisma.$transaction(async (transactionClient) => {
     if (role === UserRole.ADMIN) {
       const result = await transactionClient.booking.findMany({
-        include: {
+        select: {
+          id: true,
+          status: true,
+          paymentStatus: true,
+          createdAt: true,
           flat: {
-            select: { flatName:true,email:true }
+            select: {
+              flatName: true,
+              user: { select: { seller: { select: { name: true } } } },
+            },
+          },
+          user: {
+            select: {
+              buyer: { select: { name: true } },
+            },
           },
         },
       });

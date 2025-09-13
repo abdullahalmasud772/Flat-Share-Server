@@ -6,7 +6,7 @@ import { ENUM_USER_ROLE } from "../../../enums/user";
 
 const router = express.Router();
 
-router.post("/", auth(UserRole.BUYER), BookingController.createBooking);
+router.post("/create-booking", auth(UserRole.BUYER), BookingController.createBooking);
 
 router.get(
   "/all-booking",
