@@ -9,9 +9,9 @@ const router = express.Router();
 router.post("/", auth(UserRole.BUYER), BookingController.createBooking);
 
 router.get(
-  "/",
+  "/all-booking",
   auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.SELLER, UserRole.BUYER),
-  BookingController.getBooking
+  BookingController.getAllBooking
 );
 
 router.get(

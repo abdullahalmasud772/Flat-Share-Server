@@ -39,8 +39,7 @@ const createBookingIntoDB = async (req: Request) => {
   return result;
 };
 
-const getBookingIntoDB = async (req: Request) => {
-  // const userId = req?.user?.userId;
+const getAllBookingIntoDB = async (req: Request) => {
   const email = req?.user?.email;
   const role = req?.user?.role;
 
@@ -56,14 +55,14 @@ const getBookingIntoDB = async (req: Request) => {
             email: email,
           },
         },
-        include: {
-          user: {
-            include: {
-              buyer: true,
-            },
-          },
-          flat: true,
-        },
+        // include: {
+        //   user: {
+        //     include: {
+        //       buyer: true,
+        //     },
+        //   },
+        //   flat: true,
+        // },
       });
       return result;
     }
@@ -166,7 +165,7 @@ const updateBookingStatusIntoDB = async (req: Request, bookingId: string) => {
 
 export const BookingServices = {
   createBookingIntoDB,
-  getBookingIntoDB,
+  getAllBookingIntoDB,
   getSingleBookingIntoDB,
   updateBookingStatusIntoDB,
 };

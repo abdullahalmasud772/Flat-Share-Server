@@ -21,21 +21,17 @@ app.use(
   })
 );
 app.use(cookieParser());
-
-//parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1", router);
 
-app.get("/", async (req: Request, res: Response) => {
-  res.status(200).json({
-    message: "Flat Share Server working....!",
-  });
+app.get("/", (req: Request, res: Response) => {
+  res.status(200).json({ message: "Flatshare API is running 🚀" });
 });
 
 //global error handler
-// app.use(globalErrorHandler);
+app.use(globalErrorHandler);
 
 //handle not found
 app.use(notFound);
