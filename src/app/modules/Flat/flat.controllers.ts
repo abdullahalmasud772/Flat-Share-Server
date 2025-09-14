@@ -17,10 +17,10 @@ const createFlat = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getAllFlats = catchAsync(async (req: Request, res: Response) => {
+const getAllFlat = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, flatFilterableFields);
   const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
-  const result = await FlatServices.getAllFlatsIntoDB(filters, options);
+  const result = await FlatServices.getAllFlatIntoDB(filters, options);
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -88,7 +88,7 @@ const deleteFlat = catchAsync(async (req: Request, res: Response) => {
 
 export const FlatController = {
   createFlat,
-  getAllFlats,
+  getAllFlat,
   getSellerFlats,
   getSingleFlat,
   updateFlat,

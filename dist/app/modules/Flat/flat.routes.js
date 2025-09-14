@@ -18,13 +18,12 @@ router.post("/", (0, auth_1.default)(client_1.UserRole.SELLER), fileUploadHelper
 router.get("/", flat_controllers_1.FlatController.getAllFlats);
 router.get("/seller", (0, auth_1.default)(user_1.ENUM_USER_ROLE.SELLER), flat_controllers_1.FlatController.getSellerFlats);
 router.get("/:id", flat_controllers_1.FlatController.getSingleFlat);
-router.patch(
-//"/updateFlat",
-"/:id", 
-//  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SELLER),
+router.patch("/:id", (0, auth_1.default)(user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_USER_ROLE.SELLER), 
 /* FlatController.updateFlat, */
 fileUploadHelper_1.FileUploadHelper.upload.single("file"), (req, res, next) => {
     var _a;
+    console.log(req.file, "file");
+    console.log(req.body, "body");
     req.body = JSON.parse((_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.data);
     return flat_controllers_1.FlatController.updateFlat(req, res, next);
 });

@@ -45,14 +45,36 @@ const createBookingIntoDB = (req) => __awaiter(void 0, void 0, void 0, function*
     });
     return result;
 });
-const getBookingIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllBookingIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* () {
     var _b, _c;
-    // const userId = req?.user?.userId;
     const email = (_b = req === null || req === void 0 ? void 0 : req.user) === null || _b === void 0 ? void 0 : _b.email;
     const role = (_c = req === null || req === void 0 ? void 0 : req.user) === null || _c === void 0 ? void 0 : _c.role;
+    // include: {
+    //   flat: {
+    //     select: { flatName:true,email:true }
+    //   },
+    // },
     const result = yield prisma_1.default.$transaction((transactionClient) => __awaiter(void 0, void 0, void 0, function* () {
         if (role === client_1.UserRole.ADMIN) {
-            const result = yield transactionClient.booking.findMany();
+            const result = yield transactionClient.booking.findMany({
+                select: {
+                    id: true,
+                    status: true,
+                    paymentStatus: true,
+                    createdAt: true,
+                    flat: {
+                        select: {
+                            flatName: true,
+                            user: { select: { seller: { select: { name: true } } } },
+                        },
+                    },
+                    user: {
+                        select: {
+                            buyer: { select: { name: true } },
+                        },
+                    },
+                },
+            });
             return result;
         }
         if (role === client_1.UserRole.SELLER) {
@@ -62,14 +84,14 @@ const getBookingIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* ()
                         email: email,
                     },
                 },
-                include: {
-                    user: {
-                        include: {
-                            buyer: true,
-                        },
-                    },
-                    flat: true,
-                },
+                // include: {
+                //   user: {
+                //     include: {
+                //       buyer: true,
+                //     },
+                //   },
+                //   flat: true,
+                // },
             });
             return result;
         }
@@ -78,9 +100,9 @@ const getBookingIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* ()
                 where: {
                     email: email,
                 },
-                include: {
-                    flat: true,
-                },
+                // include: {
+                //   flat: true,
+                // },
             });
             return result;
         }
@@ -156,7 +178,7 @@ const updateBookingStatusIntoDB = (req, bookingId) => __awaiter(void 0, void 0, 
 });
 exports.BookingServices = {
     createBookingIntoDB,
-    getBookingIntoDB,
+    getAllBookingIntoDB,
     getSingleBookingIntoDB,
     updateBookingStatusIntoDB,
 };

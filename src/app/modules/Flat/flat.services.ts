@@ -62,7 +62,7 @@ const createFlatIntoDB = async (req: Request) => {
   }
 };
 
-const getAllFlatsIntoDB = async (
+const getAllFlatIntoDB = async (
   filters: IFlatFilterRequest,
   options: IPaginationOptions
 ): Promise<IGenericResponse<Flat[]>> => {
@@ -108,8 +108,7 @@ const getAllFlatsIntoDB = async (
             createdAt: "desc",
           },
     include: {
-      user: true,
-      booking: true,
+      user: { select: { seller: { select: { name: true } } } },
     },
   });
   const total = await prisma.flat.count({
@@ -158,7 +157,7 @@ const updateFlatIntoDB = async (
   flatId: string,
   req: Request
 ) /* : Promise<Flat>  */ => {
-  console.log(req.body)
+  console.log(req.body);
   await prisma.flat.findUniqueOrThrow({
     where: {
       id: flatId,
@@ -208,7 +207,7 @@ const deleteFlatIntoDB = async (id: string) => {
 
 export const FlatServices = {
   createFlatIntoDB,
-  getAllFlatsIntoDB,
+  getAllFlatIntoDB,
   getSellerFlatsIntoDB,
   getSingleFlatIntoDB,
   updateFlatIntoDB,

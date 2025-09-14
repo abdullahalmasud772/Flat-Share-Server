@@ -17,7 +17,7 @@ router.post(
   }
 );
 
-router.get("/", FlatController.getAllFlats);
+router.get("/all-flat", FlatController.getAllFlat);
 
 router.get(
   "/seller",

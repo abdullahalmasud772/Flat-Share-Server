@@ -27,8 +27,8 @@ const createBooking = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
         data: result,
     });
 }));
-const getBooking = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield booking_services_1.BookingServices.getBookingIntoDB(req);
+const getAllBooking = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield booking_services_1.BookingServices.getAllBookingIntoDB(req);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
@@ -57,7 +57,7 @@ const updateBookingStatus = (0, catchAsync_1.default)((req, res) => __awaiter(vo
 }));
 exports.BookingController = {
     createBooking,
-    getBooking,
+    getAllBooking,
     getSingleBooking,
     updateBookingStatus,
 };
