@@ -109,6 +109,8 @@ const getAllFlatIntoDB = async (
           },
     include: {
       user: { select: { seller: { select: { name: true } } } },
+      // booking:true,
+      _count:{select:{booking:true}}
     },
   });
   const total = await prisma.flat.count({

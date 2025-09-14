@@ -11,28 +11,37 @@ cloudinary.config({
   api_secret: config.cloudinary.cloudinary_api_secret,
 });
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+
+  params: async (req, file) => {
+    let base = "flatshare";
+
+    if (req.originalUrl.includes("admin")) {
+      base = "flatshare/admin";
+    } else if (req.baseUrl.includes("seller")) {
+      base = "flatshare/seller";
+    } else if (req.baseUrl.includes("buyer")) {
+      base = `flatshare/buyer`;
+    }
+
+    const fileName = file.originalname
+      .split(".")[0]
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-_]/g, "");
+
+    // folder: "uploads",
+    // public_id: (req, file) => file.originalname.split(".")[0],
+    // format: async (req: any, file: any) => "png",
+    return {
+      folder: base,
+      allowed_formats: ["jpeg", "png", "jpg", "webp"],
+      public_id: `${Date.now()}-${fileName}`,
+      resource_type: "image",
+    };
   },
 });
-
-// Multer Cloudinary Storage কনফিগারেশন
-
-// const storage = new CloudinaryStorage({
-//   cloudinary: cloudinary,
-//   params: {
-//     // @ts-ignore
-//     folder: "uploads", // Cloudinary এর ফোল্ডার
-//     format: async (req: any, file: any) => "png", // ফাইল ফরম্যাট সেট করো
-//     public_id: (req, file) => file.originalname.split(".")[0],
-//     // folder: 'uploads', // Cloudinary-তে ফোল্ডারের নাম
-//     // allowed_formats: ['jpeg', 'png', 'jpg', 'webp'], // ফরম্যাট সীমাবদ্ধতা
-//   },
-// });
 
 const upload = multer({ storage: storage });
 
@@ -61,3 +70,13 @@ export const FileUploadHelper = {
   uploadToCloudinary,
   upload,
 };
+
+/// when devlopment mode use local storage
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, "uploads/");
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, file.originalname);
+//   },
+// });

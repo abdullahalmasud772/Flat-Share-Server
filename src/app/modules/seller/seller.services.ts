@@ -2,11 +2,7 @@ import { Seller } from "@prisma/client";
 import prisma from "../../../shared/prisma";
 
 const getAllSellerIntoDB = async () => {
-  const result = await prisma.seller.findMany({
-    where: {
-      isDeleted: false,
-    },
-  });
+  const result = await prisma.seller.findMany();
   return result;
 };
 

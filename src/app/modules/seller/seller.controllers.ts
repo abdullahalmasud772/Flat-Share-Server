@@ -4,7 +4,6 @@ import { SellerServices } from "./seller.services";
 import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
 
-///
 const getAllSeller = catchAsync(async (req: Request, res: Response) => {
   const result = await SellerServices.getAllSellerIntoDB();
   sendResponse(res, {

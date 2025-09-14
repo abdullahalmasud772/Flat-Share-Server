@@ -1,20 +1,12 @@
 import { Request } from "express";
 import prisma from "../../../shared/prisma";
 import { hashedPassword } from "../../../helpers/hashPasswordHelper";
-import {
-  Admin,
-  Buyer,
-  Seller,
-  User,
-  UserRole,
-  UserStatus,
-} from "@prisma/client";
+import { Admin, Buyer, Seller, UserRole, UserStatus } from "@prisma/client";
 import { IUploadFile } from "../../../interfaces/file";
 import { FileUploadHelper } from "../../../helpers/fileUploadHelper";
 import ApiError from "../../../errors/ApiError";
 import httpStatus from "http-status";
 import { ENUM_USER_ROLE } from "../../../enums/user";
-import { IUserProfileDataUpdate } from "./user.constants";
 import { generateUserId } from "./user.utils";
 
 export type IAdminUpdateBuyer = {
@@ -23,29 +15,39 @@ export type IAdminUpdateBuyer = {
 };
 
 /// Create Admin
-const createAdminIntoDB = async (req: Request): Promise<Admin> => {
-  const file = req.file as IUploadFile;
+const createAdminIntoDB = async (req: Request) /* : Promise<Admin>  */ => {
+  const adminData = req.body.admin;
+  const existsAdmin = await prisma.user.findUnique({
+    where: { email: adminData.email },
+  });
 
-  if (file) {
-    const uploadedProfileImage = await FileUploadHelper.uploadToCloudinary(
-      file
-    );
-    req.body.admin.profilePhoto = uploadedProfileImage?.secure_url;
+  if (existsAdmin) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "This email alrady exist!");
+  }
+
+  if (req?.file) {
+    const file = req.file as IUploadFile;
+    adminData.profilePhoto = file?.path;
+    // const uploadedProfileImage = await FileUploadHelper.uploadToCloudinary(
+    //   file
+    // );
+    // req.body.admin.profilePhoto = uploadedProfileImage?.secure_url;
   }
 
   const adminId = await generateUserId("admin");
   const hashPassword = await hashedPassword(req.body.password);
   const result = await prisma.$transaction(async (transactionClient) => {
-    const newUser = await transactionClient.user.create({
+    await transactionClient.user.create({
       data: {
         userId: adminId,
-        email: req.body.admin.email,
+        email: adminData.email,
         password: hashPassword,
         role: UserRole.ADMIN,
       },
     });
+
     const newAdmin = await transactionClient.admin.create({
-      data: req.body.admin,
+      data: adminData,
     });
 
     return newAdmin;

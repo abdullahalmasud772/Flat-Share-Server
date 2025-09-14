@@ -6,7 +6,7 @@ import { ENUM_USER_ROLE } from "../../../enums/user";
 const router = Router();
 
 router.get(
-  "/",
+  "/all-seller",
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
   SellerControllers.getAllSeller
 );
