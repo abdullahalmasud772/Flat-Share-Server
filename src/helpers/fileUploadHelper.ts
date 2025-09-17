@@ -23,6 +23,8 @@ const storage = new CloudinaryStorage({
       base = "flatshare/seller";
     } else if (req.baseUrl.includes("buyer")) {
       base = `flatshare/buyer`;
+    } else if (req.baseUrl.includes("flat")) {
+      base = `flatshare/flat`;
     }
 
     const fileName = file.originalname

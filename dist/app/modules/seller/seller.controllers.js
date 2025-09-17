@@ -17,7 +17,6 @@ const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
 const seller_services_1 = require("./seller.services");
 const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
 const http_status_1 = __importDefault(require("http-status"));
-///
 const getAllSeller = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield seller_services_1.SellerServices.getAllSellerIntoDB();
     (0, sendResponse_1.default)(res, {

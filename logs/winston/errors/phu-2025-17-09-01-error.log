@@ -1,0 +1,141 @@
+Wed Sep 17 2025 1:8:1 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ 
+Invalid `prisma.seller.update()` invocation:
+
+{
+  where: {
+    email: "saki@gmail.com"
+  },
+  data: {
+    name: "Tanvir Saki",
+    profession: "Business",
+    address: "Sylhet, Bangladesh",
+    contactNumber: "01526457771",
+    profilePhoto: undefined,
+    gender: "male",
+            ~~~~~~
+    bio: "This is my bio "
+  }
+}
+
+Invalid value for argument `gender`. Expected GenderStatus.
+Wed Sep 17 2025 1:18:41 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ 
+Invalid `prisma.buyer.update()` invocation:
+
+{
+  where: {
+    email: "kamrul@gmail.com"
+  },
+  data: {
+    name: "Kamrul Islam",
+    profession: "Doctor",
+    address: "Dhaka - 1212",
+    contactNumber: "01535258581",
+    profilePhoto: undefined,
+    gender: "male",
+            ~~~~~~
+    bio: "This is my bio (kamrul)"
+  }
+}
+
+Invalid value for argument `gender`. Expected GenderStatus.
+Wed Sep 17 2025 1:19:14 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ 
+Invalid `prisma.buyer.update()` invocation:
+
+{
+  where: {
+    email: "kamrul@gmail.com"
+  },
+  data: {
+    name: "Kamrul Islam",
+    profession: "Doctor",
+    address: "Dhaka - 1212",
+    contactNumber: "01574578479",
+    profilePhoto: undefined,
+    gender: "male",
+            ~~~~~~
+    bio: "This is my bio (kamrul)"
+  }
+}
+
+Invalid value for argument `gender`. Expected GenderStatus.
+Wed Sep 17 2025 1:20:48 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ 
+Invalid `prisma.buyer.update()` invocation:
+
+{
+  where: {
+    email: "kamrul@gmail.com"
+  },
+  data: {
+    name: "Kamrul Islams",
+    profession: "Doctor",
+    address: "Dhaka - 1212",
+    contactNumber: "01535258581",
+    profilePhoto: undefined,
+    gender: "male",
+            ~~~~~~
+    bio: ""
+  }
+}
+
+Invalid value for argument `gender`. Expected GenderStatus.
+Wed Sep 17 2025 1:21:17 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ 
+Invalid `prisma.buyer.update()` invocation:
+
+{
+  where: {
+    email: "kamrul@gmail.com"
+  },
+  data: {
+    name: "Kamrul Islam",
+    profession: "Doctor",
+    address: "Dhaka - 1212",
+    contactNumber: "01535258585",
+    profilePhoto: undefined,
+    gender: "male",
+            ~~~~~~
+    bio: ""
+  }
+}
+
+Invalid value for argument `gender`. Expected GenderStatus.
+Wed Sep 17 2025 1:25:19 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ 
+Invalid `prisma.seller.update()` invocation:
+
+{
+  where: {
+    email: "saki@gmail.com"
+  },
+  data: {
+    name: "Kamrul Islam",
+    profession: "Doctor",
+    address: "Dhaka - 1212",
+    contactNumber: "01535258581",
+    profilePhoto: undefined,
+    gender: "female",
+            ~~~~~~~~
+    bio: "This is my bio (kamrul)"
+  }
+}
+
+Invalid value for argument `gender`. Expected GenderStatus.
+Wed Sep 17 2025 1:25:31 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ 
+Invalid `prisma.seller.update()` invocation:
+
+{
+  where: {
+    email: "saki@gmail.com"
+  },
+  data: {
+    name: "Tanvir Sakidd",
+    profession: "Business",
+    address: "Sylhet, Bangladesh",
+    contactNumber: "01685411425",
+    profilePhoto: undefined,
+    gender: "male",
+            ~~~~~~
+    bio: "This is my bio "
+  }
+}
+
+Invalid value for argument `gender`. Expected GenderStatus.
+Wed Sep 17 2025 1:28:9 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ Transaction API error: Unable to start a transaction in the given time.

@@ -40,31 +40,41 @@ const cloudinary_1 = require("cloudinary");
 const multer_1 = __importDefault(require("multer"));
 const fs = __importStar(require("fs"));
 const config_1 = __importDefault(require("../config"));
+const multer_storage_cloudinary_1 = require("multer-storage-cloudinary");
 cloudinary_1.v2.config({
     cloud_name: config_1.default.cloudinary.cloudinary_cloud_name,
     api_key: config_1.default.cloudinary.cloudinary_api_key,
     api_secret: config_1.default.cloudinary.cloudinary_api_secret,
 });
-const storage = multer_1.default.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, "uploads/");
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname);
-    },
+const storage = new multer_storage_cloudinary_1.CloudinaryStorage({
+    cloudinary: cloudinary_1.v2,
+    params: (req, file) => __awaiter(void 0, void 0, void 0, function* () {
+        let base = "flatshare";
+        if (req.originalUrl.includes("admin")) {
+            base = "flatshare/admin";
+        }
+        else if (req.baseUrl.includes("seller")) {
+            base = "flatshare/seller";
+        }
+        else if (req.baseUrl.includes("buyer")) {
+            base = `flatshare/buyer`;
+        }
+        const fileName = file.originalname
+            .split(".")[0]
+            .toLowerCase()
+            .replace(/\s+/g, "-")
+            .replace(/[^a-z0-9-_]/g, "");
+        // folder: "uploads",
+        // public_id: (req, file) => file.originalname.split(".")[0],
+        // format: async (req: any, file: any) => "png",
+        return {
+            folder: base,
+            allowed_formats: ["jpeg", "png", "jpg", "webp"],
+            public_id: `${Date.now()}-${fileName}`,
+            resource_type: "image",
+        };
+    }),
 });
-// Multer Cloudinary Storage কনফিগারেশন
-// const storage = new CloudinaryStorage({
-//   cloudinary: cloudinary,
-//   params: {
-//     // @ts-ignore
-//     folder: "uploads", // Cloudinary এর ফোল্ডার
-//     format: async (req: any, file: any) => "png", // ফাইল ফরম্যাট সেট করো
-//     public_id: (req, file) => file.originalname.split(".")[0],
-//     // folder: 'uploads', // Cloudinary-তে ফোল্ডারের নাম
-//     // allowed_formats: ['jpeg', 'png', 'jpg', 'webp'], // ফরম্যাট সীমাবদ্ধতা
-//   },
-// });
 const upload = (0, multer_1.default)({ storage: storage });
 const uploadToCloudinary = (file) => __awaiter(void 0, void 0, void 0, function* () {
     return new Promise((resolve, reject) => {
@@ -86,3 +96,12 @@ exports.FileUploadHelper = {
     uploadToCloudinary,
     upload,
 };
+/// when devlopment mode use local storage
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, "uploads/");
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, file.originalname);
+//   },
+// });

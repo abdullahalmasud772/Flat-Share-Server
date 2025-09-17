@@ -14,52 +14,42 @@ import httpStatus from "http-status";
 import { generateFlatNumber } from "./flat.utils";
 
 const createFlatIntoDB = async (req: Request) => {
-  const user = req?.user;
-  const file = req.file as IUploadFile;
-
   const existingFlat = await prisma.flat.findUnique({
-    where: {
-      flatName: req?.body?.flatName,
-    },
+    where: { flatName: req?.body?.flatName },
   });
-
   if (existingFlat) {
     throw new ApiError(httpStatus.BAD_REQUEST, "This flat you alrady created!");
   }
 
-  if (user?.role === "SELLER") {
-    if (file) {
-      const uploadedProfileImage = await FileUploadHelper.uploadToCloudinary(
-        file
-      );
-      req.body.flatPhoto = uploadedProfileImage?.secure_url;
-    }
-
-    const flatNo = await generateFlatNumber();
-    const result = await prisma.$transaction(async (transactionClient) => {
-      const createFlat: FlatCreateInput = await transactionClient.flat.create({
-        data: {
-          flatNo: flatNo,
-          email: user?.email,
-          flatName: req.body.flatName,
-          squareFeet: req.body.squareFeet,
-          totalBedrooms: req.body.totalBedrooms,
-          totalRooms: req.body.totalRooms,
-          utilitiesDescription: req.body.utilitiesDescription,
-          location: req.body.location,
-          description: req.body.description,
-          amenities: req.body.amenities,
-          rent: req.body.rent,
-          advanceAmount: req.body.advanceAmount,
-          flatPhoto: req.body.flatPhoto,
-        },
-      });
-      return createFlat;
-    });
-    return result;
-  } else {
-    console.log("You are not parmited!");
+  const flatdata = req.body;
+  const user = req.user;
+  const file = req.file as IUploadFile;
+  if (file) {
+    flatdata.flatPhoto = file?.path;
   }
+
+  const result = await prisma.$transaction(async (transactionClient) => {
+    const flatNo = await generateFlatNumber();
+    const createFlat: FlatCreateInput = await transactionClient.flat.create({
+      data: {
+        flatNo: flatNo,
+        email: user?.email,
+        flatName: req.body.flatName,
+        squareFeet: req.body.squareFeet,
+        totalBedrooms: req.body.totalBedrooms,
+        totalRooms: req.body.totalRooms,
+        utilitiesDescription: req.body.utilitiesDescription,
+        location: req.body.location,
+        description: req.body.description,
+        amenities: req.body.amenities,
+        rent: req.body.rent,
+        advanceAmount: req.body.advanceAmount,
+        flatPhoto: req.body.flatPhoto,
+      },
+    });
+    return createFlat;
+  });
+  return result;
 };
 
 const getAllFlatIntoDB = async (
@@ -110,7 +100,7 @@ const getAllFlatIntoDB = async (
     include: {
       user: { select: { seller: { select: { name: true } } } },
       // booking:true,
-      _count:{select:{booking:true}}
+      _count: { select: { booking: true } },
     },
   });
   const total = await prisma.flat.count({

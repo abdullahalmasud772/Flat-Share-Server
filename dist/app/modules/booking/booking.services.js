@@ -65,6 +65,7 @@ const getAllBookingIntoDB = (req) => __awaiter(void 0, void 0, void 0, function*
                     flat: {
                         select: {
                             flatName: true,
+                            flatPhoto: true,
                             user: { select: { seller: { select: { name: true } } } },
                         },
                     },

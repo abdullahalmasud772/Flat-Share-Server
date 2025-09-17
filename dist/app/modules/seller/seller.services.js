@@ -26,11 +26,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SellerServices = void 0;
 const prisma_1 = __importDefault(require("../../../shared/prisma"));
 const getAllSellerIntoDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield prisma_1.default.seller.findMany({
-        where: {
-            isDeleted: false,
-        },
-    });
+    const result = yield prisma_1.default.seller.findMany();
     return result;
 });
 const getSingleSellerIntoDB = (id) => __awaiter(void 0, void 0, void 0, function* () {

@@ -1,0 +1,23 @@
+Wed Sep 17 2025 13:30:1 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ 
+Invalid `prisma.flat.findMany()` invocation:
+
+
+Can't reach database server at `gondola.proxy.rlwy.net`:`16808`
+
+Please make sure your database server is running at `gondola.proxy.rlwy.net`:`16808`.
+Wed Sep 17 2025 13:30:2 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ Invalid Refresh Token
+Wed Sep 17 2025 13:30:4 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ 
+Invalid `prisma.flat.findMany()` invocation:
+
+
+Error querying the database: FATAL: the database system is not yet accepting connections
+DETAIL: Consistent recovery state has not been yet reached.
+Wed Sep 17 2025 13:31:15 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ You are not authorized!!
+Wed Sep 17 2025 13:31:15 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ You are not authorized!!
+Wed Sep 17 2025 13:31:16 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ You are not authorized!!
+Wed Sep 17 2025 13:31:16 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ You are not authorized!!
+Wed Sep 17 2025 13:31:41 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ You are not authorized!!
+Wed Sep 17 2025 13:31:41 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ You are not authorized!!
+Wed Sep 17 2025 13:31:46 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ Forbidden!!
+Wed Sep 17 2025 13:31:46 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ Forbidden!!
+Wed Sep 17 2025 13:31:48 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ Transaction API error: Unable to start a transaction in the given time.

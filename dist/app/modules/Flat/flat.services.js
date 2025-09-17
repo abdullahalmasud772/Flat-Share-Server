@@ -75,7 +75,7 @@ const createFlatIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* ()
         console.log("You are not parmited!");
     }
 });
-const getAllFlatsIntoDB = (filters, options) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllFlatIntoDB = (filters, options) => __awaiter(void 0, void 0, void 0, function* () {
     const { limit, page, skip } = paginationHelper_1.paginationHelper.calculatePagination(options);
     const { searchTerm } = filters, filterData = __rest(filters, ["searchTerm"]);
     const andConditions = [];
@@ -112,8 +112,9 @@ const getAllFlatsIntoDB = (filters, options) => __awaiter(void 0, void 0, void 0
                 createdAt: "desc",
             },
         include: {
-            user: true,
-            booking: true,
+            user: { select: { seller: { select: { name: true } } } },
+            // booking:true,
+            _count: { select: { booking: true } }
         },
     });
     const total = yield prisma_1.default.flat.count({
@@ -196,7 +197,7 @@ const deleteFlatIntoDB = (id) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.FlatServices = {
     createFlatIntoDB,
-    getAllFlatsIntoDB,
+    getAllFlatIntoDB,
     getSellerFlatsIntoDB,
     getSingleFlatIntoDB,
     updateFlatIntoDB,

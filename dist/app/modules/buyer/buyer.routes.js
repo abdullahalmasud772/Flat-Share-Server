@@ -9,7 +9,7 @@ const buyer_controllers_1 = require("./buyer.controllers");
 const auth_1 = __importDefault(require("../../middlewares/auth"));
 const user_1 = require("../../../enums/user");
 const router = (0, express_1.Router)();
-router.get("/", (0, auth_1.default)(user_1.ENUM_USER_ROLE.SUPER_ADMIN, user_1.ENUM_USER_ROLE.ADMIN), buyer_controllers_1.BuyerControllers.getAllBuyer);
+router.get("/all-buyer", (0, auth_1.default)(user_1.ENUM_USER_ROLE.SUPER_ADMIN, user_1.ENUM_USER_ROLE.ADMIN), buyer_controllers_1.BuyerControllers.getAllBuyer);
 router.get("/:id", (0, auth_1.default)(user_1.ENUM_USER_ROLE.SUPER_ADMIN, user_1.ENUM_USER_ROLE.ADMIN), buyer_controllers_1.BuyerControllers.getSingleBuyer);
 router.patch("/:id", (0, auth_1.default)(user_1.ENUM_USER_ROLE.BUYER), buyer_controllers_1.BuyerControllers.updateSingleBuyer);
 exports.BuyerRoutes = router;

@@ -22,24 +22,34 @@ const http_status_1 = __importDefault(require("http-status"));
 const user_utils_1 = require("./user.utils");
 /// Create Admin
 const createAdminIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* () {
-    const file = req.file;
-    if (file) {
-        const uploadedProfileImage = yield fileUploadHelper_1.FileUploadHelper.uploadToCloudinary(file);
-        req.body.admin.profilePhoto = uploadedProfileImage === null || uploadedProfileImage === void 0 ? void 0 : uploadedProfileImage.secure_url;
+    const adminData = req.body.admin;
+    const existsAdmin = yield prisma_1.default.user.findUnique({
+        where: { email: adminData.email },
+    });
+    if (existsAdmin) {
+        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, "This email alrady exist!");
+    }
+    if (req === null || req === void 0 ? void 0 : req.file) {
+        const file = req.file;
+        adminData.profilePhoto = file === null || file === void 0 ? void 0 : file.path;
+        // const uploadedProfileImage = await FileUploadHelper.uploadToCloudinary(
+        //   file
+        // );
+        // req.body.admin.profilePhoto = uploadedProfileImage?.secure_url;
     }
     const adminId = yield (0, user_utils_1.generateUserId)("admin");
     const hashPassword = yield (0, hashPasswordHelper_1.hashedPassword)(req.body.password);
     const result = yield prisma_1.default.$transaction((transactionClient) => __awaiter(void 0, void 0, void 0, function* () {
-        const newUser = yield transactionClient.user.create({
+        yield transactionClient.user.create({
             data: {
                 userId: adminId,
-                email: req.body.admin.email,
+                email: adminData.email,
                 password: hashPassword,
                 role: client_1.UserRole.ADMIN,
             },
         });
         const newAdmin = yield transactionClient.admin.create({
-            data: req.body.admin,
+            data: adminData,
         });
         return newAdmin;
     }));

@@ -8,7 +8,7 @@ import { ENUM_USER_ROLE } from "../../../enums/user";
 const router = express.Router();
 
 router.post(
-  "/",
+  "/create-flat",
   auth(UserRole.SELLER),
   FileUploadHelper.upload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {

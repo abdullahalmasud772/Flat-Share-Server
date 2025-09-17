@@ -15,7 +15,7 @@ router.post("/", (0, auth_1.default)(client_1.UserRole.SELLER), fileUploadHelper
     req.body = JSON.parse(req.body.data);
     return flat_controllers_1.FlatController.createFlat(req, res, next);
 });
-router.get("/", flat_controllers_1.FlatController.getAllFlats);
+router.get("/all-flat", flat_controllers_1.FlatController.getAllFlat);
 router.get("/seller", (0, auth_1.default)(user_1.ENUM_USER_ROLE.SELLER), flat_controllers_1.FlatController.getSellerFlats);
 router.get("/:id", flat_controllers_1.FlatController.getSingleFlat);
 router.patch("/:id", (0, auth_1.default)(user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_USER_ROLE.SELLER), 

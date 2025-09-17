@@ -12,7 +12,7 @@ const createFlat = catchAsync(async (req: Request, res: Response) => {
   sendUniqueResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: "Flat added successfully",
+    message: "Create new flat successfully",
     data: result,
   });
 });
@@ -75,6 +75,7 @@ const softDeleteFlat = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
 const deleteFlat = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await FlatServices.deleteFlatIntoDB(id);

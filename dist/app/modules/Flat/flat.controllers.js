@@ -29,10 +29,10 @@ const createFlat = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
         data: result,
     });
 }));
-const getAllFlats = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllFlat = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const filters = (0, pick_1.default)(req.query, flat_constant_1.flatFilterableFields);
     const options = (0, pick_1.default)(req.query, ["limit", "page", "sortBy", "sortOrder"]);
-    const result = yield flat_services_1.FlatServices.getAllFlatsIntoDB(filters, options);
+    const result = yield flat_services_1.FlatServices.getAllFlatIntoDB(filters, options);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
@@ -94,7 +94,7 @@ const deleteFlat = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
 }));
 exports.FlatController = {
     createFlat,
-    getAllFlats,
+    getAllFlat,
     getSellerFlats,
     getSingleFlat,
     updateFlat,
