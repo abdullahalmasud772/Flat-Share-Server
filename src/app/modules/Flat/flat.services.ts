@@ -1,6 +1,6 @@
 import { Request } from "express";
 import prisma from "../../../shared/prisma";
-import { Booking, Flat, Prisma } from "@prisma/client";
+import { Booking, Flat, Prisma, UserStatus } from "@prisma/client";
 import { FlatCreateInput, flatSearchableFields } from "./flat.constant";
 import { IUploadFile } from "../../../interfaces/file";
 import { FileUploadHelper } from "../../../helpers/fileUploadHelper";
@@ -14,6 +14,12 @@ import httpStatus from "http-status";
 import { generateFlatNumber } from "./flat.utils";
 
 const createFlatIntoDB = async (req: Request) => {
+  const user = req.user;
+  const userData = await prisma.user.findUnique({where:{id:user?.userId, status:UserStatus.ACTIVE}, select:{email:true}});
+
+  if (!userData) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "User does not exists!");
+  }
   const existingFlat = await prisma.flat.findUnique({
     where: { flatName: req?.body?.flatName },
   });
@@ -22,7 +28,6 @@ const createFlatIntoDB = async (req: Request) => {
   }
 
   const flatdata = req.body;
-  const user = req.user;
   const file = req.file as IUploadFile;
   if (file) {
     flatdata.flatPhoto = file?.path;
@@ -33,18 +38,18 @@ const createFlatIntoDB = async (req: Request) => {
     const createFlat: FlatCreateInput = await transactionClient.flat.create({
       data: {
         flatNo: flatNo,
-        email: user?.email,
-        flatName: req.body.flatName,
-        squareFeet: req.body.squareFeet,
-        totalBedrooms: req.body.totalBedrooms,
-        totalRooms: req.body.totalRooms,
-        utilitiesDescription: req.body.utilitiesDescription,
-        location: req.body.location,
-        description: req.body.description,
-        amenities: req.body.amenities,
-        rent: req.body.rent,
-        advanceAmount: req.body.advanceAmount,
-        flatPhoto: req.body.flatPhoto,
+        email: userData?.email,
+        flatName: flatdata.flatName,
+        squareFeet: flatdata.squareFeet,
+        totalBedrooms: flatdata.totalBedrooms,
+        totalRooms: flatdata.totalRooms,
+        utilitiesDescription: flatdata.utilitiesDescription,
+        location: flatdata.location,
+        description: flatdata.description,
+        amenities: flatdata.amenities,
+        rent: flatdata.rent,
+        advanceAmount: flatdata.advanceAmount,
+        flatPhoto: flatdata.flatPhoto,
       },
     });
     return createFlat;

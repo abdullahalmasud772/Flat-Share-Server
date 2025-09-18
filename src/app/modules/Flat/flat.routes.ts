@@ -12,7 +12,7 @@ router.post(
   auth(UserRole.SELLER),
   FileUploadHelper.upload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {
-    req.body = JSON.parse(req.body.data);
+    req.body = JSON.parse(req?.body?.data);
     return FlatController.createFlat(req, res, next);
   }
 );
