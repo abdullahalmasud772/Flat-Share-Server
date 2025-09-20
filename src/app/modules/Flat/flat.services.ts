@@ -15,7 +15,10 @@ import { generateFlatNumber } from "./flat.utils";
 
 const createFlatIntoDB = async (req: Request) => {
   const user = req.user;
-  const userData = await prisma.user.findUnique({where:{id:user?.userId, status:UserStatus.ACTIVE}, select:{email:true}});
+  const userData = await prisma.user.findUnique({
+    where: { id: user?.userId, status: UserStatus.ACTIVE },
+    select: { email: true },
+  });
 
   if (!userData) {
     throw new ApiError(httpStatus.BAD_REQUEST, "User does not exists!");
@@ -153,22 +156,28 @@ const getSingleFlatIntoDB = async (id: string): Promise<Flat | null> => {
 const updateFlatIntoDB = async (
   flatId: string,
   req: Request
-) /* : Promise<Flat>  */ => {
-  console.log(req.body);
-  await prisma.flat.findUniqueOrThrow({
-    where: {
-      id: flatId,
-      isDeleted: false,
-    },
+): Promise<Flat> => {
+  const flatExist = await prisma.flat.findUnique({
+    where: { id: flatId, isDeleted: false },
+  });
+  
+  if (!flatExist) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Flat does not exists!");
+  }
+
+  const checkFlatOwner = await prisma.flat.findUnique({
+    where: { id: flatId, email: req?.user?.email },
   });
 
-  const file = req.file as IUploadFile;
-  if (file) {
-    const uploadedProfileImage = await FileUploadHelper.uploadToCloudinary(
-      file
+  if (!checkFlatOwner) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "You are not the owner of this flat."
     );
-    req.body.flatPhoto = uploadedProfileImage?.secure_url;
   }
+
+  const file = req.file as IUploadFile;
+  req.body.flatPhoto = file?.path;
 
   const result = await prisma.flat.update({
     where: {
