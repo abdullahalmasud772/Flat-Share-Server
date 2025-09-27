@@ -156,7 +156,7 @@ const getSingleFlatIntoDB = async (id: string): Promise<Flat | null> => {
 const updateFlatIntoDB = async (
   flatId: string,
   req: Request
-): Promise<Flat> => {
+) => {
   const flatExist = await prisma.flat.findUnique({
     where: { id: flatId, isDeleted: false },
   });

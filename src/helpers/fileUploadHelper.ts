@@ -17,13 +17,9 @@ const storage = new CloudinaryStorage({
   params: async (req, file) => {
     let base = "flatshare";
 
-    if (req.originalUrl.includes("admin")) {
-      base = "flatshare/admin";
-    } else if (req.baseUrl.includes("seller")) {
-      base = "flatshare/seller";
-    } else if (req.baseUrl.includes("buyer")) {
-      base = `flatshare/buyer`;
-    } else if (req.baseUrl.includes("flat")) {
+    if (req.originalUrl.includes("user")) {
+      base = "flatshare/user";
+    } else if (req.originalUrl.includes("flat")) {
       base = `flatshare/flat`;
     }
 
@@ -32,10 +28,6 @@ const storage = new CloudinaryStorage({
       .toLowerCase()
       .replace(/\s+/g, "-")
       .replace(/[^a-z0-9-_]/g, "");
-
-    // folder: "uploads",
-    // public_id: (req, file) => file.originalname.split(".")[0],
-    // format: async (req: any, file: any) => "png",
     return {
       folder: base,
       allowed_formats: ["jpeg", "png", "jpg", "webp"],

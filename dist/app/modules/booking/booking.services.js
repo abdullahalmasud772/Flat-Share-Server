@@ -85,6 +85,21 @@ const getAllBookingIntoDB = (req) => __awaiter(void 0, void 0, void 0, function*
                         email: email,
                     },
                 },
+                select: {
+                    id: true,
+                    flatId: true,
+                    status: true,
+                    paymentStatus: true,
+                    createdAt: true,
+                    flat: { select: { flatName: true, flatPhoto: true } },
+                    user: {
+                        select: {
+                            buyer: {
+                                select: { name: true, email: true, contactNumber: true },
+                            },
+                        },
+                    },
+                },
                 // include: {
                 //   user: {
                 //     include: {
@@ -114,49 +129,55 @@ const getSingleBookingIntoDB = (req) => __awaiter(void 0, void 0, void 0, functi
     ///
 });
 const updateBookingStatusIntoDB = (req, bookingId) => __awaiter(void 0, void 0, void 0, function* () {
-    yield prisma_1.default.booking.findUniqueOrThrow({
+    //// check exists booking id
+    const booking = yield prisma_1.default.booking.findUniqueOrThrow({
         where: {
             id: bookingId,
         },
+        select: { id: true, flatId: true },
     });
     const result = yield prisma_1.default.$transaction((transactionClient) => __awaiter(void 0, void 0, void 0, function* () {
-        var _d, _e, _f, _g, _h, _j, _k, _l, _m;
-        const email = (_d = req === null || req === void 0 ? void 0 : req.user) === null || _d === void 0 ? void 0 : _d.email;
-        const result = yield ((_e = transactionClient.booking) === null || _e === void 0 ? void 0 : _e.findMany({
+        var _d, _e, _f, _g, _h, _j;
+        ///// Flat booking list
+        const flatOwner = (_d = req === null || req === void 0 ? void 0 : req.body) === null || _d === void 0 ? void 0 : _d.email;
+        const flatBookingList = yield ((_e = transactionClient.booking) === null || _e === void 0 ? void 0 : _e.findMany({
             where: {
                 flat: {
-                    email: email,
+                    email: flatOwner,
                 },
-                flatId: (_f = req === null || req === void 0 ? void 0 : req.body) === null || _f === void 0 ? void 0 : _f.flatId,
+                flatId: booking === null || booking === void 0 ? void 0 : booking.flatId,
             },
         }));
-        if ((result === null || result === void 0 ? void 0 : result.length) > 1) {
-            const filteredResults = result.filter((item) => item.id !== bookingId);
-            const [flatId] = filteredResults.map((item) => item.flatId);
-            yield ((_g = transactionClient.booking) === null || _g === void 0 ? void 0 : _g.updateMany({
+        ////// If there are multiple bookings, then all of them should be rejected except the one that is confirmed.
+        if ((flatBookingList === null || flatBookingList === void 0 ? void 0 : flatBookingList.length) > 1) {
+            const flatBookingListFilter = flatBookingList.filter((item) => item.id !== bookingId);
+            const flatIds = flatBookingListFilter.map((item) => item.flatId);
+            yield ((_f = transactionClient.booking) === null || _f === void 0 ? void 0 : _f.updateMany({
                 where: {
                     id: { not: bookingId },
-                    flatId: flatId,
+                    flatId: { in: flatIds },
                 },
                 data: { status: "REJECTED" },
             }));
         }
-        const updateConfirmBooking = yield ((_h = transactionClient.booking) === null || _h === void 0 ? void 0 : _h.update({
+        /////  update confirm booking
+        const updateConfirmBooking = yield ((_g = transactionClient.booking) === null || _g === void 0 ? void 0 : _g.update({
             where: {
                 id: bookingId,
             },
-            data: (_j = req === null || req === void 0 ? void 0 : req.body) === null || _j === void 0 ? void 0 : _j.values,
+            data: { status: "BOOKED" },
         }));
-        const [flatId] = result === null || result === void 0 ? void 0 : result.map((item) => item === null || item === void 0 ? void 0 : item.flatId);
-        const updateBookingFlatStatus = yield ((_k = transactionClient.flat) === null || _k === void 0 ? void 0 : _k.update({
+        /////  update booking flat status availability false
+        const updateBookingFlatStatus = yield ((_h = transactionClient.flat) === null || _h === void 0 ? void 0 : _h.update({
             where: {
-                id: flatId,
+                id: booking === null || booking === void 0 ? void 0 : booking.flatId,
             },
             data: { availability: false },
         }));
-        const flatAmountData = yield ((_l = transactionClient === null || transactionClient === void 0 ? void 0 : transactionClient.flat) === null || _l === void 0 ? void 0 : _l.findFirstOrThrow({
+        //// calculate amount
+        const flatAmountData = yield ((_j = transactionClient === null || transactionClient === void 0 ? void 0 : transactionClient.flat) === null || _j === void 0 ? void 0 : _j.findUniqueOrThrow({
             where: {
-                id: (_m = req === null || req === void 0 ? void 0 : req.body) === null || _m === void 0 ? void 0 : _m.flatId,
+                id: booking === null || booking === void 0 ? void 0 : booking.flatId,
             },
             select: {
                 advanceAmount: true,
@@ -164,16 +185,26 @@ const updateBookingStatusIntoDB = (req, bookingId) => __awaiter(void 0, void 0, 
             },
         }));
         const rentWithAdvanceAmount = (flatAmountData === null || flatAmountData === void 0 ? void 0 : flatAmountData.advanceAmount) + (flatAmountData === null || flatAmountData === void 0 ? void 0 : flatAmountData.rent);
-        const transactionId = yield (0, payment_utils_1.default)();
+        //// create transaction Id
+        const transactionId = (yield (0, payment_utils_1.default)());
+        ///// create payment
         const paymentData = {
             bookingId: bookingId,
             amount: rentWithAdvanceAmount,
             transactionId: transactionId,
         };
-        const createPaymentData = yield transactionClient.payment.create({
+        const checkExistThisBookingPayment = yield transactionClient.payment.findUnique({
+            where: { bookingId },
+        });
+        if (checkExistThisBookingPayment) {
+            yield transactionClient.payment.delete({
+                where: { bookingId },
+            });
+        }
+        const createPayment = yield transactionClient.payment.create({
             data: paymentData,
         });
-        return { updateConfirmBooking, updateBookingFlatStatus, createPaymentData };
+        return createPayment;
     }));
     return result;
 });

@@ -58,7 +58,7 @@ const getAllBookingIntoDB = async (req: Request) => {
           flat: {
             select: {
               flatName: true,
-              flatPhoto:true,
+              flatPhoto: true,
               user: { select: { seller: { select: { name: true } } } },
             },
           },
@@ -76,6 +76,21 @@ const getAllBookingIntoDB = async (req: Request) => {
         where: {
           flat: {
             email: email,
+          },
+        },
+        select: {
+          id: true,
+          flatId: true,
+          status: true,
+          paymentStatus: true,
+          createdAt: true,
+          flat: { select: { flatName: true, flatPhoto: true } },
+          user: {
+            select: {
+              buyer: {
+                select: { name: true, email: true, contactNumber: true },
+              },
+            },
           },
         },
         // include: {
@@ -110,77 +125,94 @@ const getSingleBookingIntoDB = async (req: Request) => {
 };
 
 const updateBookingStatusIntoDB = async (req: Request, bookingId: string) => {
-  await prisma.booking.findUniqueOrThrow({
+  //// check exists booking id
+  const booking = await prisma.booking.findUniqueOrThrow({
     where: {
       id: bookingId,
     },
+    select: { id: true, flatId: true },
   });
 
   const result = await prisma.$transaction(async (transactionClient) => {
-    const email = req?.user?.email;
-
-    const result = await transactionClient.booking?.findMany({
+    ///// Flat booking list
+    const flatOwner = req?.body?.email;
+    const flatBookingList = await transactionClient.booking?.findMany({
       where: {
         flat: {
-          email: email,
+          email: flatOwner,
         },
-        flatId: req?.body?.flatId,
+        flatId: booking?.flatId,
       },
     });
 
-    if (result?.length > 1) {
-      const filteredResults = result.filter((item) => item.id !== bookingId);
-      const [flatId] = filteredResults.map((item) => item.flatId);
+    ////// If there are multiple bookings, then all of them should be rejected except the one that is confirmed.
+    if (flatBookingList?.length > 1) {
+      const flatBookingListFilter = flatBookingList.filter(
+        (item) => item.id !== bookingId
+      );
+      const flatIds = flatBookingListFilter.map((item) => item.flatId);
 
       await transactionClient.booking?.updateMany({
         where: {
           id: { not: bookingId },
-          flatId: flatId,
+          flatId: { in: flatIds },
         },
         data: { status: "REJECTED" },
       });
     }
 
+    /////  update confirm booking
     const updateConfirmBooking = await transactionClient.booking?.update({
       where: {
         id: bookingId,
       },
-      data: req?.body?.values,
+      data: { status: "BOOKED" },
     });
 
-    const [flatId] = result?.map((item) => item?.flatId);
+    /////  update booking flat status availability false
     const updateBookingFlatStatus = await transactionClient.flat?.update({
       where: {
-        id: flatId,
+        id: booking?.flatId,
       },
       data: { availability: false },
     });
 
-    const flatAmountData = await transactionClient?.flat?.findFirstOrThrow({
+    //// calculate amount
+    const flatAmountData = await transactionClient?.flat?.findUniqueOrThrow({
       where: {
-        id: req?.body?.flatId,
+        id: booking?.flatId,
       },
       select: {
         advanceAmount: true,
         rent: true,
       },
     });
-
     const rentWithAdvanceAmount =
       flatAmountData?.advanceAmount + flatAmountData?.rent;
 
-    const transactionId = await generateTransactionId();
+    //// create transaction Id
+    const transactionId = (await generateTransactionId()) as string;
+
+    ///// create payment
     const paymentData = {
       bookingId: bookingId,
       amount: rentWithAdvanceAmount,
       transactionId: transactionId,
     };
-
-    const createPaymentData = await transactionClient.payment.create({
+    const checkExistThisBookingPayment =
+      await transactionClient.payment.findUnique({
+        where: { bookingId },
+      });
+    if (checkExistThisBookingPayment) {
+      await transactionClient.payment.delete({
+        where: { bookingId },
+      });
+    }
+    const createPayment = await transactionClient.payment.create({
       data: paymentData,
     });
 
-    return { updateConfirmBooking, updateBookingFlatStatus, createPaymentData };
+    return createPayment;
   });
 
   return result;

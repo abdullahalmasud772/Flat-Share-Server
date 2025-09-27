@@ -50,23 +50,17 @@ const storage = new multer_storage_cloudinary_1.CloudinaryStorage({
     cloudinary: cloudinary_1.v2,
     params: (req, file) => __awaiter(void 0, void 0, void 0, function* () {
         let base = "flatshare";
-        if (req.originalUrl.includes("admin")) {
-            base = "flatshare/admin";
+        if (req.originalUrl.includes("user")) {
+            base = "flatshare/user";
         }
-        else if (req.baseUrl.includes("seller")) {
-            base = "flatshare/seller";
-        }
-        else if (req.baseUrl.includes("buyer")) {
-            base = `flatshare/buyer`;
+        else if (req.originalUrl.includes("flat")) {
+            base = `flatshare/flat`;
         }
         const fileName = file.originalname
             .split(".")[0]
             .toLowerCase()
             .replace(/\s+/g, "-")
             .replace(/[^a-z0-9-_]/g, "");
-        // folder: "uploads",
-        // public_id: (req, file) => file.originalname.split(".")[0],
-        // format: async (req: any, file: any) => "png",
         return {
             folder: base,
             allowed_formats: ["jpeg", "png", "jpg", "webp"],

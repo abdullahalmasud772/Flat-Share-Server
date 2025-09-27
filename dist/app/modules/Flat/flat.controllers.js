@@ -25,7 +25,7 @@ const createFlat = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
     (0, sendUniqeResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
-        message: "Flat added successfully",
+        message: "Create new flat successfully",
         data: result,
     });
 }));
@@ -63,7 +63,6 @@ const getSingleFlat = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
 }));
 const updateFlat = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    console.log(req.body);
     const result = yield flat_services_1.FlatServices.updateFlatIntoDB(id, req);
     (0, sendResponse_1.default)(res, {
         success: true,

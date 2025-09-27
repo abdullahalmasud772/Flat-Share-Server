@@ -38,11 +38,11 @@ router.patch(
 );
 
 router.delete(
-  "/soft/:id",
+  "/soft-delete-flat/:id",
   auth(ENUM_USER_ROLE.ADMIN),
   FlatController.softDeleteFlat
 );
 
-router.delete("/:id", auth(ENUM_USER_ROLE.ADMIN), FlatController.deleteFlat);
+router.delete("/delete-flat/:id", auth(ENUM_USER_ROLE.ADMIN), FlatController.deleteFlat);
 
 export const FlatRoutes = router;
