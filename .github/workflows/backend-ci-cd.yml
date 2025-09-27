@@ -1,0 +1,49 @@
+name: Backend CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'npm' # Caching dependencies
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: |
+          npm ci
+
+      # Step 4: Run tests
+      # - name: Run tests
+      #   run: |
+      #     npm run dev
+
+      # Step 5: প্রজেক্ট বিল্ড করা
+      - name: Build Project
+        run: npm run build
+
+      # Step 6: ডিপ্লয়মেন্ট কমান্ড চালানো
+      - name: Deploy Backend
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.Flat_Share_Backend_Vercel_Token }}
+          vercel-org-id: ${{ secrets.Flat_Share_Backend_Org_ID }}
+          vercel-project-id: ${{ secrets.Flat_Share_Backend_Project_ID }}
+          vercel-args: '--prod'
+        #   working-directory: .
