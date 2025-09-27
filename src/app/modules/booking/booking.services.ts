@@ -125,6 +125,8 @@ const getSingleBookingIntoDB = async (req: Request) => {
 };
 
 const updateBookingStatusIntoDB = async (req: Request, bookingId: string) => {
+  console.log(bookingId, 'booking id');
+  console.log(req?.user, 'body')
   //// check exists booking id
   const booking = await prisma.booking.findUniqueOrThrow({
     where: {
@@ -133,10 +135,13 @@ const updateBookingStatusIntoDB = async (req: Request, bookingId: string) => {
     select: { id: true, flatId: true },
   });
 
-  const result = await prisma.$transaction(async (transactionClient) => {
+  //// create transaction Id
+  const transactionId = (await generateTransactionId()) as string;
+
+  const result = await prisma.$transaction(async (tx) => {
     ///// Flat booking list
-    const flatOwner = req?.body?.email;
-    const flatBookingList = await transactionClient.booking?.findMany({
+    const flatOwner = req?.user?.email;
+    const flatBookingList = await tx.booking?.findMany({
       where: {
         flat: {
           email: flatOwner,
@@ -147,22 +152,17 @@ const updateBookingStatusIntoDB = async (req: Request, bookingId: string) => {
 
     ////// If there are multiple bookings, then all of them should be rejected except the one that is confirmed.
     if (flatBookingList?.length > 1) {
-      const flatBookingListFilter = flatBookingList.filter(
-        (item) => item.id !== bookingId
-      );
-      const flatIds = flatBookingListFilter.map((item) => item.flatId);
-
-      await transactionClient.booking?.updateMany({
+      await tx.booking?.updateMany({
         where: {
           id: { not: bookingId },
-          flatId: { in: flatIds },
+          flatId: booking.flatId,
         },
         data: { status: "REJECTED" },
       });
     }
 
     /////  update confirm booking
-    const updateConfirmBooking = await transactionClient.booking?.update({
+    await tx.booking?.update({
       where: {
         id: bookingId,
       },
@@ -170,7 +170,7 @@ const updateBookingStatusIntoDB = async (req: Request, bookingId: string) => {
     });
 
     /////  update booking flat status availability false
-    const updateBookingFlatStatus = await transactionClient.flat?.update({
+    await tx.flat?.update({
       where: {
         id: booking?.flatId,
       },
@@ -178,38 +178,21 @@ const updateBookingStatusIntoDB = async (req: Request, bookingId: string) => {
     });
 
     //// calculate amount
-    const flatAmountData = await transactionClient?.flat?.findUniqueOrThrow({
-      where: {
-        id: booking?.flatId,
-      },
-      select: {
-        advanceAmount: true,
-        rent: true,
-      },
+    const flatAmountData = await tx?.flat?.findUniqueOrThrow({
+      where: { id: booking?.flatId },
+      select: { advanceAmount: true, rent: true },
     });
     const rentWithAdvanceAmount =
       flatAmountData?.advanceAmount + flatAmountData?.rent;
 
-    //// create transaction Id
-    const transactionId = (await generateTransactionId()) as string;
+    // Delete old payment if exists (safer way)
+    await tx.payment.deleteMany({
+      where: { bookingId },
+    });
 
-    ///// create payment
-    const paymentData = {
-      bookingId: bookingId,
-      amount: rentWithAdvanceAmount,
-      transactionId: transactionId,
-    };
-    const checkExistThisBookingPayment =
-      await transactionClient.payment.findUnique({
-        where: { bookingId },
-      });
-    if (checkExistThisBookingPayment) {
-      await transactionClient.payment.delete({
-        where: { bookingId },
-      });
-    }
-    const createPayment = await transactionClient.payment.create({
-      data: paymentData,
+    // Create new payment
+    const createPayment = await tx.payment.create({
+      data: { bookingId, amount: rentWithAdvanceAmount, transactionId },
     });
 
     return createPayment;
