@@ -42,11 +42,6 @@ const createBookingIntoDB = async (req: Request) => {
 const getAllBookingIntoDB = async (req: Request) => {
   const email = req?.user?.email;
   const role = req?.user?.role;
-  // include: {
-  //   flat: {
-  //     select: { flatName:true,email:true }
-  //   },
-  // },
   const result = await prisma.$transaction(async (transactionClient) => {
     if (role === UserRole.ADMIN) {
       const result = await transactionClient.booking.findMany({
@@ -93,14 +88,6 @@ const getAllBookingIntoDB = async (req: Request) => {
             },
           },
         },
-        // include: {
-        //   user: {
-        //     include: {
-        //       buyer: true,
-        //     },
-        //   },
-        //   flat: true,
-        // },
       });
       return result;
     }
@@ -109,9 +96,21 @@ const getAllBookingIntoDB = async (req: Request) => {
         where: {
           email: email,
         },
-        // include: {
-        //   flat: true,
-        // },
+        select: {
+          id: true,
+          flatId: true,
+          status: true,
+          paymentStatus: true,
+          createdAt: true,
+          flat: { select: { flatName: true, flatPhoto: true } },
+          user: {
+            select: {
+              seller: {
+                select: { name: true, email: true, contactNumber: true },
+              },
+            },
+          },
+        },
       });
       return result;
     }
@@ -125,8 +124,6 @@ const getSingleBookingIntoDB = async (req: Request) => {
 };
 
 const updateBookingStatusIntoDB = async (req: Request, bookingId: string) => {
-  console.log(bookingId, 'booking id');
-  console.log(req?.user, 'body')
   //// check exists booking id
   const booking = await prisma.booking.findUniqueOrThrow({
     where: {
