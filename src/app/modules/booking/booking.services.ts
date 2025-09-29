@@ -102,11 +102,14 @@ const getAllBookingIntoDB = async (req: Request) => {
           status: true,
           paymentStatus: true,
           createdAt: true,
-          flat: { select: { flatName: true, flatPhoto: true } },
-          user: {
+          flat: {
             select: {
-              seller: {
-                select: { name: true, email: true, contactNumber: true },
+              flatName: true,
+              flatPhoto: true,
+              availability: true,
+              location: true,
+              user: {
+                select: { seller: { select: { name: true, email: true } } },
               },
             },
           },
@@ -120,7 +123,49 @@ const getAllBookingIntoDB = async (req: Request) => {
 };
 
 const getSingleBookingIntoDB = async (req: Request) => {
-  ///
+  const bookingId = req?.params?.id;
+  const user = req?.user;
+
+  if (user?.role === UserRole.ADMIN) {
+    const result = await prisma.booking.findUniqueOrThrow({
+      where: { id: bookingId },
+    });
+    return result;
+  } else if (user?.role === UserRole.SELLER) {
+    return await prisma.booking.findUniqueOrThrow({
+      where: { id: bookingId, flat: { email: user?.email } },
+    });
+  } else if (user?.role === UserRole.BUYER) {
+    return await prisma.booking.findUniqueOrThrow({
+      where: { id: bookingId, email: user?.email },
+      select: {
+        id: true,
+        email: true,
+        paymentStatus: true,
+        createdAt: true,
+        status: true,
+        flat: {
+          select: {
+            flatName: true,
+            flatPhoto: true,
+            flatNo: true,
+            email: true,
+            squareFeet: true,
+            totalRooms: true,
+            totalBedrooms: true,location:true,
+            rent: true,
+            advanceAmount: true,
+            availability: true,
+            description: true,
+            amenities: true,
+            utilitiesDescription: true,
+            viewFlat: true,
+            user:{select:{seller:{select:{name:true, email:true}}}}
+          },
+        },
+      },
+    });
+  }
 };
 
 const updateBookingStatusIntoDB = async (req: Request, bookingId: string) => {

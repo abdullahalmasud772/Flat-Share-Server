@@ -15,7 +15,7 @@ router.get(
 );
 
 router.get(
-  "/:id",
+  "/single-booking/:id",
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.BUYER, ENUM_USER_ROLE.SELLER),
   BookingController.getSingleBooking
 );
