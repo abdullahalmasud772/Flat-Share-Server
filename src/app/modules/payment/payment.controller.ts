@@ -9,19 +9,21 @@ const initPayment = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: "payment initiate successfully",
+    message: "Payment initiate successfully",
     data: result,
   });
 });
 
+type PaymentResult = {
+  tran_id: string;
+  amount: number;
+};
 const validatePayment = catchAsync(async (req: Request, res: Response) => {
   const result = await PaymentServices.validatePaymentIntoDB(req.query);
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: "payment validate successfully",
-    data: result,
-  });
+  const { tran_id, amount } = result as PaymentResult;
+  res.redirect(
+    `https://flatshare.vercel.app/dashboard/buyer/my-payments/payment-success?tran_id=${tran_id}&amount=${amount}`
+  );
 });
 
 const getPayment = catchAsync(async (req: Request, res: Response) => {

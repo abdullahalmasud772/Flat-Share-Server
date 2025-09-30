@@ -32,6 +32,7 @@ export default {
     ssl_success_url: process.env.SSL_SUCCESS_URL,
     ssl_fail_url: process.env.SSL_FAIL_URL,
     ssl_cancel_url: process.env.SSL_CANCEL_URL,
+    ssl_ipn_url:process.env.SSL_IPN_URL,
     ssl_payment_url: process.env.SSL_PAYMENT_URL,
     ssl_validation_api: process.env.SSL_VALIDATION_API,
   },

@@ -1,8 +1,6 @@
 import { Request } from "express";
 import { ENUM_USER_ROLE } from "../../../enums/user";
 import prisma from "../../../shared/prisma";
-import axios from "axios";
-import config from "../../../config";
 import { SSLService } from "../sslcommerz/ssl.service";
 import { PaymentStatus } from "@prisma/client";
 
@@ -41,10 +39,11 @@ const initPaymentIntoDB = async (req: Request) => {
     },
   });
 
+
   const initPaymentData = {
-    total_amount: paymentDta?.amount,
+    amount: paymentDta?.amount,
     transactionId: paymentDta?.transactionId,
-    product_name: paymentDta?.booking?.flat?.flatName,
+    flat_name: paymentDta?.booking?.flat?.flatName,
     cus_name: paymentDta?.booking?.user?.buyer?.name || '',
     cus_email: paymentDta?.booking?.user?.buyer?.email || '',
     cus_address: paymentDta?.booking?.user?.buyer?.address || '',
@@ -92,9 +91,7 @@ const validatePaymentIntoDB = async (payload: any) => {
       },
     });
   });
-  return {
-    message: "Payment Success",
-  };
+  return response;
 };
 
 const getPaymentIntoDB = async (req: Request) => {
@@ -133,6 +130,7 @@ const getPaymentIntoDB = async (req: Request) => {
               flat: {
                 select: {
                   flatName: true,
+                  flatPhoto:true,
                   flatNo: true,
                   email: true,
                 },

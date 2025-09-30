@@ -7,15 +7,15 @@ const initPayment = async (paymentData: IPaymentData) => {
     const data = {
       store_id: config.ssl.ssl_store_id,
       store_passwd: config.ssl.ssl_store_passwd,
-      total_amount: paymentData?.total_amount,
+      total_amount: paymentData?.amount,
       currency: "BDT",
       tran_id: paymentData?.transactionId,
-      success_url: config.ssl.ssl_success_url,
+      success_url: `https://flstshare-server.vercel.app/api/v1/payment/success?tran_id=${paymentData?.transactionId}&amount=${paymentData?.amount}`,
       fail_url: config.ssl.ssl_fail_url,
       cancel_url: config.ssl.ssl_cancel_url,
-      ipn_url: "http://localhost:3030/ipn",
+      ipn_url: config.ssl.ssl_ipn_url,
       shipping_method: "N/A",
-      product_name: paymentData?.product_name,
+      product_name: paymentData?.flat_name,
       product_category: "Electronic",
       product_profile: "N/A",
       cus_name: paymentData?.cus_name,
@@ -43,7 +43,7 @@ const initPayment = async (paymentData: IPaymentData) => {
       data: data,
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
     });
-
+    
     return response?.data;
   } catch (error) {
     console.log(error);

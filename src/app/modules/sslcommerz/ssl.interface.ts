@@ -1,8 +1,8 @@
 
 export type IPaymentData = {
-    total_amount: number,
+    amount: number,
     transactionId: string,
-    product_name: string,
+    flat_name: string,
     cus_name: string,
     cus_email: string,
     cus_address: string,

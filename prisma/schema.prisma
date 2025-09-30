@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model User {
@@ -103,6 +104,7 @@ model Flat {
   booking              Booking[]
   user                 User      @relation(fields: [email], references: [email])
   review               Review?
+  payment              Payment?
 
   @@map("flats")
 }
@@ -143,6 +145,7 @@ model Review {
 model Payment {
   id                String        @id @default(uuid())
   bookingId         String        @unique
+  flatId            String        @unique
   amount            Float
   transactionId     String        @unique
   payStatus         PaymentStatus @default(UNPAID)
@@ -151,6 +154,7 @@ model Payment {
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
   booking           Booking       @relation(fields: [bookingId], references: [id])
+  Flat              Flat          @relation(fields: [flatId], references: [id])
 }
 
 enum BookingStatus {

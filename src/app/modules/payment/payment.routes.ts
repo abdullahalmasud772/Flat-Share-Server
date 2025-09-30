@@ -7,11 +7,12 @@ const router = Router();
 
 router.post("/init-payment/:bookingId", PaymentController.initPayment);
 
-router.get("/ipn", PaymentController.validatePayment);
+router.post("/success", PaymentController.validatePayment);
+// router.get("/ipn", PaymentController.validatePayment);
 
 router.get(
-  "/",
-  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.BUYER, ENUM_USER_ROLE.SELLER),
+  "/all-payment",
+  auth(ENUM_USER_ROLE.ADMIN,ENUM_USER_ROLE.SELLER, ENUM_USER_ROLE.BUYER),
   PaymentController.getPayment
 );
 

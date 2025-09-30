@@ -152,7 +152,8 @@ const getSingleBookingIntoDB = async (req: Request) => {
             email: true,
             squareFeet: true,
             totalRooms: true,
-            totalBedrooms: true,location:true,
+            totalBedrooms: true,
+            location: true,
             rent: true,
             advanceAmount: true,
             availability: true,
@@ -160,7 +161,9 @@ const getSingleBookingIntoDB = async (req: Request) => {
             amenities: true,
             utilitiesDescription: true,
             viewFlat: true,
-            user:{select:{seller:{select:{name:true, email:true}}}}
+            user: {
+              select: { seller: { select: { name: true, email: true } } },
+            },
           },
         },
       },
@@ -229,12 +232,17 @@ const updateBookingStatusIntoDB = async (req: Request, bookingId: string) => {
 
     // Delete old payment if exists (safer way)
     await tx.payment.deleteMany({
-      where: { bookingId },
+      where: { flatId: booking.flatId, },
     });
 
     // Create new payment
     const createPayment = await tx.payment.create({
-      data: { bookingId, amount: rentWithAdvanceAmount, transactionId },
+      data: {
+        bookingId,
+        flatId: booking.flatId,
+        amount: rentWithAdvanceAmount,
+        transactionId,
+      },
     });
 
     return createPayment;
