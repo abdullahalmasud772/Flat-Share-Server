@@ -62,6 +62,7 @@ const getAllBookingIntoDB = async (req: Request) => {
               buyer: { select: { name: true } },
             },
           },
+          payment: { select: { amount: true } },
         },
       });
       return result;
@@ -87,6 +88,7 @@ const getAllBookingIntoDB = async (req: Request) => {
               },
             },
           },
+          payment: { select: { amount: true } },
         },
       });
       return result;
@@ -113,6 +115,7 @@ const getAllBookingIntoDB = async (req: Request) => {
               },
             },
           },
+          payment: { select: { amount: true } },
         },
       });
       return result;
@@ -144,6 +147,7 @@ const getSingleBookingIntoDB = async (req: Request) => {
         paymentStatus: true,
         createdAt: true,
         status: true,
+        payment: { select: { amount: true } },
         flat: {
           select: {
             flatName: true,
@@ -232,7 +236,7 @@ const updateBookingStatusIntoDB = async (req: Request, bookingId: string) => {
 
     // Delete old payment if exists (safer way)
     await tx.payment.deleteMany({
-      where: { flatId: booking.flatId, },
+      where: { flatId: booking.flatId },
     });
 
     // Create new payment
