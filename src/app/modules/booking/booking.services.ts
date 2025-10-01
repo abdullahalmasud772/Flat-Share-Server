@@ -54,6 +54,8 @@ const getAllBookingIntoDB = async (req: Request) => {
             select: {
               flatName: true,
               flatPhoto: true,
+              rent: true,
+              advanceAmount: true,
               user: { select: { seller: { select: { name: true } } } },
             },
           },
@@ -80,7 +82,14 @@ const getAllBookingIntoDB = async (req: Request) => {
           status: true,
           paymentStatus: true,
           createdAt: true,
-          flat: { select: { flatName: true, flatPhoto: true } },
+          flat: {
+            select: {
+              flatName: true,
+              flatPhoto: true,
+              rent: true,
+              advanceAmount: true,
+            },
+          },
           user: {
             select: {
               buyer: {
@@ -110,6 +119,8 @@ const getAllBookingIntoDB = async (req: Request) => {
               flatPhoto: true,
               availability: true,
               location: true,
+              rent: true,
+              advanceAmount: true,
               user: {
                 select: { seller: { select: { name: true, email: true } } },
               },
