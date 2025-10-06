@@ -6,84 +6,14 @@
     "auditLog": "D:\\Programing\\FullStack_Projects\\Flat_Share\\Flat-Share-Server\\logs\\winston\\errors\\.2f99f1c3b295e7b891f26012454747b3fb63fc20-audit.json",
     "files": [
         {
-            "date": 1757759156707,
-            "name": "D:\\Programing\\FullStack_Projects\\Flat_Share\\Flat-Share-Server\\logs\\winston\\errors\\phu-2025-13-09-16-error.log",
-            "hash": "82d091f26e3d76c31f2a456563bfb3f0ecd2c511e2f46c5f10584953d09d45d0"
+            "date": 1759741123316,
+            "name": "D:\\Programing\\FullStack_Projects\\Flat_Share\\Flat-Share-Server\\logs\\winston\\errors\\phu-2025-06-10-14-error.log",
+            "hash": "2f172de5e7bd590500d4f014cedfdb5b372b0419de9619e493bec4d11500562a"
         },
         {
-            "date": 1757764480619,
-            "name": "D:\\Programing\\FullStack_Projects\\Flat_Share\\Flat-Share-Server\\logs\\winston\\errors\\phu-2025-13-09-17-error.log",
-            "hash": "3417dc9b803b82a6c86e05269923853a2ccc671378fd071217a12e1e6ff99abb"
-        },
-        {
-            "date": 1757770820186,
-            "name": "D:\\Programing\\FullStack_Projects\\Flat_Share\\Flat-Share-Server\\logs\\winston\\errors\\phu-2025-13-09-19-error.log",
-            "hash": "f33bd5cf094b4578300a54fb7b8dd152ff2b34d052b48dc0542413a63db1c1ab"
-        },
-        {
-            "date": 1757778251520,
-            "name": "D:\\Programing\\FullStack_Projects\\Flat_Share\\Flat-Share-Server\\logs\\winston\\errors\\phu-2025-13-09-21-error.log",
-            "hash": "1ab06acb5319063997771f975e3a70b11dc5c25e348412e31bd4592937696d50"
-        },
-        {
-            "date": 1757779285715,
-            "name": "D:\\Programing\\FullStack_Projects\\Flat_Share\\Flat-Share-Server\\logs\\winston\\errors\\phu-2025-13-09-22-error.log",
-            "hash": "e2e8f9ec0fc6d93d585be66057c93cc4658dd86a61bf4d2ddafed7cd0613ca42"
-        },
-        {
-            "date": 1757784523931,
-            "name": "D:\\Programing\\FullStack_Projects\\Flat_Share\\Flat-Share-Server\\logs\\winston\\errors\\phu-2025-13-09-23-error.log",
-            "hash": "5b6ee40b4a1694da9cde1e17ceebc95b0800e7bddb722d7e2ee82f2ba4cd183f"
-        },
-        {
-            "date": 1757786860256,
-            "name": "D:\\Programing\\FullStack_Projects\\Flat_Share\\Flat-Share-Server\\logs\\winston\\errors\\phu-2025-14-09-00-error.log",
-            "hash": "9fc4bc4ececf52c85d6e35930f015bb3a3e7964bd96cdf3f9a7db469b1b92a56"
-        },
-        {
-            "date": 1757790067967,
-            "name": "D:\\Programing\\FullStack_Projects\\Flat_Share\\Flat-Share-Server\\logs\\winston\\errors\\phu-2025-14-09-01-error.log",
-            "hash": "3282577f31d02571abeededb028c470f45224e69dd3a3932097f5b664f6b818a"
-        },
-        {
-            "date": 1757967556015,
-            "name": "D:\\Programing\\FullStack_Projects\\Flat_Share\\Flat-Share-Server\\logs\\winston\\errors\\phu-2025-16-09-02-error.log",
-            "hash": "3d94f33a0dcccda70608fe24609c2fce4bc16de4c2ddf7d6aad48b03bbf3252b"
-        },
-        {
-            "date": 1758001168458,
-            "name": "D:\\Programing\\FullStack_Projects\\Flat_Share\\Flat-Share-Server\\logs\\winston\\errors\\phu-2025-16-09-11-error.log",
-            "hash": "485619523b012ae2496ea10a4c9b0e5f251a3a743b816ec561c9ace352fcef0b"
-        },
-        {
-            "date": 1758003744066,
-            "name": "D:\\Programing\\FullStack_Projects\\Flat_Share\\Flat-Share-Server\\logs\\winston\\errors\\phu-2025-16-09-12-error.log",
-            "hash": "11c50c3320325ad05a142265a8b3b5ea2a6e14d0784942ae2f8c973289f88343"
-        },
-        {
-            "date": 1758028389557,
-            "name": "D:\\Programing\\FullStack_Projects\\Flat_Share\\Flat-Share-Server\\logs\\winston\\errors\\phu-2025-16-09-19-error.log",
-            "hash": "2f66c81100a4256051eb1442b831fbf009680b9f06f27d1b525a7ed81ec2da7e"
-        },
-        {
-            "date": 1758033879874,
-            "name": "D:\\Programing\\FullStack_Projects\\Flat_Share\\Flat-Share-Server\\logs\\winston\\errors\\phu-2025-16-09-20-error.log",
-            "hash": "fcd489984d958ca3a6424d5b07d1ea783bbf3a72e8381c3924d47411db8a4c34"
-        },
-        {
-            "date": 1758049681700,
-            "name": "D:\\Programing\\FullStack_Projects\\Flat_Share\\Flat-Share-Server\\logs\\winston\\errors\\phu-2025-17-09-01-error.log",
-            "hash": "4d5a52d9257ca3cd1d37e33f66f6cb4e69fe29650dac5589d6330fcaa8028022"
-        },
-        {
-            "date": 1758094057577,
-            "name": "D:\\Programing\\FullStack_Projects\\Flat_Share\\Flat-Share-Server\\logs\\winston\\errors\\phu-2025-17-09-13-error.log",
-            "hash": "a2b9caefe6d9e52e42f7b98227dc02ec86bfe651661f65d003ea730d7012c6aa"
-        },
-        {
-            "date": 1758099679735,
-            "name": "D:\\Programing\\FullStack_Projects\\Flat_Share\\Flat-Share-Server\\logs\\winston\\errors\\phu-2025-17-09-15-error.log",
-            "hash": "76bd47a613e60e6ca23023a33c132fd77e9e5ad47194fa4b52ccec69ca6b67b1"
+            "date": 1759741352209,
+            "name": "D:\\Programing\\FullStack_Projects\\Flat_Share\\Flat-Share-Server\\logs\\winston\\errors\\phu-2025-06-10-15-error.log",
+            "hash": "0d7cd0039569ad6a54180d311601599deca27998d2fe0af101b2a91feeeb5e24"
         }
     ],
     "hashType": "sha256"

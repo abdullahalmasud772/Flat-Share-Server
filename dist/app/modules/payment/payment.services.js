@@ -52,9 +52,9 @@ const initPaymentIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* (
         },
     });
     const initPaymentData = {
-        total_amount: paymentDta === null || paymentDta === void 0 ? void 0 : paymentDta.amount,
+        amount: paymentDta === null || paymentDta === void 0 ? void 0 : paymentDta.amount,
         transactionId: paymentDta === null || paymentDta === void 0 ? void 0 : paymentDta.transactionId,
-        product_name: (_b = (_a = paymentDta === null || paymentDta === void 0 ? void 0 : paymentDta.booking) === null || _a === void 0 ? void 0 : _a.flat) === null || _b === void 0 ? void 0 : _b.flatName,
+        flat_name: (_b = (_a = paymentDta === null || paymentDta === void 0 ? void 0 : paymentDta.booking) === null || _a === void 0 ? void 0 : _a.flat) === null || _b === void 0 ? void 0 : _b.flatName,
         cus_name: ((_e = (_d = (_c = paymentDta === null || paymentDta === void 0 ? void 0 : paymentDta.booking) === null || _c === void 0 ? void 0 : _c.user) === null || _d === void 0 ? void 0 : _d.buyer) === null || _e === void 0 ? void 0 : _e.name) || '',
         cus_email: ((_h = (_g = (_f = paymentDta === null || paymentDta === void 0 ? void 0 : paymentDta.booking) === null || _f === void 0 ? void 0 : _f.user) === null || _g === void 0 ? void 0 : _g.buyer) === null || _h === void 0 ? void 0 : _h.email) || '',
         cus_address: ((_l = (_k = (_j = paymentDta === null || paymentDta === void 0 ? void 0 : paymentDta.booking) === null || _j === void 0 ? void 0 : _j.user) === null || _k === void 0 ? void 0 : _k.buyer) === null || _l === void 0 ? void 0 : _l.address) || '',
@@ -94,9 +94,7 @@ const validatePaymentIntoDB = (payload) => __awaiter(void 0, void 0, void 0, fun
             },
         });
     }));
-    return {
-        message: "Payment Success",
-    };
+    return response;
 });
 const getPaymentIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* () {
     var _q, _r;
@@ -132,6 +130,7 @@ const getPaymentIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* ()
                             flat: {
                                 select: {
                                     flatName: true,
+                                    flatPhoto: true,
                                     flatNo: true,
                                     email: true,
                                 },

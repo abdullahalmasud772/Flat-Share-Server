@@ -22,18 +22,14 @@ const initPayment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, vo
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
-        message: "payment initiate successfully",
+        message: "Payment initiate successfully",
         data: result,
     });
 }));
 const validatePayment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield payment_services_1.PaymentServices.validatePaymentIntoDB(req.query);
-    (0, sendResponse_1.default)(res, {
-        success: true,
-        statusCode: http_status_1.default.OK,
-        message: "payment validate successfully",
-        data: result,
-    });
+    const { tran_id, amount } = result;
+    res.redirect(`https://flatshare.vercel.app/dashboard/buyer/my-payments/payment-success?tran_id=${tran_id}&amount=${amount}`);
 }));
 const getPayment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield payment_services_1.PaymentServices.getPaymentIntoDB(req);

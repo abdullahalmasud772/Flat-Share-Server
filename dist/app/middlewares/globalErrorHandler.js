@@ -13,7 +13,7 @@ const handleZodError_1 = __importDefault(require("../../errors/handleZodError"))
 const logger_1 = require("../../shared/logger");
 const globalErrorHandler = (error, req, res, next) => {
     config_1.default.env === "development"
-        ? console.log(`🐱‍🏍 globalErrorHandler ~~`, { error })
+        ? console.log(`🐱‍🏍 globalErrorHandlers ~~`, error === null || error === void 0 ? void 0 : error.message)
         : logger_1.errorlogger.error(`🐱‍🏍 globalErrorHandler ~~`, error);
     let statusCode = 500;
     let message = "Something went wrong !";

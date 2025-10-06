@@ -1,9 +1,0 @@
-Wed Sep 17 2025 15:37:53 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ 
-Invalid `prisma.flat.findUnique()` invocation:
-
-
-Error querying the database: FATAL: the database system is starting up
-Wed Sep 17 2025 15:43:40 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ Forbidden!!
-Wed Sep 17 2025 15:44:12 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ You are not authorized!!
-Wed Sep 17 2025 15:45:41 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ No Flat found
-Wed Sep 17 2025 15:47:10 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ This flat you alrady created!

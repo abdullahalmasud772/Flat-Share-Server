@@ -7,6 +7,7 @@ const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
 const routes_1 = __importDefault(require("./app/routes"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const globalErrorHandler_1 = __importDefault(require("./app/middlewares/globalErrorHandler"));
 const notFound_1 = __importDefault(require("./app/middlewares/notFound"));
 const path_1 = __importDefault(require("path"));
 const serve_favicon_1 = __importDefault(require("serve-favicon"));
@@ -28,7 +29,7 @@ app.get("/", (req, res) => {
     res.status(200).json({ message: "Flatshare API is running 🚀" });
 });
 //global error handler
-// app.use(globalErrorHandler);
+app.use(globalErrorHandler_1.default);
 //handle not found
 app.use(notFound_1.default);
 exports.default = app;
