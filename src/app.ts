@@ -8,7 +8,7 @@ import path from "path";
 import favicon from "serve-favicon";
 
 const app: Application = express();
-app.use(favicon(path.join(__dirname, "../public", "favicon.ico")));
+// app.use(favicon(path.join(__dirname, "../public", "favicon.ico")));
 
 app.use(
   cors({
@@ -31,7 +31,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 //global error handler
-// app.use(globalErrorHandler);
+app.use(globalErrorHandler);
 
 //handle not found
 app.use(notFound);
